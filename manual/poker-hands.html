@@ -1,0 +1,229 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+</head>
+
+<body>
+<h1>Example 1. Poker Hands</h1>
+<hr/>
+<p>
+  In this section, we will describe the program that determine the poker hands.<br/>
+  We do pattern matching collections of cards as a multiset of cards.<br/>
+  The program codes that we describe in this section can are in <code>lib/poker-hands.egi</code> and <code>sample/poker-hands-test.egi</code>.<br/>
+</p>
+
+<p>
+  First, we define the <code>Card</code> type.<br/>
+  To define it, we define the <code>Suit</code> type, and the <code>Mod</code>.<br/>
+</p>
+
+<p>
+  The definition of the <code>Suit</code> is as below.<br/>
+</p>
+
+<pre>
+  <code>
+(define $Suit
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (destructor
+        {[spade []
+          {[&lt;spade&gt; {[]}]
+           [_ {}]}]
+         [heart []
+          {[&lt;heart&gt; {[]}]
+           [_ {}]}]
+         [club []
+          {[&lt;club&gt; {[]}]
+           [_ {}]}]
+         [diamond []
+          {[&lt;diamond&gt; {[]}]
+           [_ {}]}]
+         })]
+     [$=
+      (lambda [$val $tgt]
+        (match [val tgt] [Suit Suit]
+          {[[&lt;spade&gt; &lt;spade&gt;] #t]
+           [[&lt;heart&gt; &lt;heart&gt;] #t]
+           [[&lt;club&gt; &lt;club&gt;] #t]
+           [[&lt;diamond&gt; &lt;diamond&gt;] #t]
+           [[_ _] #f]}))]
+     }))
+  </code>
+</pre>
+  The definition of the <code>Mod</code> is as below.<br/>
+<p>
+
+</p>
+<pre>
+  <code>
+(define $Mod
+  (lambda [$m]
+    (type
+      {[$var-match (lambda [$tgt] {(mod tgt m)})]
+       [$= (lambda [$val $tgt]
+             (= (mod val m) (mod tgt m)))]})))
+  </code>
+</pre>
+
+<p>
+  The <code>Card</code> type is defined using those two types defined above.<br/>
+</p>
+
+<pre>
+  <code>
+(define $Card
+  (type
+    {[$var-match (lambda [$tgt] {tgt})]
+     [$inductive-match
+      (destructor
+        {[card [Suit (Mod 13)]
+          {[&lt;card $s $n&gt; {[s n]}]}]})]
+     [$= (lambda [$val $tgt]
+           (match [val tgt] [Card Card]
+             {[[&lt;card $s $n&gt;
+                &lt;card ,s ,n&gt;]
+               #t]
+              [[_ _] #f]}))]}))
+  </code>
+</pre>
+
+<p>
+  If we defined the <code>Card</code> type as abobe, we can define a function that determine poker hands as following.<br/>
+</p>
+
+<pre>
+  <code>
+(define $poker-hands
+  (lambda [$Cs]
+    (match Cs (Multiset Card)
+      {[&lt;cons &lt;card $S $n&gt;
+         &lt;cons &lt;card ,S ,(- n 1)&gt;
+          &lt;cons &lt;card ,S ,(- n 2)&gt;
+           &lt;cons &lt;card ,S ,(- n 3)&gt;
+            &lt;cons &lt;card ,S ,(- n 4)&gt;
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;straight-flush&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          !&lt;cons &lt;card _ ,n&gt;
+            !&lt;cons &lt;card _ ,n&gt;
+              !&lt;cons _
+                !&lt;nil&gt;
+                &gt;&gt;&gt;&gt;&gt;
+        &lt;four-of-kind&gt;]
+       [&lt;cons &lt;card _ $m&gt;
+         &lt;cons &lt;card _ ,m&gt;
+          &lt;cons &lt;card _ ,m&gt;
+           &lt;cons &lt;card _ $n&gt;
+            !&lt;cons &lt;card _ ,n&gt;
+              !&lt;nil&gt;
+              &gt;&gt;&gt;&gt;&gt;
+        &lt;full-house&gt;]
+       [&lt;cons &lt;card $S _&gt;
+         !&lt;cons &lt;card ,S _&gt;
+           !&lt;cons &lt;card ,S _&gt;
+             !&lt;cons &lt;card ,S _&gt;
+               !&lt;cons &lt;card ,S _&gt;
+                 !&lt;nil&gt;
+                 &gt;&gt;&gt;&gt;&gt;
+        &lt;flush&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,(- n 1)&gt;
+          &lt;cons &lt;card _ ,(- n 2)&gt;
+           &lt;cons &lt;card _ ,(- n 3)&gt;
+            &lt;cons &lt;card _ ,(- n 4)&gt;
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;straight&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          &lt;cons &lt;card _ ,n&gt;
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;three-of-kind&gt;]
+       [&lt;cons &lt;card _ $m&gt;
+         &lt;cons &lt;card _ ,m&gt;
+          !&lt;cons &lt;card _ $n&gt;
+            &lt;cons &lt;card _ ,n&gt;
+             !&lt;cons _
+               !&lt;nil&gt;
+               &gt;&gt;&gt;&gt;&gt;
+        &lt;two-pair&gt;]
+       [&lt;cons &lt;card _ $n&gt;
+         &lt;cons &lt;card _ ,n&gt;
+          &lt;cons _
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;one-pair&gt;]
+       [&lt;cons _
+         &lt;cons _
+          &lt;cons _
+           &lt;cons _
+            &lt;cons _
+             !&lt;nil&gt;
+             &gt;&gt;&gt;&gt;&gt;
+        &lt;nothing&gt;]})))
+  </code>
+</pre>
+
+<p>
+  We can use <code>poker-hands</code> function as follow.<br/>
+</p>
+
+<pre>
+  <code>
+&gt; (test (poker-hands {&lt;card &lt;club&gt; 4&gt;
+                      &lt;card &lt;club&gt; 2&gt;
+                      &lt;card &lt;club&gt; 13&gt;
+                      &lt;card &lt;club&gt; 1&gt;
+                      &lt;card &lt;club&gt; 3&gt;}))
+&lt;straight-flush&gt;
+
+&gt; (test (poker-hands {&lt;card &lt;diamond&gt; 1&gt;
+                      &lt;card &lt;club&gt; 2&gt;
+                      &lt;card &lt;club&gt; 1&gt;
+                      &lt;card &lt;heart&gt; 1&gt;
+                      &lt;card &lt;diamond&gt; 2&gt;}))
+&lt;full-house&gt;
+
+&gt; (test (poker-hands {&lt;card &lt;diamond&gt; 4&gt;
+                      &lt;card &lt;club&gt; 2&gt;
+                      &lt;card &lt;club&gt; 5&gt;
+                      &lt;card &lt;heart&gt; 1&gt;
+                      &lt;card &lt;diamond&gt; 3&gt;}))
+&lt;straight&gt;
+  
+&gt; (test (poker-hands {&lt;card &lt;diamond&gt; 4&gt;
+                      &lt;card &lt;club&gt; 10&gt;
+                      &lt;card &lt;club&gt; 5&gt;
+                      &lt;card &lt;heart&gt; 1&gt;
+                      &lt;card &lt;diamond&gt; 3&gt;}))
+&lt;nothing&gt;
+
+  </code>
+</pre>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://egi.pira.jp">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+
