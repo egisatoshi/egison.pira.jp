@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Egisonにおける変数のスコープ</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9772679-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body>
+<h1>Egisonにおける変数のスコープ</h1>
+
+<p>
+Egisonの変数のスコープは、レキシカルスコープを採用しています。<br/>
+レキシカルスコープは静的スコープとも呼ばれていて、
+変数に束縛されている値がどこで束縛されたものか、構文構造を解析すれば決定できるようになっています。<br/>
+</p>
+
+<p>
+Egisonは非線形なパターンマッチを実現するために、パターンの部分について特殊なスコープを持っている以外は、
+</p>
+
+<hr/>
+
+<h2>パターンのスコープ</h2>
+
+<h3>シンプルなパターン</h3>
+
+<h3>パターンのモジュール化</h3>
+
+<p>
+以下は麻雀の上がり判定をするプログラムです。<br/>
+</p>
+
+<code>
+(define $shuntsu : (\ [(Pattern Hai) (Pattern (Collection Hai))] (Pattern (Collection Hai)))
+  (lambda [$pat1 $pat2]
+    &lt;cons (& pat1 &lt;num $s $n&gt;)
+     &lt;cons &lt;num ,s ,(+ n 1)&gt;
+      &lt;cons &lt;num ,s ,(+ n 2)&gt;
+       pat2&gt;&gt;&gt;))
+        
+(define $kohtsu : (\ [(Pattern Hai) (Pattern (Collection Hai))] (Pattern (Collection Hai)))
+  (lambda [$pat1 $pat2]
+    &lt;cons (& pat1 $h)
+     &lt;cons ,h
+      &lt;cons ,h
+       pat2&gt;&gt;&gt;))
+ 
+(define $twin : (\ [(Pattern Hai) (Pattern (Collection Hai))] (Pattern (Collection Hai)))
+  (lambda [$pat1 $pat2]
+    &lt;cons (& pat1 $h)
+     &lt;cons ,h
+      pat2&gt;&gt;))
+ 
+(define $agari? : (\ (Collection Hai) Bool)
+  (function (multiset hai)
+    {[(twin $th_1 (| (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (shuntsu $sh_4 &lt;nil&gt;))))
+                     (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (kohtsu $kh_1 &lt;nil&gt;))))
+                     (shuntsu $sh_1 (shuntsu $sh_2 (kohtsu $kh_1 (kohtsu $kh_2 &lt;nil&gt;))))
+                     (shuntsu $sh_1 (kohtsu $kh_1 (kohtsu $kh_2 (kohtsu $kh_3 &lt;nil&gt;))))
+                     (kohtsu $kh_1 (kohtsu $kh_2 (kohtsu $kh_3 (kohtsu $kh_4 &lt;nil&gt;))))
+                     (twin $th_2 (twin $th_3 (twin $th_4 (twin $th_5 (twin $th_6 (twin $th_7 &lt;nil&gt;))))))
+                     ))
+      #t]
+     [_
+      #f]}))
+</code>
+
+<hr/>
+<p>
+  [<a href="../index-j.html">Egison Top</a>]
+</p>
+
+</body>
+
+<footer>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=left>
+        <i>
+          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index-j.html">Satoshi Egi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
