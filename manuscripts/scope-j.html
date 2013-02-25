@@ -56,7 +56,7 @@ Egisonのパターンマッチの例をこれから多く見ていくと、非�
 以下は麻雀の上がり判定をするプログラムです。<br/>
 </p>
 
-<code>
+<pre><code>
 (define $shuntsu : (\ [(Pattern Hai) (Pattern (Collection Hai))] (Pattern (Collection Hai)))
   (lambda [$pat1 $pat2]
     &lt;cons (& pat1 &lt;num $s $n&gt;)
@@ -89,7 +89,7 @@ Egisonのパターンマッチの例をこれから多く見ていくと、非�
       #t]
      [_
       #f]}))
-</code>
+</code></pre>
 
 <p>
 </p>
