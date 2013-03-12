@@ -24,7 +24,84 @@
 Egison内部でどのような仕組みでパターンマッチが評価されるのか説明します。<br/>
 </p>
 
+<p>
+Egisonでは、パターンの静的スコープを実現するために、以下のような制約があります。<br/>
+</p>
+
+<ul>
+  <li>パターンを返す関数の引数は、全てパターンでなくてはならない</li>
+</ul>
+
+<p>
+パターン内に現れる関数適用はパターンをだいたい返します。<br/>
+ただ、その関数適用の式の関数部分の式が関数適用の式である場合は、パターンを引数にとりパターンを返す関数を返します。<br/>
+その関数適用はパターンを返す関数適用ではないので、その関数の引数にはパターン以外が現れても問題ありません。<br/>
+</p>
+
 <hr/>
+
+<h2>概念の説明</h2>
+
+<h3>Matching State</h3>
+
+<h3>Matching Tree</h3>
+
+<h3>Matching Atom</h3>
+
+<p>
+patternとtarget、matcherの組み合わせをmatching atomと呼びます。<br/>
+</p>
+
+<h3>Matching Node</h3>
+
+<h3>Meta Pattern Variable</h3>
+
+<hr/>
+
+<h2>パターンマッチの仕組みの詳細</h2>
+
+<h3>パターンがワイルドカードである場合</h3>
+
+<p>
+
+</p>
+
+
+<h3>パターンが関数適用である場合</h3>
+
+<p>
+Egisonではパターンに、パターンを引数に受けとてってパターンを返す関数の適用を書くことができます。<br/>
+</p>
+
+<pre><code>
+matching state: &lt;matching-atom match-result {[(pfn parg1 parg2) tgt matcher] @matoms}&gt;
+
+new matching state: &lt;matching-atom {} {[(pfn pvar1 pvar2) tgt matcher]}&gt;
+result of new matching state: {[pvar1 tgts1 matcher] [pvar2 tgts2 matcher]}
+
+next matching state: &lt;matching-atom match-result {[pvar1 tgt11 matcher1] [pvar2 tgt21 matcher2] @matoms}&gt;
+                     &lt;matching-atom match-result {[pvar1 tgt12 matcher1] [pvar2 tgt22 matcher2] @matoms}&gt;
+                     ...
+</code></pre>
+
+<p>
+新しいmatching stateを生成し、引数のパターンをメタパターン変数に置き換えて、パターンマッチを行います。<br/>
+</p>
+
+<p>
+メタパターン変数のパターンマッチにおいては、メタパターン変数とターゲットをマッチするところまで行い、matcherをsomethingまで落としません。<br/>
+</p>
+
+
+<h3>それ以外の場合</h3>
+
+<p>
+それ以外の場合はmatcherの定義に書かれている通りにパターンマッチが行われます。<br/>
+</p>
+
+
+<hr/>
+
 <p>
   [<a href="../index-j.html">Egison Top</a>]
 </p>
