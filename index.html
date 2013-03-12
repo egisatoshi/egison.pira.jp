@@ -25,10 +25,85 @@
 <h2 id="description">What is Egison?</h2>
 
 <p>
-  Egison is the pattern-matching-oriented pure functional programming language.<br/>
-  A feature of Egison is the strong pattern match facility.<br/>
-  With Egison, you can directly represent pattern matching for data types whose data have no normal forms,
-  such as set, multiset, and algebraic structures such as group, ring, field, and so on.
+  Egison is the
+  <ul>
+    <li>pattern-matching-oriented</li>
+    <li>pure functional</li>
+  </ul>
+  programming language.<br/>
+</p>
+
+<p>
+  A feature of Egison is the strong pattern matching facility.<br/>
+  With Egison, you can represent pattern matching for data types whose data have no normal forms,
+  such as set, multiset, and algebraic structures such as group, ring, field, and so on.<br/>
+</p>
+
+<p>
+  Egison will include
+  <ul>
+    <li>concurrent system as Erlang</li>
+    <li>static typing system as Haskell and OCaml</li>
+  </ul>
+  in the next version 4, now developing.<br/>
+</p>
+
+<hr/>
+
+<h2 id="pattern-matching">Pattern Matching</h2>
+
+<p>
+  A feature of Egison is the strong pattern matching facility.<br/>
+  Egison can pattern match with data types whose data have no normal forms (<i>unfree data types</i>).<br/>
+  Following features enable it.<br/>
+</p>
+
+<ul>
+  <li>Multiple pattern matching results</li>
+  <p>
+    Pattern matching has multiple results.<br/>
+    This feature is necessary to pattern match with unfree data types.<br/>
+    Because unfree data have many forms for same data, so there are multiple ways of destruction.<br/>
+  </p>
+
+  <li>Non-linear patterns</li>
+  <p>
+    Bindings in a pattern can be refer in the same pattern.<br/>
+    It is necessary to write useful patterns for pattern matching with multiple results.<br/>
+  </p>
+
+  <li>First class patterns</li>
+  <p>
+    We can write functions that receive patterns and return a pattern.<br/>
+    Useful patterns can be reused in many places in a program.<br/>
+  </p>
+</ul>
+
+<p>
+  Egioson's pattern matching will include following features.
+</p>
+
+<ul>
+  <li>Auto-parallelized pattern matching</li>
+  <p>
+    Parallelizable loops are expressed with pattern matching in Egison.<br/>
+    Pattern matching process inside Egison itself can be parallelized easily.<br/>
+  </p>
+</ul>
+
+<p>
+  Algorithms are expressed intuitively and will be auto-parallelized with Egison.<br/>
+</p>
+
+<hr/>
+
+<h2 id="manual">Manual</h2>
+
+<p>
+  <ul>
+    <li><a href="manual3/index.html">Egison Version 3 User Manual</a></li>
+    <li><a href="manual2/index.html">Egison Version 2 User Manual</a></li>
+  </ul>
 </p>
 
 <hr/>
@@ -42,14 +117,6 @@
     Twitter: <a href="http://twitter.com/Egison_Lang">@Egison_Lang</a>
   </li>
 
-</p>
-
-<hr/>
-
-<h2 id="manual">Manual</h2>
-
-<p>
-  <a href="manual2/index.html">Egison Version 2 User Manual</a>
 </p>
 
 <hr/>
