@@ -18,7 +18,7 @@
 </head>
 
 <body>
-<h1>Introduction</h1>
+<h1>Basics of Syntax and Semantics</h1>
 <hr/>
 <p>
   In this section, we run very simple Egison programs.<br/>
@@ -26,6 +26,8 @@
 <hr/>
 
 <h2>Top Expressions</h2>
+
+<h3>Define and Test Expressions</h3>
 
 <p>
   Give some input to Egison as below.<br/>
@@ -50,7 +52,7 @@ f
   A <code>test</code> expression evaluates the given expression.<br/>
 </p>
 
-<h2>Load Expressions</h2>
+<h3>Load Expressions</h3>
 
 <p>
   You can load Egison Libraries with <code>load</code> expressions.<br/>
@@ -67,11 +69,14 @@ f
   To load your own program, you can use <code>load-file</code> expressions.<br/>
   A <code>load-file</code> expression takes a full-path to the Egison program file.<br/>
 </p>
+
 <h2>Build-in Data</h2>
 
 <p>
   Characters, integers, and float numbers are implemented as build-in data in this language.<br/>
 </p>
+
+<h3>Characters</h3>
 
 <p>
   A character surrounded by single quote is a character literal.<br/>
@@ -86,6 +91,8 @@ f
   </code>
 </pre>
 
+<h3>Strings</h3>
+
 <p>
   A line of characters surrounded by double quote is a string literal.<br/>
   Strings are treated as lists of characters.<br/>
@@ -98,6 +105,8 @@ f
 ...
   </code>
 </pre>
+
+<h3>Integers</h3>
 
 <p>
   A string which consists from only numbers is a number literal.<br/>
@@ -112,8 +121,10 @@ f
   </code>
 </pre>
 
+<h3>Floats</h3>
+
 <p>
-  A string which consists of numbers and contains <code>.</code> between numbers is a float literal.<br/>
+  A string which consists of numbers and contains `<code>.</code>' between numbers is a float literal.<br/>
 </p>
 
 <pre>
@@ -124,6 +135,8 @@ f
 ...
   </code>
 </pre>
+
+<h2>Syntax of Egison</h2>
 
 </body>
 
