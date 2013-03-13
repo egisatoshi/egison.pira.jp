@@ -158,6 +158,14 @@
 
 </code></pre>
 
+<pre><code>
+&gt; (test (match-all {1 2 3 4 5 6 7} (multiset integer)
+          [(index-loop* $l $i (from 1) &lt;cons $a_i &lt;snoc $b_i l&gt; (| &lt;nil&gt; &lt;cons $c_1 &lt;nil&gt;&gt;))
+           [a_@ c_@ b_@])))
+
+
+</code></pre>
+
 <footer>
   <hr size=1 noshade>
   <table width=100% border=0 cellspacing=0>

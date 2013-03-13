@@ -73,36 +73,20 @@ f
 <h2>Build-in Data</h2>
 
 <p>
-  Characters, integers, and float numbers are implemented as build-in data in this language.<br/>
+  Booleans, integers, float numbers, and characters are implemented as build-in data in Egison.<br/>
 </p>
 
-<h3>Characters</h3>
+<h3>Booleans</h3>
 
 <p>
-  A character surrounded by single quote is a character literal.<br/>
+  `<code>#t</code>' represents true.<br/>
+  `<code>#f</code>' represents false.<br/>
 </p>
 
 <pre>
   <code>
-'a'
-'b'
-'c'
-...
-  </code>
-</pre>
-
-<h3>Strings</h3>
-
-<p>
-  A line of characters surrounded by double quote is a string literal.<br/>
-  Strings are treated as lists of characters.<br/>
-</p>
-
-<pre>
-  <code>
-"abc"
-"cde\n"
-...
+#t
+#f
   </code>
 </pre>
 
@@ -136,7 +120,75 @@ f
   </code>
 </pre>
 
+<h3>Characters</h3>
+
+<p>
+  A character surrounded by single quote is a character literal.<br/>
+</p>
+
+<pre>
+  <code>
+'a'
+'b'
+'c'
+...
+  </code>
+</pre>
+
+<h3>Strings</h3>
+
+<p>
+  A line of characters surrounded by double quote is a string literal.<br/>
+  Strings are treated as lists of characters.<br/>
+</p>
+
+<pre>
+  <code>
+"abc"
+"cde\n"
+...
+  </code>
+</pre>
+
 <h2>Syntax of Egison</h2>
+
+<h3>Inductive Data</h3>
+
+<h3>Tuples (Multiple Values)</h3>
+
+<h3>Collections</h3>
+
+<h3><code>lambda</code> expressions</h3>
+
+<h3><code>let</code> expressions</h3>
+
+<h3><code>letrec</code> expressions</h3>
+
+<h3><code>if</code> expressions</h3>
+
+<h3><code>match</code> expressions</h3>
+
+<h3><code>match-all</code> expressions</h3>
+
+<h3><code>matcher</code> expressions</h3>
+
+<h3><code>function</code> expressions</h3>
+
+<h3><code>apply</code> expressions</h3>
+
+<h3>Patterns</h3>
+
+<h4>Pattern Variables</h4>
+
+<h4>Value Patterns</h4>
+
+<h4>Cut Patterns</h4>
+
+<h4>Not Patterns</h4>
+
+<h4>And Patterns</h4>
+
+<h4>Or Patterns</h4>
 
 </body>
 
