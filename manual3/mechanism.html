@@ -71,6 +71,7 @@
   `<code>p</code>' represents pattern.<br/>
   `<code>t</code>' represents target.<br/>
   `<code>m</code>' represents matcher.<br/>
+  `<code>env</code>' is the environment when the evalation process enters the `<code>match-all</code>' expression.<br/>
 </p>
 
 <pre><code>
@@ -235,19 +236,6 @@ MState [stack : {[p : ,m
 MState [stack : {[p : _
                   t : {8 7 7}
                   m : (multiset integer)]}]
-       [env : env]
-       [result : {[m 2]}]
-</code></pre>
-
-<p>
-  This matching state is reduced as follow.<br/>
-  The matcher of the matching atom is changed to `<code>something</code>' from `<code>integer</code>'.<br/>
-</p>
-
-<pre><code>
-MState [stack : {[p : _
-                  t : {8 7 7}
-                  m : something]}]
        [env : env]
        [result : {[m 2]}]
 </code></pre>
@@ -560,7 +548,7 @@ MState [stack : {(MNode [stack : [p : &lt;cons ,pat pat2&gt;
 <h2>Parallelize Egison Pattern Matching</h2>
 
 <p>
-  Each matching state have no dependency, so the order of reduction between matching states has no restriction.<br/>
+  Each matching state has no dependency, so the order of reduction between matching states has no restriction.<br/>
   Therefore, we can parallelize reduction of matching states.<br/>
 </p>
 
