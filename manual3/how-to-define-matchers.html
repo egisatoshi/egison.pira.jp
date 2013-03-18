@@ -8,14 +8,14 @@
 <h1>How to Define Matchers</h1>
 <hr/>
 <p>
-  We need to define how to do pattern matching for data of each matcher, to evaluate pattern matching expressions explained in the previous section.<br/>
+  We need to define how to do pattern matching for data of each data type, to evaluate pattern matching expressions explained in the previous section.<br/>
   In this section, I explain how to define matchers, and how pattern matching is executed.<br/>
 </p>
 <hr/>
 
 <h2>Definitions for Collection Data Matchers</h2>
 
-In this section, I explain the matcher definitions of lists, multisets, and sets.
+In this section, I'll explain matcher definitions of lists, multisets, and sets.
 
 <pre>
 <code>
@@ -24,38 +24,38 @@ In this section, I explain the matcher definitions of lists, multisets, and sets
     (matcher
       {[,$val []
         {[$tgt (match [val tgt] [(list a) (list a)]
-                 {[[<nil> <nil>] {[]}]
-                  [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+                 {[[&lt;nil&gt; &lt;nil&gt;] {[]}]
+                  [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] {[]}]
                   [[_ _] {}]})]}]
-       [<nil> []
+       [&lt;nil&gt; []
         {[{} {[]}]
          [_ {}]}]
-       [<cons $ $> [a (list a)]
+       [&lt;cons $ $&gt; [a (list a)]
         {[{$x @$xs} {[x xs]}]
          [_ {}]}]
-       [<snoc $ $> [a (list a)]
+       [&lt;snoc $ $&gt; [a (list a)]
         {[{@$xs $x} {[x xs]}]
          [_ {}]}]
-       [<join ,$pxs $> [(list a)]
+       [&lt;join ,$pxs $&gt; [(list a)]
         {[$tgt (letrec {[$helper (lambda [$pxs $tgt]
                                    (match [pxs tgt] [(list a) (list a)]
-                                     {[[<nil> _] {tgt}]
-                                      [[<cons $x $xs> <cons ,x $ys>] (helper xs ys)]
+                                     {[[&lt;nil&gt; _] {tgt}]
+                                      [[&lt;cons $x $xs&gt; &lt;cons ,x $ys&gt;] (helper xs ys)]
                                       [[_ _] {}]}))]}
                  (helper pxs tgt))]}]
-       [<join $ $> [(list a) (list a)]
+       [&lt;join $ $&gt; [(list a) (list a)]
         {[$tgt (letrec {[$helper (lambda [$xs $ys]
                                    (match ys (list a)
-                                     {[<nil> {[xs {}]}]
-                                      [<cons $z $zs> {[xs ys] @(helper {@xs z} zs)}]}))]}
+                                     {[&lt;nil&gt; {[xs {}]}]
+                                      [&lt;cons $z $zs&gt; {[xs ys] @(helper {@xs z} zs)}]}))]}
                  (helper {} tgt))]}]
-       [<nioj ,$pxs $> [(list a)]
-        {[$tgt (match-all tgt (list a) [<join $ys ,pxs> ys])]}]
-       [<nioj $ $> [(list a) (list a)]
+       [&lt;nioj ,$pxs $&gt; [(list a)]
+        {[$tgt (match-all tgt (list a) [&lt;join $ys ,pxs&gt; ys])]}]
+       [&lt;nioj $ $&gt; [(list a) (list a)]
         {[$tgt (letrec {[$helper (lambda [$xs $ys]
                                    (match ys (list a)
-                                     {[<nil> {[{} xs]}]
-                                      [<cons $z $zs> {[ys xs] @(helper {@xs z} zs)}]}))]}
+                                     {[&lt;nil&gt; {[{} xs]}]
+                                      [&lt;cons $z $zs&gt; {[ys xs] @(helper {@xs z} zs)}]}))]}
                  (helper {} tgt))]}]
        [$ [something]
         {[$tgt {tgt}]}]
@@ -64,52 +64,49 @@ In this section, I explain the matcher definitions of lists, multisets, and sets
 </pre>
 
 <p>
-  <code>list</code> is defined as a function that get a matcher and returns a matcher for lists of that matcher.<br/>
-  For example, <code>(list integer)</code> means a list of integer, and <code>(list (list integer))</code> means a list of lists of integers.<br/>
+  <code>list</code> is defined as a function that gets a matcher and returns a matcher.<br/>
+  The argument matcher is the matcher for elements of lists.<br/>
+  Therefore, <code>(list integer)</code> means a matcher of a list of integers, and <code>(list (list integer))</code> means a matcher of a list of lists of integers.<br/>
 </p>
 
 <p>
-  A <code>matcher</code> expression is used to define a matcher.<br/>
+  A <code>matcher</code> expression defines a matcher.<br/>
   The pattern matching process of Egison is recursively defined.<br/>
-  The input of the pattern matching process are a pattern, a target, and a matcher, and the pattern matching process decompose the input pattern and the input target as the programmer defined in matcher definition.<br/>
-  The decomposed patterns and target data are passed to next pattern matching process with the matchers that is specified in the matcher definition too.<br/>
+  The input of the pattern matching process are a pattern, a target, and a matcher, and the pattern matching process decompose the input pattern and target according to the matcher definition.<br/>
+  The decomposed patterns and targets are passed to next pattern matching process with the matchers that is specified in the matcher definition.<br/>
+  A <code>matcher</code> expression defines the way of destruction of each one step in whole recursive destruction.<br/>
+  You can see pattern matching process samples in <a href="./mechanism.html">next section</a>.<br/>
 </p>
 
 <p>
-  <code>something</code> is the only built-in matcher in Egison.<br/>
-  Pattern matching process terminates when its input matcher come to <code>something</code>.<br/>
-  <code>something</code> can get only a pattern variable for its pattern,
-  and bind the target data withount any transformations to the pattern variable.</code>
-</p>
-
-<p>
-  A <code>matcher</code> expression is constituted of a collection of <i>matcher clauses</i>, a tuple of a <i>primitive-pattern-pattern</i>, a <i>next-matcher-expression</i> and a collection of <i>primitive-match-clauses</i>.<br/>
+  A <code>matcher</code> expression is constituted of a collection of <i>primitive-pattern-clauses</i>.<br/>
+  A primitive-pattern-clause is a tuple of a <i>primitive-pattern-pattern</i>, a <i>next-matcher-expression</i> and a collection of <i>primitive-data-clauses</i>.<br/>
 </p>
 
 <p>
   A <i>primitive-pattern-pattern</i> is a pattern for patterns.<br/>
-  The pattern is pattern matched with the primitive-pattern-patterns from the head of the matcher clauses.<br/>
+  The pattern is pattern matched with the primitive-pattern-patterns from the head of the primitive-pattern-clauses.<br/>
   If one of the primitive-pattern-pattern is matched with the pattern, 
-  the <i>primitive-match-clauses</i> of that matcher clause are used to get the targets and the matchers for next pattern matching.<br/>
+  the primitive-pattern-clauses of that primitive-pattern-pattern is used to get the targets and the matchers for next pattern matching.<br/>
 </p>
 
 <pre>
 <code>
-&lt;primitive-pp&gt; ::= `&lt;' cons-name &lt;primitive-pp&gt;* `&gt;'
-                 | `,$' var-name (value-pat pattern)
-                 | `_'           (wild card)
+&lt;primitive-pp&gt; ::= `$'                                (primitive pattern variable)
+                 | `,$' var-name                      (value-pat pattern)
+                 |  `&lt;' cons-name &lt;primitive-pp&gt;* `&gt;' (primitive inductive pattern)
 </code>
 </pre>
 
 <p>
   Here is syntax of <i>primitive-pattern-patterns</i>.<br/>
-  A primitive-pattern-pattern is an inductive data whose element is a wildcard or a value-pattern pattern.<br/>
-  A primitive-pattern-pattern which is enclosed with `<code>&lt;</code>' and `<code>&gt;</code>' matches with the inductive pattern whose constructor name is same.<br/>
+  A primitive-pattern-pattern is an inductive data whose element is a `<code>$</code>' or a value-pattern pattern.<br/>
+  A primitive-pattern-pattern which is enclosed with `<code>&lt;</code>' and `<code>&gt;</code>' matches with the inductive pattern whose pattern constructor is same.<br/>
 </p>
 
 <p>
   An value-pattern-pattern is matched with the value pattern and bind its value to <code>var-name</code>.<br/>
-  These bindings are used in the evaluation of the primitive-match-clause.<br/>
+  These bindings are used in the evaluation of the primitive-data-clause.<br/>
 </p>
 
 <p>
@@ -117,7 +114,7 @@ In this section, I explain the matcher definitions of lists, multisets, and sets
 </p>
 
 <p>
-  A primitive-match-clause is constituted of <i>primitive-data-pattern</i> and a body expression which is evaluated to next pattern matching targets.<br/>
+  A primitive-data-clause is constituted of <i>primitive-data-pattern</i> and a body expression which is evaluated to next pattern matching targets.<br/>
   The way of Pattern matching of primitive-data-pattern is same with the ordinary pattern matching.<br/>
   It has only one result, and not allow repeated pattern variables.<br/>
   Here is syntax of primitive data patterns.<br/>
@@ -183,7 +180,7 @@ and the target is <code>{1 2 3}</code>.<br/>
 
 <p>
   The both argument pattern constructor <code>join</code> is not a value pattern.<br/>
-  So, the primitive-pattern-pattern of sixth matcher clause <code>&lt;join _ _&gt;</code> is matched with the input pattern.<br/>
+  So, the primitive-pattern-pattern of sixth primitive-pattern-clause <code>&lt;join _ _&gt;</code> is matched with the input pattern.<br/>
   First `<code>_</code>' of the primitive-pattern-pattern is matched with <code>$xs</code>,
   and second `<code>_</code>' of the primitive-pattern-pattern is matched with <code>&lt;cons _ $ys&gt;</code>.<br/>
   Therefore <code>$xs</code> and <code>&lt;cons _ $xs&gt;</code> are passed to next pattern matching process as next patterns.<br/>
@@ -198,9 +195,9 @@ and the target is <code>{1 2 3}</code>.<br/>
 <p>
   The primitive-match-cluases return a collection of next matchers.<br/>
   The primitive-match-cluases of this matcher-caluse has only one prmitive-match-cluase.<br/>
-  The primitive-data-pattern of this primitive-match-clause is <code>$tgt</code>,
+  The primitive-data-pattern of this primitive-data-clause is <code>$tgt</code>,
   and it is matched with and bound to the target data <code>{1 2 3}</code>.<br/>
-  The body of primitive-match-clause is evaluated and it returns
+  The body of primitive-data-clause is evaluated and it returns
   <code>{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}</code>.<br/>
   All elements of this collection are passed to next pattern mathing as next targets.<br/>
   There are multiple ways to destruct the collection with <code>join</code> pattern constructor.<br/>
@@ -228,48 +225,42 @@ and the target is <code>{1 2 3}</code>.<br/>
     (matcher
       {[,$val []
         {[$tgt (match [val tgt] [(list a) (multiset a)]
-                 {[[<nil> <nil>] {[]}]
-                  [[<cons $x $xs> <cons ,x ,xs>] {[]}]
+                 {[[&lt;nil&gt; &lt;nil&gt;] {[]}]
+                  [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] {[]}]
                   [[_ _] {}]})]}]
-       [<nil> []
+       [&lt;nil&gt; []
         {[{} {[]}]
          [_ {}]}]
-       [<cons ,$px $> [(multiset a)]
-        {[$tgt (if (member? px tgt)
-                   {(remove tgt px)}
-                   {})]}]
-       [<cons $ $> [a (multiset a)]
-        {[$tgt (letrec {[$helper (lambda [$xs $ys]
-                                   (match ys (list a)
-                                     {[<nil> {}]
-                                      [<cons $z $zs> (if (member? z xs)
-                                                         (helper {@xs z} zs)
-                                                         {[z {@xs @zs}] @(helper {@xs z} zs)})]}))]}
-                 (helper {} tgt))]}]
-       [<join ,$pxs _> [(multiset a)]
-        {[$tgt (letrec {[$helper (lambda [$xs $ys]
-                                   (match xs (list something)
-                                     {[<nil> ys]
-                                      [<cons $z $zs> (if (member? z ys)
-                                                         (helper zs (remove ys z))
-                                                         {})]}))]}
-                 {(helper pxs tgt)})]}]
-       [<join $ $> [(multiset a) (multiset a)]
-        {[$tgt
-          (foldr
-                 (lambda [$xi $xs]
-                   (let {[[$x $i] xi]}
-                     (map-and-concat
-                                     (lambda [$sub] 
-                                       (do {[[$ys $zs] sub]
-                                            [$zs ((remove-all a) zs x)]}
-                                         (match-all (loop $l $j (between 1 i) {x @l} {}) (list a) [<join $us $vs> [{@us @ys} {@zs @vs}]])))
-                                     xs)))
-                 {[{} tgt]}
-                 ((occurrence a) tgt))]}]
-       [_ [something]
+       [&lt;cons ,$px $&gt; [(multiset a)]
+        {[$tgt (match tgt (list a)
+                 {[&lt;join $hs &lt;cons ,px $ts&gt;&gt; {{@hs @ts}}]
+                  [_ {}]})]}]
+       [&lt;cons $ $&gt; [a (multiset a)]
+        {[$tgt (match-all tgt (list a)
+                 [&lt;join $hs &lt;cons $x $ts&gt;&gt; [x {@hs @ts}]])]}]
+       [&lt;join ,$pxs $&gt; [(multiset a)]
+        {[$tgt undefined]}]
+       [$ [something]
         {[$tgt {tgt}]}]
        })))
+
+(define $set
+  (lambda [$a]
+    (matcher
+      {[&lt;nil&gt; []
+        {[{} {[]}]
+         [_ {}]}]
+       [&lt;cons ,$px $&gt; [(set a)]
+        {[$tgt (match tgt (list a)
+                 {[&lt;join _ &lt;cons ,px _&gt;&gt; {tgt}]
+                  [_ {}]})]}]
+       [&lt;cons $ $&gt; [a (set a)]
+        {[$tgt (match-all tgt (list a)
+                 [&lt;join _ &lt;cons $x _&gt;&gt; [x tgt]])]}]
+       [$ [something]
+        {[$tgt {tgt}]}]
+       })))
+
 </code>
 </pre>
 
