@@ -27,8 +27,8 @@
 </p>
 
 <p>
-  First, we define the <code>card</code> type.<br/>
-  To define it, we define the <code>suit</code> type, and the <code>mod</code>.<br/>
+  First, we define the <code>card</code> matcher.<br/>
+  To define it, we define the <code>suit</code> matcher, and the <code>mod</code>.<br/>
 </p>
 
 <p>
@@ -39,31 +39,36 @@
   <code>
 (define $suit
   (matcher
-    {[,$suit []
-      {[$tgt (if (eq? tgt suit)
-                 {[]}
-                 {})]}]
+    {[,$val []
+      {[$tgt (match [val tgt] [suit suit]
+               {[[&lt;spade&gt; &lt;spade&gt;] {[]}]
+                [[&lt;heart&gt; &lt;heart&gt;] {[]}]
+                [[&lt;club&gt; &lt;club&gt;] {[]}]
+                [[&lt;diamond&gt; &lt;diamond&gt;] {[]}]
+                [[_ _] {}]})]}]
      [&lt;spade&gt; []
-      {[&lt;spade&gt; {[]}]
+      {[&lt;Spade&gt; {[]}]
        [_ {}]}]
      [&lt;heart&gt; []
-      {[&lt;heart&gt; {[]}]
+      {[&lt;Heart&gt; {[]}]
        [_ {}]}]
      [&lt;club&gt; []
-      {[&lt;club&gt; {[]}]
+      {[&lt;Club&gt; {[]}]
        [_ {}]}]
      [&lt;diamond&gt; []
-      {[&lt;diamond&gt; {[]}]
+      {[&lt;Diamond&gt; {[]}]
        [_ {}]}]
      [$ [something]
       {[$tgt {tgt}]}]
      }))
   </code>
 </pre>
-  The definition of the <code>mod</code> is as below.<br/>
-<p>
 
+<p>
+  The definition of the <code>mod</code> is as below.<br/>
+  This is included in "<code>lib/core/number.egi</code>".<br/>
 </p>
+
 <pre>
   <code>
 (define $mod
@@ -80,7 +85,7 @@
 </pre>
 
 <p>
-  The <code>card</code> type is defined using those two types defined above.<br/>
+  The <code>card</code> matcher is defined using those two types defined above.<br/>
 </p>
 
 <pre>
@@ -91,8 +96,8 @@
       {[$tgt (match [val tgt] [card card]
                {[[&lt;card $s $n&gt; &lt;card ,s ,n&gt;] {[]}]
                 [[_ _] {}]})]}]
-     [&lt;card $ $&gt; [suit (mod 13)]
-      {[&lt;card $s $n&gt; {[s n]}]}]
+     [&lt;card $ $&gt; [suit integer]
+      {[&lt;Card $s $n&gt; {[s n]}]}]
      [$ [something]
       {[$tgt {tgt}]}]
      }))
@@ -100,77 +105,77 @@
 </pre>
 
 <p>
-  If we defined the <code>card</code> type as abobe, we can define a function that determine poker hands as following.<br/>
+  If we defined the <code>card</code> matcher as abobe, we can define a function that determine poker hands as following.<br/>
 </p>
 
 <pre>
   <code>
 (define $poker-hands
-  (lambda [$Cs]
-    (match Cs (Multiset card)
-      {[&lt;cons &lt;card $S $n&gt;
-         &lt;cons &lt;card ,S ,(- n 1)&gt;
-          &lt;cons &lt;card ,S ,(- n 2)&gt;
-           &lt;cons &lt;card ,S ,(- n 3)&gt;
-            &lt;cons &lt;card ,S ,(- n 4)&gt;
-             !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;straight-flush&gt;]
+  (lambda [$cs]
+    (match cs (multiset card)
+      {[&lt;cons &lt;card $s $n&gt;
+         &lt;cons &lt;card ,s ,(- n 1)&gt;
+          &lt;cons &lt;card ,s ,(- n 2)&gt;
+           &lt;cons &lt;card ,s ,(- n 3)&gt;
+            &lt;cons &lt;card ,s ,(- n 4)&gt;
+             &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Straight-Flush&gt;]
        [&lt;cons &lt;card _ $n&gt;
          &lt;cons &lt;card _ ,n&gt;
-          !&lt;cons &lt;card _ ,n&gt;
-            !&lt;cons &lt;card _ ,n&gt;
-              !&lt;cons _
-                !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;four-of-kind&gt;]
+          &lt;cons &lt;card _ ,n&gt;
+            &lt;cons &lt;card _ ,n&gt;
+              &lt;cons _
+                &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Four-of-Kind&gt;]
        [&lt;cons &lt;card _ $m&gt;
          &lt;cons &lt;card _ ,m&gt;
           &lt;cons &lt;card _ ,m&gt;
            &lt;cons &lt;card _ $n&gt;
-            !&lt;cons &lt;card _ ,n&gt;
-              !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;full-house&gt;]
-       [&lt;cons &lt;card $S _&gt;
-         !&lt;cons &lt;card ,S _&gt;
-           !&lt;cons &lt;card ,S _&gt;
-             !&lt;cons &lt;card ,S _&gt;
-               !&lt;cons &lt;card ,S _&gt;
-                 !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;flush&gt;]
+            &lt;cons &lt;card _ ,n&gt;
+              &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Full-House&gt;]
+       [&lt;cons &lt;card $s _&gt;
+         &lt;cons &lt;card ,s _&gt;
+           &lt;cons &lt;card ,s _&gt;
+             &lt;cons &lt;card ,s _&gt;
+               &lt;cons &lt;card ,s _&gt;
+                 &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Flush&gt;]
        [&lt;cons &lt;card _ $n&gt;
          &lt;cons &lt;card _ ,(- n 1)&gt;
           &lt;cons &lt;card _ ,(- n 2)&gt;
            &lt;cons &lt;card _ ,(- n 3)&gt;
             &lt;cons &lt;card _ ,(- n 4)&gt;
-             !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;straight&gt;]
+             &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Straight&gt;]
        [&lt;cons &lt;card _ $n&gt;
          &lt;cons &lt;card _ ,n&gt;
           &lt;cons &lt;card _ ,n&gt;
            &lt;cons _
             &lt;cons _
-             !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;three-of-kind&gt;]
+             &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Three-of-Kind&gt;]
        [&lt;cons &lt;card _ $m&gt;
          &lt;cons &lt;card _ ,m&gt;
-          !&lt;cons &lt;card _ $n&gt;
+          &lt;cons &lt;card _ $n&gt;
             &lt;cons &lt;card _ ,n&gt;
-             !&lt;cons _
-               !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;two-pair&gt;]
+             &lt;cons _
+               &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Two-Pair&gt;]
        [&lt;cons &lt;card _ $n&gt;
          &lt;cons &lt;card _ ,n&gt;
           &lt;cons _
            &lt;cons _
             &lt;cons _
-             !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;one-pair&gt;]
+             &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;One-Pair&gt;]
        [&lt;cons _
          &lt;cons _
           &lt;cons _
            &lt;cons _
             &lt;cons _
-             !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-        &lt;nothing&gt;]})))
+             &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
+        &lt;Nothing&gt;]})))
   </code>
 </pre>
 
@@ -180,34 +185,36 @@
 
 <pre>
   <code>
-&gt; (test (poker-hands {&lt;card &lt;club&gt; 4&gt;
-                      &lt;card &lt;club&gt; 2&gt;
-                      &lt;card &lt;club&gt; 13&gt;
-                      &lt;card &lt;club&gt; 1&gt;
-                      &lt;card &lt;club&gt; 3&gt;}))
-&lt;straight-flush&gt;
-
-&gt; (test (poker-hands {&lt;card &lt;diamond&gt; 1&gt;
-                      &lt;card &lt;club&gt; 2&gt;
-                      &lt;card &lt;club&gt; 1&gt;
-                      &lt;card &lt;heart&gt; 1&gt;
-                      &lt;card &lt;diamond&gt; 2&gt;}))
-&lt;full-house&gt;
-
-&gt; (test (poker-hands {&lt;card &lt;diamond&gt; 4&gt;
-                      &lt;card &lt;club&gt; 2&gt;
-                      &lt;card &lt;club&gt; 5&gt;
-                      &lt;card &lt;heart&gt; 1&gt;
-                      &lt;card &lt;diamond&gt; 3&gt;}))
-&lt;straight&gt;
-  
-&gt; (test (poker-hands {&lt;card &lt;diamond&gt; 4&gt;
-                      &lt;card &lt;club&gt; 10&gt;
-                      &lt;card &lt;club&gt; 5&gt;
-                      &lt;card &lt;heart&gt; 1&gt;
-                      &lt;card &lt;diamond&gt; 3&gt;}))
-&lt;nothing&gt;
-
+&gt; (test (poker-hands {&lt;Card &lt;Heart&gt; 1&gt;
+                      &lt;Card &lt;Heart&gt; 2&gt;
+                      &lt;Card &lt;Heart&gt; 3&gt;
+                      &lt;Card &lt;Heart&gt; 4&gt;
+                      &lt;Card &lt;Heart&gt; 5&gt;}))
+&lt;Straight-Flush&gt;
+&gt; (test (poker-hands {&lt;Card &lt;Club&gt; 4&gt;
+                      &lt;Card &lt;Club&gt; 2&gt;
+                      &lt;Card &lt;Club&gt; 13&gt;
+                      &lt;Card &lt;Club&gt; 1&gt;
+                      &lt;Card &lt;Club&gt; 3&gt;}))
+&lt;Flush&gt;
+&gt; (test (poker-hands {&lt;Card &lt;Diamond&gt; 1&gt;
+                      &lt;Card &lt;Club&gt; 2&gt;
+                      &lt;Card &lt;Club&gt; 1&gt;
+                      &lt;Card &lt;Heart&gt; 1&gt;
+                      &lt;Card &lt;Diamond&gt; 2&gt;}))
+&lt;Full-House&gt;
+&gt; (test (poker-hands {&lt;Card &lt;Diamond&gt; 4&gt;
+                      &lt;Card &lt;Club&gt; 2&gt;
+                      &lt;Card &lt;Club&gt; 5&gt;
+                      &lt;Card &lt;Heart&gt; 1&gt;
+                      &lt;Card &lt;Diamond&gt; 3&gt;}))
+&lt;Straight&gt;
+&gt; (test (poker-hands {&lt;Card &lt;Diamond&gt; 4&gt;
+                      &lt;Card &lt;Club&gt; 10&gt;
+                      &lt;Card &lt;Club&gt; 5&gt;
+                      &lt;Card &lt;Heart&gt; 1&gt;
+                      &lt;Card &lt;Diamond&gt; 3&gt;}))
+&lt;Nothing&gt;
   </code>
 </pre>
 

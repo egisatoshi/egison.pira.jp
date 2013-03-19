@@ -1,0 +1,196 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Programming Language Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9772679-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body>
+<h1>Example 4. Mahjong Hands</h1>
+<hr/>
+<p>
+  In this section, we will describe the program that determine the mahjong hands.<br/>
+  We do pattern matching collections of hais as a multiset of cards.<br/>
+  The program we describe in this section can are in <code>sample/mahjong.egi</code>.<br/>
+</p>
+
+<p>
+  First, we define matchers for mahjong.<br/>
+</p>
+
+<pre>
+  <code>
+(define $suit
+  (matcher
+    {[,$val []
+      {[$tgt (match [val tgt] [suit suit]
+               {[[&lt;wan&gt; &lt;wan&gt;] {[]}]
+                [[&lt;pin&gt; &lt;pin&gt;] {[]}]
+                [[&lt;sou&gt; &lt;sou&gt;] {[]}]
+                [_ {}]})]}]
+     [&lt;wan&gt; []
+      {[&lt;Wan&gt; {[]}]
+       [_ {}]}]
+     [&lt;pin&gt; []
+      {[&lt;Pin&gt; {[]}]
+       [_ {}]}]
+     [&lt;sou&gt; []
+      {[&lt;Sou&gt; {[]}]
+       [_ {}]}]
+     [$ [something]
+      {[$tgt {tgt}]}]
+     }))
+
+(define $honor
+  (matcher
+    {[,$val []
+      {[$tgt (match [val tgt] [honor honor]
+               {[[&lt;ton&gt; &lt;ton&gt;] {[]}]
+                [[&lt;nan&gt; &lt;nan&gt;] {[]}]
+                [[&lt;sha&gt; &lt;sha&gt;] {[]}]
+                [[&lt;pe&gt; &lt;pe&gt;] {[]}]
+                [[&lt;haku&gt; &lt;haku&gt;] {[]}]
+                [[&lt;hatsu&gt; &lt;hatsu&gt;] {[]}]
+                [[&lt;chun&gt; &lt;chun&gt;] {[]}]
+                [_ {}]})]}]
+     [&lt;ton&gt; []
+      {[&lt;Ton&gt; {[]}]
+       [_ {}]}]
+     [&lt;nan&gt; []
+      {[&lt;Nan&gt; {[]}]
+       [_ {}]}]
+     [&lt;sha&gt; []
+      {[&lt;Sha&gt; {[]}]
+       [_ {}]}]
+     [&lt;pe&gt; []
+      {[&lt;Pe&gt; {[]}]
+       [_ {}]}]
+     [&lt;haku&gt; []
+      {[&lt;Haku&gt; {[]}]
+       [_ {}]}]
+     [&lt;hatsu&gt; []
+      {[&lt;Hatsu&gt; {[]}]
+       [_ {}]}]
+     [&lt;chun&gt; []
+      {[&lt;Chun&gt; {[]}]
+       [_ {}]}]
+     [$ [something]
+      {[$tgt {tgt}]}]
+     }))
+
+(define $hai
+  (matcher
+    {[,$val []
+      {[$tgt (match [val tgt] [hai hai]
+               {[[&lt;num $s $n&gt; &lt;num ,s ,n&gt;] {[]}]
+                [[&lt;ji $h&gt; &lt;ji ,h&gt;] {[]}]
+                [[_ _] {}]})]}]
+     [&lt;num $ $&gt; [suit integer]
+      {[&lt;Num $s $n&gt; {[s n]}]
+       [_ {}]}]
+     [&lt;ji $&gt; [honor]
+      {[&lt;Ji $h&gt; {h}]
+       [_ {}]}]
+     [$ [something]
+      {[$tgt {tgt}]}]
+     }))
+  </code>
+</pre>
+
+<p>
+  Here are pattern constructors useful to match with mahjong hands.
+</p>
+
+<pre>
+  <code>
+(define $shuntsu
+  (pattern-constructor [$pat1 $pat2]
+    &lt;cons (& &lt;num $s $n&gt; pat1)
+     &lt;cons &lt;num ,s ,(+ n 1)&gt;
+      &lt;cons &lt;num ,s ,(+ n 2)&gt;
+       pat2&gt;&gt;&gt;))
+
+(define $kohtsu
+  (pattern-constructor [$pat1 $pat2]
+    &lt;cons (& $pat pat1)
+     &lt;cons ,pat
+      &lt;cons ,pat
+       pat2&gt;&gt;&gt;))
+
+(define $twin
+  (pattern-constructor [$pat1 $pat2]
+    &lt;cons (& $pat pat1)
+     &lt;cons ,pat
+      pat2&gt;&gt;))
+  </code>
+</pre>
+
+<p>
+  
+</p>
+
+<pre>
+  <code>
+(define $agari?
+  (function (multiset hai)
+    {[(twin $th_1 (| (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (shuntsu $sh_4 &lt;nil&gt;))))
+                     (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (kohtsu $kh_1 &lt;nil&gt;))))
+                     (shuntsu $sh_1 (shuntsu $sh_2 (kohtsu $kh_1 (kohtsu $kh_2 &lt;nil&gt;))))
+                     (shuntsu $sh_1 (kohtsu $kh_1 (kohtsu $kh_2 (kohtsu $kh_3 &lt;nil&gt;))))
+                     (kohtsu $kh_1 (kohtsu $kh_2 (kohtsu $kh_3 (kohtsu $kh_4 &lt;nil&gt;))))
+                     (twin $th_2 (twin $th_3 (twin $th_4 (twin $th_5 (twin $th_6 (twin $th_7 &lt;nil&gt;))))))
+                     ))
+      #t]
+     [_
+      #f]}))
+  </code>
+</pre>
+
+<p>
+  We can use <code>agari?</code> function as follow.<br/>
+</p>
+
+<pre>
+  <code>
+(test (agari? {&lt;Ji &lt;Haku&gt;&gt; &lt;Ji &lt;Haku&gt;&gt;
+               &lt;Num &lt;Wan&gt; 3&gt; &lt;Num &lt;Wan&gt; 4&gt; &lt;Num &lt;Wan&gt; 5&gt;
+               &lt;Num &lt;Wan&gt; 6&gt; &lt;Num &lt;Wan&gt; 7&gt; &lt;Num &lt;Wan&gt; 8&gt;
+               &lt;Num &lt;Pin&gt; 2&gt; &lt;Num &lt;Pin&gt; 3&gt; &lt;Num &lt;Pin&gt; 4&gt;
+               &lt;Num &lt;Sou&gt; 6&gt; &lt;Num &lt;Sou&gt; 6&gt; &lt;Num &lt;Sou&gt; 6&gt;}))
+
+(test (agari? {&lt;Ji &lt;Haku&gt;&gt; &lt;Ji &lt;Haku&gt;&gt;
+               &lt;Num &lt;Wan&gt; 6&gt; &lt;Num &lt;Wan&gt; 7&gt; &lt;Num &lt;Wan&gt; 8&gt;
+               &lt;Num &lt;Wan&gt; 3&gt; &lt;Num &lt;Wan&gt; 4&gt; &lt;Num &lt;Wan&gt; 5&gt;
+               &lt;Num &lt;Pin&gt; 1&gt; &lt;Num &lt;Pin&gt; 3&gt; &lt;Num &lt;Pin&gt; 4&gt;
+               &lt;Num &lt;Sou&gt; 6&gt; &lt;Num &lt;Sou&gt; 6&gt; &lt;Num &lt;Sou&gt; 6&gt;}))
+  </code>
+</pre>
+
+</body>
+
+<footer>
+  <hr size=1 noshade>
+  <table width=100% border=0 cellspacing=0>
+    <tr>
+      <td align=right>
+        <i>
+          <a href="http://egi.pira.jp">Egi Satoshi</a>
+        </i>
+    </tr>
+  </table>
+</footer>
+
+</html>
+
