@@ -309,6 +309,15 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
   </code>
 </pre>
 
+<p>
+This expression do pattern matching of the first argument.<br/>
+The fist argument is regarded as a data of the second argument and compared with the patterns of the third argument.
+When it matches a pattern in the third argument, the associated formula will be evaluated.
+When the pattern includes pattern variables, variables are locally bound and the formula will be evaluated with the variables.
+This binding isn't necessarily unique.
+But, unlike the below, this expression returns just one of the cases.
+</p>
+
 <pre>
   <code>
     &gt; (test (match {1 2 3 4} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
@@ -325,6 +334,12 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
     (match-all <i>formula</i> <i>matcher</i> [<i>pattern</i> <i>formula</i>])
   </code>
 </pre>
+
+<p>
+  Like a <code>match</code> expression, a <code>match-all</code> expression also do pattern matching.<br/>
+  However, this expression returns all cases of binding.
+  For the details, see next section.
+</p>
 
 <pre>
   <code>
@@ -370,6 +385,9 @@ are the same.
 
 <h3>Patterns</h3>
 
+Patterns form the basis of Egison.<br/>
+Since they are first-class objects, you can regard patterns as values.
+
 <h4>Pattern Variables</h4>
 
 <h4>Value Patterns</h4>
@@ -380,7 +398,74 @@ are the same.
 
 <h4>And Patterns</h4>
 
+<pre>
+  <code>
+    (& <i>pattern</i> ...)
+  </code>
+</pre>
+
+<p>
+When you have patterns, you sometimes want to get a pattern that is matched, if and only if, all of the patterns are matched.<br/>
+Such a pattern is called "and pattern".
+</p>
+
+<pre>
+  <code>
+    (& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;)
+    (&)
+  </code>
+</pre>
+
+<p>
+  The most common usage of and pattern is "matching and binding".<br/>
+  When you need to get a value matched the pattern, it is useful.
+</p>
+
+<pre>
+  <code>
+    (& &lt;cons _ _&gt; $xs)
+  </code>
+</pre>
+
 <h4>Or Patterns</h4>
+
+<pre>
+  <code>
+    (| <i>pattern</i> ...)
+  </code>
+</pre>
+
+<p>
+  Or patterns are the dual of and patterns.</br>
+  If you want to get an object that matches one of given patterns, you should use or pattern.
+</p>
+
+<pre>
+  <code>
+    (| 1 2 3)
+    (| #t #f)
+    (|)
+  </code>
+</pre>
+
+<p>
+  The following is an interesting example of or pattern.
+  <code>f</code> is the pattern that any sequence consisting of 1 matches.
+</p>
+
+<pre>
+  <code>
+    &gt; (define $f (pattern-constructor [] (| &lt;nil&gt; &lt;cons ,1 (f)&gt;)))
+    &gt; (test (match-all {1} (list integer) [(f) &lt;OK&gt;]))
+    {&lt;OK&gt;}
+    &gt; (test (match-all {1 1 1 1 1 1} (list integer) [(f) &lt;OK&gt;]))
+    {&lt;OK&gt;}
+    &gt; (test (match-all {} (list integer) [(f) &lt;OK&gt;]))
+    {&lt;OK&gt;}
+    &gt; (test (match-all {1 1 1 2 1 1} (list integer) [(f) &lt;OK&gt;]))
+    {}
+  </code>
+</pre>
 
 <hr/>
 
