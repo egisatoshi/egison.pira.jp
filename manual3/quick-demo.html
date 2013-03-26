@@ -21,9 +21,20 @@
 <h1>Quick Demo</h1>
 <hr/>
 <p>
-  If you run these codes, you will quickly understand how Egison is like.<br/>
+  In this section, we give you examples of Egison code.
+  If you run these codes, you will quickly understand how Egison works.
+</p>
 <hr/>
 
+<p>
+Assume you have a collection {1 2 3} (i.e., 1, 2, and 3) and want to divide the collection into an item and the rest.<br/>
+If you regard {1 2 3} as a list, you can use usual "car" and "cdr".<br/>
+However, if its order has no meaning (namely, {1 2 3} = {2 1 3} = {3 2 1} = ...),
+is it right to use "car" and "cdr"?<br/>
+Moreover, if the numbers of occurences of each element are meaningless (namely, {1 2 3} = {1 1 2 2 2 2 3} = ...), what should you do?<br/>
+These are easy for human to do, but not so easy to write codes in usual programming languages.<br/>
+The followings are Egison code to do that.
+</p>
 
 <pre><code>
 &gt; (test (match-all {1 2 3} (list integer)
@@ -38,6 +49,10 @@
           [&lt;cons $x $ts&gt; [x ts]]))
 
 </code></pre>
+
+<p>
+You are probably surprised at how simple these codes are.
+</p>
 
 <pre><code>
 &gt; (test (match-all {1 2 3} (list integer)
