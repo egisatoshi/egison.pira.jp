@@ -156,7 +156,51 @@ x
 
 <h3>Tuples (Multiple Values)</h3>
 
+<p>
+A tuple is expressed as a sequence of elements enclosed in square brackets.<br/>
+If a tuple consists of an element, the tuple and the element are the same.
+</p>
+
+<pre>
+  <code>
+[]
+[1 2]
+[#t "abc" 4]
+[1]
+  </code>
+</pre>
+
 <h3>Collections</h3>
+<p>
+A collection is a sequence of elements enclosed in braces.<br/>
+Unlike a tuple, a collection of an element and its unique element differ.<br/>
+</p>
+
+<pre>
+  <code>
+    {}
+    {1 2}
+    {#t "abc" 4}
+    {1}
+  </code>
+</pre>
+
+<p>
+A collection may contain a collection as its element.<br/>
+Generally, an element of a collection that is an element of a collection isn't an element of the outer collection.<br/>
+But, <code>@</code> placed before a collection breaks the collection.<br/>
+Then, an element of a collection with <code>@</code> that is an element of a collection is an element of the outer collection.<br/>
+Using this notation, you can construct a collection from subcollections.
+</p>
+
+<pre>
+  <code>
+    &gt; (test {1 @{2 3}})
+    {1 2 3}
+    &gt; (test {@{@{1}} @{2 @{3}}})
+    {1 2 3}
+  </code>
+</pre>
 
 <h3><code>lambda</code> expressions</h3>
 
