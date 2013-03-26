@@ -204,19 +204,135 @@ Using this notation, you can construct a collection from subcollections.
 
 <h3><code>lambda</code> expressions</h3>
 
+<pre>
+  <code>
+    (lambda [<i>variable</i> ...] <i>formula</i>)
+  </code>
+</pre>
+
+<p>
+Lambda expression makes functions as other functional programming languages.<br/>
+It takes two arguments.<br/>
+The first one is a tuple of variables, which are the dummy variables of the function.
+Note <code>[$x]</code> and <code>$x</code> are the same.<br/>
+The second argument is a formula, which is the body of the function.
+</p>
+
+<pre>
+  <code>
+    &gt; (test (lambda [$x $y] (+ x y)))
+    (lambda [x y] ...)
+    &gt; (test ((lambda [$x $y] (+ x y)) 3 7))
+    10
+    &gt; (test ((lambda $x (not x)) #t))
+    #f
+  </code>
+</pre>
+
 <h3><code>let</code> expressions</h3>
+
+<pre>
+  <code>
+    (let {[<i>variable</i> <i>formula</i>] ...} <i>formula</i>)
+  </code>
+</pre>
+
+<p>
+<!-- TODO -->
+Note the latter example works even if x is unbound, since Egison uses lazy evaluation.
+</p>
+
+<pre>
+  <code>
+    &gt; (test (let {[$x 1] [$y 2]} (+ x y)))
+    3
+    &gt; (test (let {[$x #t] [$y x]} (not x)))
+    #f
+  </code>
+</pre>
 
 <h3><code>letrec</code> expressions</h3>
 
+<pre>
+  <code>
+    (letrec {[<i>variable</i> <i>formula</i>] ...} <i>formula</i>)
+  </code>
+</pre>
+
+<pre>
+  <code>
+    &gt; (test (letrec {[$x #t] [$y x]} (not y)))
+    #f
+  </code>
+</pre>
+
 <h3><code>if</code> expressions</h3>
+
+<pre>
+  <code>
+    (if <i>boolean</i> <i>formula</i> <i>formula</i>)
+  </code>
+</pre>
+
+<pre>
+  <code>
+    &gt; (test (if #f "YES" "NO"))
+    NO
+    &gt; (test (if #t 1 ((lambda $x (x x)) (lambda $x (x x)))))
+    1
+  </code>
+</pre>
 
 <h3><code>match</code> expressions</h3>
 
+<pre>
+  <code>
+    (match <i>formula</i> <i>matcher</i> {[<i>pattern</i> <i>formula</i>] ...})
+  </code>
+</pre>
+
+<pre>
+  <code>
+    &gt; (test (match {1 2 3 4} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+    [1 {2 3 4}]
+    &gt; (test (match {1 2 3 4} (set integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+    [1 {1 2 3 4}]
+  </code>
+</pre>
+
 <h3><code>match-all</code> expressions</h3>
+
+<pre>
+  <code>
+    (match-all <i>formula</i> <i>matcher</i> [<i>pattern</i> <i>formula</i>])
+  </code>
+</pre>
+
+<pre>
+  <code>
+    &gt; (test (match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]]))
+    [1 {2 3 4}]
+    &gt; (test (match-all {1 2 3 4} (set integer) [&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]))
+    {[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}
+  </code>
+</pre>
 
 <h3><code>matcher</code> expressions</h3>
 
 <h3><code>function</code> expressions</h3>
+
+<pre>
+  <code>
+    (function <i>matcher</i> {[<i>pattern</i> <i>formula</i>] ...})
+  </code>
+</pre>
+
+<pre>
+  <code>
+    &gt; (test (letrec {[$count (function (list something) {[&lt;nil&gt; 0] [&lt;cons _ $xs&gt; (+ (count xs) 1)]})]} (count {1 2 3})))
+    3
+  </code>
+</pre>
 
 <h3><code>apply</code> expressions</h3>
 
