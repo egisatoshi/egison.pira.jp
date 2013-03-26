@@ -61,7 +61,7 @@ x
 <pre>
   <code>
 &gt; (load "lib/graph.egi")
-&gt; (load "lib/poker-hands.egi")
+&gt; (load "lib/tree.egi")
   </code>
 </pre>
 
@@ -211,7 +211,7 @@ Using this notation, you can construct a collection from subcollections.
 </pre>
 
 <p>
-Lambda expression makes functions as other functional programming languages.<br/>
+Lambda expressions make functions as other functional programming languages.<br/>
 It takes two arguments.<br/>
 The first one is a tuple of variables, which are the dummy variables of the function.
 Note <code>[$x]</code> and <code>$x</code> are the same.<br/>
@@ -238,8 +238,10 @@ The second argument is a formula, which is the body of the function.
 </pre>
 
 <p>
-<!-- TODO -->
-Note the latter example works even if x is unbound, since Egison uses lazy evaluation.
+A let expression takes two arguments.<br/>
+The first argument is a collection of binary tuples, which are pairs of a variable and a formula.<br/>
+These formulae will be evaluated when the associated variable is needed in an evaluation of the second argument, and bound to the variable.<br/>
+Since a formula in the first argument is evaluated with the original environment, you can't use variables in the first argument in the formula.
 </p>
 
 <pre>
@@ -248,8 +250,14 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
     3
     &gt; (test (let {[$x #t] [$y x]} (not x)))
     #f
+    &gt; (test x)
+    Unbound variable: x
   </code>
 </pre>
+
+<p>
+Note the latter example works even if x is unbound, since Egison uses lazy evaluation.
+</p>
 
 <h3><code>letrec</code> expressions</h3>
 
@@ -258,6 +266,11 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
     (letrec {[<i>variable</i> <i>formula</i>] ...} <i>formula</i>)
   </code>
 </pre>
+
+<p>
+  A letrec expression is the same with a let expression except the fact that you can use recursive definition in the first argument.<br/>
+  Mutual recursion is also allowed.
+</p>
 
 <pre>
   <code>
@@ -273,6 +286,11 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
     (if <i>boolean</i> <i>formula</i> <i>formula</i>)
   </code>
 </pre>
+
+<p>
+  It's ordinary <code>if</code>.<br/>
+  But, note the result of an evaluation of the first argument must be a boolean (i.e. <code>#t</code> or <code>#f</code>).<br/>
+</p>
 
 <pre>
   <code>
@@ -327,6 +345,20 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
   </code>
 </pre>
 
+<p>
+Like a lambda expression, a function expression creates a function with an arugment.<br/>
+Pattern matching is done with the argument.<br/>
+Roughly speaking,
+<code>
+(function <i>X</i> {[<i>Y</i> <i>Z</i>] ...})
+</code>
+and
+<code>
+(lambda [$x] (match x <i>X</i> {[<i>Y</i> <i>Z</i>] ...}))
+</code>
+are the same.
+</p>
+
 <pre>
   <code>
     &gt; (test (letrec {[$count (function (list something) {[&lt;nil&gt; 0] [&lt;cons _ $xs&gt; (+ (count xs) 1)]})]} (count {1 2 3})))
@@ -342,9 +374,9 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
 
 <h4>Value Patterns</h4>
 
-<h4>Cut Patterns</h4>
+<!-- <h4>Cut Patterns</h4> -->
 
-<h4>Not Patterns</h4>
+<!-- <h4>Not Patterns</h4> -->
 
 <h4>And Patterns</h4>
 
