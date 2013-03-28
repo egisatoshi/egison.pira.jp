@@ -35,7 +35,7 @@
 <h2 id="pattern-matching">Let's do Pattern Matching!!</h2>
 
 <p>
-  In this subsection, we show various basic pattern matching for lists, multisets, and sets.<br/>
+  In this section, we show various basic pattern matching for lists, multisets, and sets.<br/>
   Now, let's execute the following code.
   We explain its meaning later.
 </p>
@@ -64,26 +64,30 @@
 <p>
   As explained in the previous section, the arguments of a <code>match-all</code> expression are a target, a type, a pattern, and a formula.<br/>
   The pattern and the formula construct a <i>match-clause</i>, and the formula is called the <i>body</i> of the match-clause.<br/>
-  The result of an evaluation of a <code>match-all</code> expression is the collection of the result of an evaluation of the formula with the matched pattern.
+  The result of an evaluation of a <code>match-all</code> expression is the collection of the result of an evaluation of the formula with the matched pattern.<br/>
   Since an unfree datum has no normal form and has many forms, the collection has multiple elements<br/>
   For example, a set {1 2 3 4} has forms such as {2 1 4 3}, {4 3 2 1}, {1 2 1 3 1 4 1}, and so on.<br/>
   If you take an element of the set, you can get 1, 2, 3, or 4.
 </p>
 
 <p>
-  In above example, the match-clause is "<code>[&lt;cons $x $xs&gt; [x xs]]</code>", and the body of the match-clause is "<code>{[x xs]}</code>".<br/>
-  The meaning of <code>cons</code> is similar to that of the ordinary functional programming languages for lists.<br/>
-  The meaning of a pattern constructor depends on types specified by second argument of the <code>match-all</code> expression.<br/>
-  It divides a collection into an element and the rest of the collection.<br/>
-  In case of multisets, an element bound to the first argument can be any elements in the target since the order of elements is not considered.<br/>
-  In the third example, the target is matched as a set of integers where the order of elements and the multiple occurrence of elements are both ignored.<br/>
-  Therefore the result of pattern matching consists of many elements.<br/>
-  In case of sets, different from multisets, sets ignore the multiple occurrence of the same element.<br/>
-  Therefore a element bound to <code>$x</code> can be contained to the collection bound to <code>$xs</code>.<br/>
+  In the above examples, their match-clause are all "<code>[&lt;cons $x $xs&gt; [x xs]]</code>", and the body of it is "<code>{[x xs]}</code>".<br/>
+  A match-clause defines a sequence of actions in the pattern matching.<br/>
+  In this case, it means "deconstruct an object in the way defined as cons, and then bind adequate objects to <code>$x</code> and <code>$xs</code>".<br/>
+  The meaning of <code>cons</code>, i.e., what kind of objects matches and what are bound to <code>$x</code> and <code>$xs</code> depends on types.<br/>
+  In general, it divides a collection into an element and the rest of the collection.<br/>
+  If a type is list, <code>$x</code> is the head of the collection and <code>$xs</code> is th rest as ordinary programming languages.<br/>
+  For example, in the above case, <code>$x</code> is 1 and <code>$xs</code> is {2 3 4}.<br/>
+  In case of multiset, namely, a type of a collection whose order is meaningless, any element in the target is bound to <code>$x</code>.<br/>
+  The above example shows the possible pairs <code>[$x $xs]</code> are <code>[1 {2 3 4}]</code>, <code>[2 {3 4 1}]</code>, <code>[3 {4 1 2}]</code>, and <code>[4 {1 2 3}]</code>.<br/>
+  Note the order is meaningless.<br/>
+  When the numbers of occurences of elements in the collection is also meaningless, namely, it is a set, an element bound to <code>$x</code> can be contained in the collection bound to <code>$xs</code>.<br/>
+  You can confirm the fact by the above example.
 </p>
 
 <p>
-  Here are other examples.<br/>
+  There are pattern constructors other than <code>cons</code>.<br/>
+  Here are other examples.
 </p>
 
 <pre>
@@ -103,11 +107,11 @@
 </pre>
 
 <p>
-  There is another pattern constructor <code>join</code>.<br/>
-  It takes two arguments.<br/>
+  The pattern constructor <code>join</code> takes two arguments.<br/>
   Programmers use it to divide a collection into two collections.<br/>
-  A target matches to the pattern when the target collection is the union of the collection matched with both arguments of <code>join</code>.<br/>
+  A target collection matches <code>join</code> pattern when the target is the union of collections matching both arguments of <code>join</code>.<br/>
   The meaning of union differs from type to type.<br/>
+  For example, <code>&lt;join ,{1 2} ,{3 4}&gt;</code> is matched only by <code>{1 2 3 4}</code> in list, but, in multiset, it is done by <code>{1 2 3 4}</code>, <code>{1 4 3 2}</code>, <code>{4 3 2 1}</code>, and so on.
 </p>
 
 <p>
@@ -130,12 +134,12 @@
 </pre>
 
 <p>
-  Arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.<br/>
-  In Egison, extraction of an element from the tail of a collection is represented in the same way with the head of it.<br/>
+  The arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.<br/>
+  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way with the head of it.<br/>
   A pattern constructor <code>nioj</code> is similar with <code>join</code>, and used to divide a target collection into two collections.<br/>
-  The difference is the order of pattern matching.<br/>
+  The difference between <code>join</code> and <code>nioj</code> is the order of pattern matching, as its name suggests.<br/>
   In case of <code>nioj</code>, pattern matching is executed from the back-side of a collection.<br/>
-  The order of pattern matching is significant if we consider non-linear pattern matching, which we will discuss in the next section.<br/>
+  The order of pattern matching is important when we do pattern matching using non-linear patterns, which we will discuss in the next section.<br/>
 </p>
 
 <h2 id="non-linear-patterns">Non-linear Patterns</h2>
