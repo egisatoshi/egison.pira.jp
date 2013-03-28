@@ -413,6 +413,8 @@ But, unlike the below, this expression returns just one of the cases.
 
 <h3><code>matcher</code> expressions</h3>
 
+See <a href="./how-to-define-matchers.html">How to Define Matchers</a>.
+
 <h3><code>function</code> expressions</h3>
 
 <pre>
@@ -456,8 +458,48 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
 
 <h3>Patterns</h3>
 
-Patterns form the basis of Egison.<br/>
-Since they are first-class objects, you can regard patterns as values.
+<p>
+  Patterns form the basis of Egison.<br/>
+  Since they are first-class objects, you can regard patterns as values.<br/>
+  This feature makes Egison a powerful language.<br/>
+  In the following, we show various patterns of Egison.<br/>
+  Here, we only show the special pattern `<code>_</code>'.<br/>
+  Any object mathces this pattern.
+</p>
+
+<pre>
+  <code>
+    &gt; (test (match 1 something {[_ &lt;OK&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match #f something {[_ &lt;OK&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match 'a' something {[_ &lt;OK&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match "KO" something {[_ &lt;OK&gt;]}))
+    &lt;OK&gt;
+  </code>
+</pre>
+
+<h4>Inductive Patterns</h4>
+
+<pre>
+  <code>
+    &lt;<i>identifier</i> <i>value</i> ...&gt;
+  </code>
+</pre>
+
+<p>
+  As a datum, a pattern can be defined inductively.<br/>
+  Notation of inductive patterns is similar to ones of inductive data.<br/>
+  The exception is, in indutive patterns, the head of an identifier is lowercase.
+</p>
+
+<pre>
+  <code>
+    &lt;nil&gt;
+    &lt;cons &lt;nil&gt; &lt;nil&gt;&gt;
+  </code>
+</pre>
 
 <h4>Pattern Variables</h4>
 
@@ -578,7 +620,7 @@ Such a pattern is called "and-pattern".
   </code>
 </pre>
 
-<h4>Or Patterns</h4>
+<h4>Or-Patterns</h4>
 
 <pre>
   <code>
