@@ -73,7 +73,7 @@ x
 <h2>Built-in Data</h2>
 
 <p>
-  Booleans, integers, float numbers, and characters are implemented as build-in data in Egison.<br/>
+  Booleans, integers, float numbers, and characters are implemented as built-in data in Egison.<br/>
 </p>
 
 <h3>Booleans</h3>
@@ -93,7 +93,7 @@ x
 <h3>Integers</h3>
 
 <p>
-  A string which consists from only numbers is a number literal.<br/>
+  A string which consists of only numbers is a number literal.<br/>
 </p>
 
 <pre>
@@ -108,7 +108,7 @@ x
 <h3>Floats</h3>
 
 <p>
-  A string which consists of numbers and contains `<code>.</code>' between numbers is a float literal.<br/>
+  A floating-point literal is concatenation of a number, `<code>.</code>', and a number.
 </p>
 
 <pre>
@@ -153,6 +153,29 @@ x
 <h2>Syntax of Egison</h2>
 
 <h3>Inductive Data</h3>
+
+<pre>
+  <code>
+    &lt;<i>Identifier</i> <i>value</i> ...&gt;
+  </code>
+</pre>
+
+<p>
+  You can create an object whose name you want.
+  It is called an inductive datum.<br/>
+  An inductive datum can have values.
+  In particular, it can have any inductive data.
+  This is why it is called "inductive".<br/>
+  Note that the name has to start with uppercase.
+</p>
+
+<pre>
+  <code>
+    &lt;A&gt;
+    &lt;Abc 1 #t "Hello, World!\n"&gt;
+    &lt;Cons &lt;Cons &lt;Nil&gt;&gt; &lt;Nil&gt;&gt;
+  </code>
+</pre>
 
 <h3>Tuples (Multiple Values)</h3>
 
@@ -239,6 +262,31 @@ The second argument is a formula, which is the body of the function.
     10
     &gt; (test ((lambda $x (not x)) #t))
     #f
+  </code>
+</pre>
+
+<p>
+  From ver.3.0, a lambda expression is equipped with simpler notation.<br/>
+  In this notation, you can omit to write "lambda" and the arguments of the function.<br/>
+  You can refer to the i-th argument by writing concatenation of <code>$</code> and i.<br/>
+  If the order of occurences of the arguments is the same with the order of the arguments and their occurences are exactly one, then you can omit a number after <code>$</code>.<br/>
+  That is, <code>(lambda [$x $y] (+ x y))</code>, <code>(+ $1 $2)</code>, and <code>(+ $ $)</code> are the same.<br/>
+  Altough this notation is so powerful, it is limited to specific functions.<br/>
+  The body of such a function has to be simple.<br/>
+  Namely, it is application of a function and its arguments, and all occurences of <code>$i</code> are the arguments.<br/>
+  For example, you can't write <code>(+ $1 (* $2 2))</code> or <code>(if $1 #f #t)</code>
+</p>
+
+<pre>
+  <code>
+    &gt; (test ((+ $1 $2) 3 4))
+    7
+    &gt; (test ((+ $ $) 3 4))
+    7
+    &gt; (test ((* $1 $1) 5))
+    25
+    &gt; (test ((map $2 $1) {1 2 3} (+ $ 1)))
+    {2 3 4}
   </code>
 </pre>
 
