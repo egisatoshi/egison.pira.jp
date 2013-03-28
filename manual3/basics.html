@@ -311,10 +311,10 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
 
 <p>
 This expression do pattern matching of the first argument.<br/>
-The fist argument is regarded as a data of the second argument and compared with the patterns of the third argument.
-When it matches a pattern in the third argument, the associated formula will be evaluated.
-When the pattern includes pattern variables, variables are locally bound and the formula will be evaluated with the variables.
-This binding isn't necessarily unique.
+The fist argument is regarded as a data of the second argument and compared with the patterns of the third argument.<br/>
+When it matches a pattern in the third argument, the associated formula will be evaluated.<br/>
+If the pattern includes pattern variables, variables are locally bound and the formula will be evaluated with the variables.<br/>
+This binding isn't necessarily unique.<br/>
 But, unlike the below, this expression returns just one of the cases.
 </p>
 
@@ -338,7 +338,7 @@ But, unlike the below, this expression returns just one of the cases.
 <p>
   Like a <code>match</code> expression, a <code>match-all</code> expression also do pattern matching.<br/>
   However, this expression returns all cases of binding.
-  For the details, see next section.
+  For the details, see the next section.
 </p>
 
 <pre>
@@ -381,7 +381,7 @@ are the same.
   </code>
 </pre>
 
-<h3><code>apply</code> expressions</h3>
+<!-- <h3><code>apply</code> expressions</h3> -->
 
 <h3>Patterns</h3>
 
@@ -390,13 +390,66 @@ Since they are first-class objects, you can regard patterns as values.
 
 <h4>Pattern Variables</h4>
 
+<pre>
+  <code>
+    <i>variable</i>
+  </code>
+</pre>
+
+<p>
+You can use varibales as patterns.
+These patterns are called "pattern variables".<br/>
+Any object matches this pattern, and then the variable is locally bound.<br/>
+Moreover, you can use the pattern in inductive patterns.<br/>
+This usage allows us to deconstruct an object.
+</p>
+
+<pre>
+  <code>
+    &gt; (test (match 1 something {[$x x]}))
+    1
+    &gt; (test (match #t something {[$z (not z)]}))
+    #f
+    &gt; (test (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+    [1 {2 3}]
+    &gt; (test (match {1} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+    [1 {}]
+  </code>
+</pre>
+
 <h4>Value Patterns</h4>
 
-<!-- <h4>Cut Patterns</h4> -->
+<pre>
+  <code>
+    ,<i>value</i>
+  </code>
+</pre>
 
-<!-- <h4>Not Patterns</h4> -->
+<p>
+  A value pattern is a pattern that paticular objects match.<br/>
+  You should not forget to place COMMA before a value.
+</p>
 
-<h4>And Patterns</h4>
+<pre>
+  <code>
+    &gt; (test (match 1 integer {[,1 &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match 0 integer {[,1 &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;KO&gt;
+    &gt; (test (match {1 2 3} (list integer) {[,{1 2 3} &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match {1 2 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match {1 4 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;KO&gt;
+  </code>
+</pre>
+
+<!-- <h4>Cut-Patterns</h4> -->
+
+<!-- <h4>Not-Patterns</h4> -->
+
+<h4>And-Patterns</h4>
 
 <pre>
   <code>
@@ -406,7 +459,7 @@ Since they are first-class objects, you can regard patterns as values.
 
 <p>
 When you have patterns, you sometimes want to get a pattern that is matched, if and only if, all of the patterns are matched.<br/>
-Such a pattern is called "and pattern".
+Such a pattern is called "and-pattern".
 </p>
 
 <pre>
@@ -416,14 +469,41 @@ Such a pattern is called "and pattern".
   </code>
 </pre>
 
+<pre>
+  <code>
+    &gt; (test (match {1 3 2} (list integer) {[&lt;cons ,1 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match {1 3 2} (list integer) {[&lt;snoc ,2 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match {1 3 2} (list integer) {[(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match {1 3 3} (list integer) {[&lt;snoc ,2 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;KO&gt;
+    &gt; (test (match {1 3 3} (list integer) {[(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;KO&gt;
+    &gt; (test (match #t something {[(&) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+  </code>
+</pre>
+
 <p>
-  The most common usage of and pattern is "matching and binding".<br/>
-  When you need to get a value matched the pattern, it is useful.
+  The most common usage of and-pattern is "matching and binding".<br/>
+  When you need to get a value matched the pattern, it is useful.<br/>
+  For example, any non-empty list matches the following and-pattern, and is bound to the variable "xs".
 </p>
 
 <pre>
   <code>
     (& &lt;cons _ _&gt; $xs)
+  </code>
+</pre>
+
+<pre>
+  <code>
+    &gt; (test (match {1 2} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]}))
+    {1 2}
+    &gt; (test (match {} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]}))
+    #f
   </code>
 </pre>
 
@@ -436,8 +516,8 @@ Such a pattern is called "and pattern".
 </pre>
 
 <p>
-  Or patterns are the dual of and patterns.</br>
-  If you want to get an object that matches one of given patterns, you should use or pattern.
+  Or-patterns are the dual of and-patterns.</br>
+  If you want to get an object that matches one of given patterns, you should use or-pattern.
 </p>
 
 <pre>
@@ -448,9 +528,18 @@ Such a pattern is called "and pattern".
   </code>
 </pre>
 
+<pre>
+  <code>
+    &gt; (test (match {1 3 3} (list integer) {[(| &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;OK&gt;
+    &gt; (test (match #t something {[(|) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+    &lt;KO&gt;
+  </code>
+</pre>
+
 <p>
-  The following is an interesting example of or pattern.
-  <code>f</code> is the pattern that any sequence consisting of 1 matches.
+  The following is an interesting example of or-pattern.
+  <code>(f)</code> is the pattern that any collection consisting of 1 matches.
 </p>
 
 <pre>
