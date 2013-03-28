@@ -156,6 +156,12 @@ x
 
 <h3>Tuples (Multiple Values)</h3>
 
+<pre>
+  <code>
+    [<i>value</i> ...]
+  </code>
+</pre>
+
 <p>
 A tuple is expressed as a sequence of elements enclosed in square brackets.<br/>
 If a tuple consists of an element, the tuple and the element are the same.
@@ -171,6 +177,13 @@ If a tuple consists of an element, the tuple and the element are the same.
 </pre>
 
 <h3>Collections</h3>
+
+<pre>
+  <code>
+    {<i>value</i> ...}
+  </code>
+</pre>
+
 <p>
 A collection is a sequence of elements enclosed in braces.<br/>
 Unlike a tuple, a collection of an element and its unique element differ.<br/>
@@ -381,7 +394,17 @@ are the same.
   </code>
 </pre>
 
-<!-- <h3><code>apply</code> expressions</h3> -->
+<h3><code>apply</code> expressions</h3>
+
+<pre>
+  <code>
+    (apply <i>function</i> [<i>value</i> ...])
+  </code>
+</pre>
+
+If you have a function and its arguments as a tuple, and want to get the result of the application, then you should use this expression.<br/>
+The result of the evaluation of an apply expression is the result of application of the function with the arguments.<br/>
+That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is the same thing with <code>(f x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>)</code>.
 
 <h3>Patterns</h3>
 
