@@ -99,6 +99,7 @@ x
 
 <p>
   A string which consists of only numbers is a number literal.<br/>
+  An integer literal is a number literal or concatenation of `-' and a number literal.
 </p>
 
 <pre>
@@ -113,7 +114,7 @@ x
 <h3>Floats</h3>
 
 <p>
-  A floating-point literal is concatenation of a number, `<code>.</code>', and a number.
+  A floating-point literal is concatenation of an integer literal, `<code>.</code>', and a number literal.
 </p>
 
 <pre>
@@ -128,7 +129,7 @@ x
 <h3>Characters</h3>
 
 <p>
-  A character surrounded by single quote is a character literal.<br/>
+  A character literal is a character enclosed in single quotes.
 </p>
 
 <pre>
@@ -143,8 +144,8 @@ x
 <h3>Strings</h3>
 
 <p>
-  A line of characters surrounded by double quote is a string literal.<br/>
-  Strings are treated as lists of characters.<br/>
+  A string literal is a string enclosed in double quotes.<br/>
+  It is treated as a list of characters.
 </p>
 
 <pre>
@@ -157,7 +158,7 @@ x
 
 <h2>Syntax of Egison</h2>
 
-<h3>Four Enclosure</h3>
+<h3>Four Enclosures</h3>
 
 First of all, we explain the enclosures of Egison.<br/>
 Perhaps you are surprised at how many kinds of enclosures in Egison when you first see code of Egison.<br/>
@@ -392,7 +393,8 @@ The fist argument is regarded as a data of the second argument and compared with
 When it matches a pattern in the third argument, the associated formula will be evaluated.<br/>
 If the pattern includes pattern variables, variables are locally bound and the formula will be evaluated with the variables.<br/>
 This binding isn't necessarily unique.<br/>
-But, unlike the below, this expression returns just one of the cases.
+But, unlike the below, this expression returns just one of the cases.<br/>
+For the details, see the next section.
 </p>
 
 <pre>
@@ -414,7 +416,7 @@ But, unlike the below, this expression returns just one of the cases.
 
 <p>
   Like a <code>match</code> expression, a <code>match-all</code> expression also do pattern matching.<br/>
-  However, this expression returns all cases of binding.
+  However, this expression returns all cases of binding.<br/>
   For the details, see the next section.
 </p>
 
@@ -479,7 +481,7 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
   Since they are first-class objects, you can regard patterns as values.<br/>
   This feature makes Egison a powerful language.<br/>
   In the following, we show various patterns of Egison.<br/>
-  Here, we only show the special pattern `<code>_</code>'.<br/>
+  Here, we only show the special pattern <i>wild card</i> `<code>_</code>'.<br/>
   Any object mathces this pattern.
 </p>
 

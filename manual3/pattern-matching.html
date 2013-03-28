@@ -21,15 +21,23 @@
 <h1>Pattern Matching</h1>
 <hr/>
 <p>
-  Egison is good at pattern matching for data types whose data have no normal form.<br/>
-  We demonstrate it here with a lot of programs that execute pattern matching with collections, such as lists, multisets, and sets.<br/>
+  How do you express a set?<br/>
+  Probably, most of you represents it as a list.<br/>
+  But, this representation raise another question.<br/>
+  Why do you choose the order? Is it meaningful?<br/>
+  Data such as sets have no normal form, and are called <i>unfree data</i>.<br/>
+  Unfortunately, it has been difficult to do pattern matching for them.<br/>
+  Egison gives various pattern matching for those data.<br/>
+  We demonstrate it here with many examples, which includes pattern matching for lists, multisets, and sets.
+</p>
 <hr/>
 
 <h2 id="pattern-matching">Let's do Pattern Matching!!</h2>
 
-
 <p>
-  Now, let's execute the following code.<br/>
+  In this subsection, we show various basic pattern matching for lists, multisets, and sets.<br/>
+  Now, let's execute the following code.
+  We explain its meaning later.
 </p>
 
 <pre>
@@ -54,14 +62,16 @@
 </pre>
 
 <p>
-  A <code>match-all</code> expression takes a target expression, a type expression, and a single match-clause.<br/>
-  Pattern matching of Egison has multiple results because unfree data has many forms.<br/>
-  The body of a match-clause is evaluated for each result of pattern matching.<br/>
-  In above example, the match-clause is "<code>[&lt;cons $x $xs&gt; [x xs]]</code>", and the body of the match-clause is "<code>{[x xs]}</code>".<br/>
-  A <code>match-all</code> expression returns a collection which consists of all of those evaluated values.<br/>
+  As explained in the previous section, the arguments of a <code>match-all</code> expression are a target, a type, a pattern, and a formula.<br/>
+  The pattern and the formula construct a <i>match-clause</i>, and the formula is called the <i>body</i> of the match-clause.<br/>
+  The result of an evaluation of a <code>match-all</code> expression is the collection of the result of an evaluation of the formula with the matched pattern.
+  Since an unfree datum has no normal form and has many forms, the collection has multiple elements<br/>
+  For example, a set {1 2 3 4} has forms such as {2 1 4 3}, {4 3 2 1}, {1 2 1 3 1 4 1}, and so on.<br/>
+  If you take an element of the set, you can get 1, 2, 3, or 4.
 </p>
 
 <p>
+  In above example, the match-clause is "<code>[&lt;cons $x $xs&gt; [x xs]]</code>", and the body of the match-clause is "<code>{[x xs]}</code>".<br/>
   The meaning of <code>cons</code> is similar to that of the ordinary functional programming languages for lists.<br/>
   The meaning of a pattern constructor depends on types specified by second argument of the <code>match-all</code> expression.<br/>
   It divides a collection into an element and the rest of the collection.<br/>
