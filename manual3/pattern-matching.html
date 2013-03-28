@@ -145,7 +145,10 @@
 <h2 id="non-linear-patterns">Non-linear Patterns</h2>
 
 <p>
-  With Egison，programmers can match for a pattern that has repeated varibles.<br/>
+  Egison allows programers to use variables "bound and be used" in a pattern.<br/>
+  A pattern that contains multiple occurences of a variable is called a <i>non-linear pattern</i>.<br/>
+  Egison is the first language that non-linear patterns can be used in pattern matching for unfree data.<br/>
+  The following is an example of non-linear patterns.
 </p>
 
 <pre>
@@ -158,14 +161,12 @@
 </pre>
 
 <p>
-  The output of this example is a collection of numbers which are contained in the target collection more than twice.<br/>
+  The output of this example is a collection of numbers which are contained in the target collection more than twice.
 </p>
 
 <p>
-  In Egison, pattern matching is executed from the left side of the pattern,
-  and the value bound to a pattern variable can be referd in its right side of the pattern.<br/>
-  A pattern which has '<code>,</code>' at the head is called a <i>value pattern</i>.<br/>
-  If the value of the expression after '<code>,</code>' is equivalent to the target value when they are regarded as the type specified, pattern matching succeed.<br/>
+  Since pattern matching of Egison is executed from left to right,
+  the value bound to a pattern variable can be referred to in its right side of the pattern.<br/>
   In this case, when the matching process proceeds to the pattern <code>,n</code>,
   the expression <code>n</code> is evaluated to the value to which <code>$n</code> is bound.<br/>
   The pattern <code>,n</code> is matched as an integer, so if the target value is equal to the value bound to <code>$n</code> as an integer,

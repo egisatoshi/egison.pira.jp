@@ -169,7 +169,7 @@ Square brackets and braces are both used to collect values.
 The difference between them is the number of values.<br/>
 The former are used to collect the fixed number of values, but the latter are used to collect the others.
 
-<h3><a name="inductive-data">Inductive Data</a></h3>
+<h3 id="inductive-data">Inductive Data</h3>
 
 <pre>
   <code>
@@ -194,7 +194,7 @@ The former are used to collect the fixed number of values, but the latter are us
   </code>
 </pre>
 
-<h3><a name="tuple">Tuples (Multiple Values)</a></h3>
+<h3 id="tuple">Tuples (Multiple Values)</h3>
 
 <pre>
   <code>
@@ -216,7 +216,7 @@ If a tuple consists of an element, the tuple and the element are the same.
   </code>
 </pre>
 
-<h3><a name="collection">Collections</a></h3>
+<h3 id="collection">Collections</h3>
 
 <pre>
   <code>
@@ -557,7 +557,8 @@ This usage allows us to deconstruct an object.
 </pre>
 
 <p>
-  A value pattern is a pattern that paticular objects match.<br/>
+  A value pattern is a pattern that objects equal to a paticular object match.<br/>
+  The meaning of "equal" is defined in matchers, and then vary by matcher.<br/>
   You should not forget to place COMMA before a value.
 </p>
 
