@@ -62,7 +62,7 @@ If found, returns the result of an evaluation the associated <code>&lt;body&gt;<
 </li>
 </ol>
 
-In the subsection, we explain the basics of matcher using <code>ordering</code>.
+In the section, we explain the basics of matcher using <code>ordering</code>.
 </p>
 
 <pre>
@@ -92,7 +92,7 @@ In the subsection, we explain the basics of matcher using <code>ordering</code>.
 
 <p>
 Note that we use neither <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, nor <code>(primitive-snoc-collection)</code>, in the definition of <code>ordering</code>.
-They are described in the next subsection.
+They are described in the next section.
 </p>
 
 <p>
@@ -203,9 +203,12 @@ The following code has the same meaning with the above definition of <code>order
   </code>
 </pre>
 
-<h2>Definitions for Collection Data Matchers</h2>
+<h2>Definitions of Matchers for Collection Data</h2>
 
-In this section, I'll explain matcher definitions of lists, multisets, and sets.
+<p>
+We will explain how to define matchers for collection data, such as list, multiset, and set.
+In this section, we show the definition of list as example, and explain the behaviour of it.
+</p>
 
 <pre>
 <code>
@@ -252,6 +255,23 @@ In this section, I'll explain matcher definitions of lists, multisets, and sets.
        })))
 </code>
 </pre>
+
+<p>
+A definition of a matcher for collection data may contains <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, and <code>(primitive-snoc-collection)</code>.
+The above examples contains all of them.
+In the following, we explain the behaviour of them.
+</p>
+
+<p>
+As is evident, just null collection matches <code>(primitive-null-collection)</code>.
+Any non-null collection matches both <code>(primitive-cons-collection)</code> and <code>(primitive-snoc-collection)</code>.
+The difference between <code>(primitive-cons-collection)</code> and <code>(primitive-snoc-collection)</code> is how to deconstruct the collection.
+Recall they take the two arguments.
+In <code>(primitive-cons-collection)</code>, the head of the collection matches the first argument, and the rest matches the second one.
+In contrast, the head matches the second argument, and the rest does the first one in <code>(primitive-snoc-collection)</code>.
+</p>
+
+<hr/>
 
 <p>
   <code>list</code> is defined as a function that gets a matcher and returns a matcher.<br/>
