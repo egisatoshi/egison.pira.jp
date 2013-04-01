@@ -16,8 +16,8 @@
 <h2>Formal Definition of <code>matcher</code></h2>
 
 <p>
-A matcher is defined using <code>matcher</code>.
-First of all, we show the formal definition (EBNF notation) of <code>matcher</code>.
+You can define a matcher using <code>matcher</code>.
+First of all, we show the formal definition of <code>matcher</code>.
 </p>
 
 <pre>
@@ -39,15 +39,29 @@ First of all, we show the formal definition (EBNF notation) of <code>matcher</co
 
 <p>
 Here, <code>&lt;body&gt;</code> is a formula of Egison.
-<code>&lt;primitive-pp&gt;</code> are <code>&lt;primitive-dp&gt;</code> abbreviations of <code>&lt;primitive-pattern-pattern&gt;</code> and <code>&lt;primitive-data-pattern&gt;</code>, respetively.
+<code>&lt;primitive-pp&gt;</code> and <code>&lt;primitive-dp&gt;</code> are abbreviations of <code>&lt;primitive-pattern-pattern&gt;</code> and <code>&lt;primitive-data-pattern&gt;</code>, respetively.
 </p>
 
 <h2>Definitions of Simple Matchers</h2>
 
 <p>
-When doing pattern matching, given a pattern and a target object, a matcher returns the candidates of <code>match-all</code>.
-In an evaluation of <code>match</code>, one of them is returned.
-Generally speaking, a matcher is a function maps a pattern and an object to a collection of objects.
+A matcher determines how to do pattern matching.
+Generally speaking, given a pattern and an object, a matcher returns the candidates of <code>match-all</code> with the pattern and the object.
+<code>match</code> returns one of them, if it isn't null.
+Given a pattern and an object, what Egison do is the following.
+<ol>
+<li>Find a <code>&lt;primitive-pattern-pattern&gt;</code> matched by the pattern.
+If the <code>&lt;primitive-pattern-pattern&gt;</code> contains pattern variables, the associated value in the pattern is bound.
+</li>
+<li>
+If found, find a <code>&lt;primitive-data-pattern&gt;</code> in the associated <code>&lt;primitive-data-clause&gt;</code> matched by the object.
+If the <code>&lt;primitive-data-pattern&gt;</code> contains pattern variables, the associated value in the object is bound.
+</li>
+<li>
+If found, returns the result of an evaluation the associated <code>&lt;body&gt;</code>
+</li>
+</ol>
+
 In the subsection, we explain the basics of matcher using <code>ordering</code>.
 </p>
 
@@ -77,69 +91,41 @@ In the subsection, we explain the basics of matcher using <code>ordering</code>.
 </pre>
 
 <p>
-Note that we use no <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, and <code>(primitive-snoc-collection)</code>, in the definition of <code>ordering</code>.
+Note that we use neither <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, nor <code>(primitive-snoc-collection)</code>, in the definition of <code>ordering</code>.
 They are described in the next subsection.
 </p>
 
 <p>
-Rouhgly speaking, <code>matcher</code> is <code>match</code> for a pattern.
-Recall the behaviour of <code>match</code>.
-Given an object, <code>match</code> examines, in order, whether the object matches a pattern.
-Similarly, given a pattern, <code>matcher</code> finds a <code>&lt;primitive-pattern-pattern&gt;</code> matched by the pattern, when <code>match</code> or <code>match-all</code> is evaluated.
-If found, the associated <code>&lt;primitive-data-clause&gt;</code>s are evaluated using the target of <code>match</code>(<code>-all</code>).
+We start to explain the behaviour from step 1 in the above list.
+In the step, Egison examines whether the pattern matches a <code>&lt;primitive-pattern-pattern&gt;</code> or not.
 See the definitions of <code>&lt;primitive-pattern-pattern&gt;</code>.
 Any value pattern and inductive pattern match <code>(value-pattern-pattern)</code> and <code>(primitive-inductive-pattern)</code>, respectively.
 <code>(primitive-pattern-variable)</code> is matched by any pattern.
-For example, consider doing the following pattern matching.
+For example, consider evaluating the following code.
 </p>
 
 <pre>
   <code>
     (match-all &lt;Equal&gt; ordering [,&lt;Less&gt; #t])
-  </code>
-</pre>
-
-<p>
-  In an evaluation of the above formula, <code>,&lt;Less&gt;</code> is evaluated.
-  Since it is a value pattern and a value pattern matches <code>(value-pattern-pattern)</code>, the <code>primitive-pattern-pattern</code> <code>,$val</code> is matched.
-  Then, the value is bound to the variable (e.g., <code>$val</code>), and the associated <code>primitive-data-clause</code>s are evaluated.
-  In this case, 
-<pre>
-  <code>
-    {[$tgt (match [val tgt] [ordering ordering]
-               {[[&lt;less&gt; &lt;less&gt;] {[]}]
-                [[&lt;equal&gt; &lt;equal&gt;] {[]}]
-                [[&lt;greater&gt; &lt;greater&gt;] {[]}]
-                [_ {}]})]}
-  </code>
-</pre>
-  are evaluated with the environment that <code>val</code> is <code>&lt;Less&gt;</code>.
-</p>
-
-<p>
-  A <code>primitive-data-clause</code> is the same with a match-clause except that patterns are <code>primitive-data-pattern</code>s.
-  Consider evaluating <code>(match-all &lt;Equal&gt; ordering [,&lt;Less&gt; #t])</code>.
-  Since any object, in particular <code>&lt;Equal&gt;</code>, matches the pattern variable <code>$tgt</code>, <code>&lt;Equal&gt;</code> is bound to <code>tgt</code>, and then the associated body is evaluated.
-  As the body contains references to <code>ordering</code>, it's a bit difficult to understand the body.
-  Then, we skip the details of an evaluation of the body, and move to another example.
-  Note that <code>define</code> allows us to define an object recursively.
-</p>
-
-<pre>
-  <code>
+    (match-all &lt;Equal&gt; ordering [,&lt;Equal&gt; #t])
     (match-all &lt;Equal&gt; ordering [&lt;equal&gt; #t])
+    (match-all &lt;Equal&gt; ordering [$x x])
   </code>
 </pre>
 
 <p>
-  As the first example, Egison does pattern matching for <code>&lt;equal&gt;</code>.
-  Since <code>&lt;equal&gt;</code> is neither a value pattern nor <code>&lt;less&gt;</code>, it skips two <code>primitive-pattern-clause</code>s, and then <code>&lt;equal&gt;</code> is matched.
-  Note that <code>primitive-pattern-pattern</code>s are examined from top to bottom.
-  In the example, the target of pattern matching is &lt;Equal&gt;, which matches the <code>primitive-data-pattern</code> in the first <code>primitive-data-clause</code>.
-  Then, the result of <code>matcher</code> is <code>{[]}</code>.
-  As explained in the head of the subsection, it is the candidates of <code>match-all</code>.
-  
+Since the patterns in the first two piece of code are both value patterns, they match <code>,$val</code>.
+Then, <code>&lt;Less&gt;</code> and <code>&lt;Equal&gt;</code> are bound to <code>val</code>.
+In the third case, <code>&lt;equal&gt;</code> matches neither <code>,$val</code> nor <code>&lt;less&gt;</code>, but <code>&lt;equal&gt;</code>, because they are exactly the same.
+In the last one, <code>$x</code> matches the last <code>primitive-pattern-pattern</code>, namely, <code>$</code>.
 </p>
+
+<p>
+Let's move to the step 2.
+Like the step 1, Egison examines whether the object matches a <code>&lt;primitive-data-pattern&gt;</code> or not, in the step.
+</p>
+
+<hr/>
 
 <p>
 Egison provides syntactic sugar <code>algebraic-data-matcher</code> for such a deinition of a matcher.
