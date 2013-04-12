@@ -243,7 +243,12 @@ In this section, we show the definition of list as example, and explain the beha
                                       [&lt;cons $z $zs&gt; {[xs ys] @(helper {@xs z} zs)}]}))]}
                  (helper {} tgt))]}]
        [&lt;nioj ,$pxs $&gt; [(list a)]
-        {[$tgt (match-all tgt (list a) [&lt;join $ys ,pxs&gt; ys])]}]
+        {[$tgt (letrec {[$helper (lambda [$pxs $tgt]
+                                   (match [pxs tgt] [(list a) (list a)]
+                                     {[[&lt;nil&gt; _] {tgt}]
+                                      [[&lt;snoc $x $xs&gt; &lt;snoc ,x $ys&gt;] (helper xs ys)]
+                                      [[_ _] {}]}))]}
+                 (helper pxs tgt))]}]
        [&lt;nioj $ $&gt; [(list a) (list a)]
         {[$tgt (letrec {[$helper (lambda [$xs $ys]
                                    (match ys (list a)
@@ -274,9 +279,28 @@ In contrast, the tail matches the second argument, and the rest do the first one
 <pre>
   <code>
     (match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]])
-    (match-all {1 2 3 4} (list integer) [&lt;snoc $x $xs&gt; [x xs]])
   </code>
 </pre>
+
+<p>
+We deconstruct <code>{1 2 3 4}</code> by <code>(primitive-cons-collection)</code>.
+In the above example, <code>&lt;cons $x $xs&gt;</code> matches <code>(primitive-inductive-pattern)</code>, and then Egison examines whether <code>{1 2 3 4}</code> matches <code>(primitive-inductive-pattern)</code>, <code>{$x @$xs}</code>.
+Recalling their behaviour, the pattern matching succeeds, and <code>x</code> and <code>xs</code> are bound to <code>1</code> and <code>{2 3 4}</code>, respectively.
+By contrast, if you substitute <code>&lt;snoc $x $xs&gt;</code> for <code>&lt;cons $x $xs&gt;</code> in the above example, <code>x</code> is bound to the last element, <code>4</code>, and <code>xs</code> is bound to <code>{1 2 3}</code>.
+Note that the null collection matches neither <code>(primitive-cons-collection)</code> nor <code>(primitive-snoc-collection)</code>. For example, when you evaluate the following code, you will get the null collection <code>{}</code>.
+</p>
+
+<pre>
+  <code>
+    (match-all {} (list integer) [&lt;cons $x $xs&gt; [x xs]])
+  </code>
+</pre>
+
+<p>
+Now, you know how to define matchers, and then you can write your own matchers.
+We recommend you to read libraries such as <code>lib/collection.egi</code>.
+There we have written many matchers, which are good examples for you.
+</p>
 
 <hr/>
 <p>
