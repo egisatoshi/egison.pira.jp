@@ -26,92 +26,178 @@ It consists of numeric functions,
 </p>
 <hr/>
 
-<h2>Numeric Functions</h2>
-
 <li><code>+</code></li>
-<p>
-  It takes two integers as the arguments, and returns the sum of them.
-</p>
-
 <li><code>-</code></li>
-<p>
-  It takes two integers as the arguments, and subtracts the second argument from the first argument.
-</p>
-
 <li><code>*</code></li>
-<p>
-  It takes two integers as the arguments, and returns the product of them.
-</p>
+<pre>
+  <code>
+    (+ 13 21)
+    (- 13 21)
+    (* 13 21)
+  </code>
+</pre>
 
 <li><code>modulo</code></li>
-<p>
-  It takes two integers as the arguments.<br/>
-  The result is the remainder from division of the first argument by the second argument.<br/>
-  The sign of the result is equal to that of the second argument.
-</p>
-
 <li><code>quotient</code></li>
-<p>
-  It takes two integers as the arguments.<br/>
-  The result is the quotient from division of the first argument by the second argument.<br/>
-  Let n, m be integers, and q, r be the results of <code>(quotient n m)</code>, <code>(remainder n m)</code>, respectively.<br/>
-  Then, n = q * m + r always holds.
-</p>
-
 <li><code>remainder</code></li>
-<p>
-  It takes two integers as the arguments.<br/>
-  The result is the remainder from division of the first argument by the second argument.<br/>
-  The sign of the result is equal to that of the first argument.
-</p>
+<pre>
+  <code>
+    (modulo -21 13)
+    (quotient -21 13)
+    (remainder -21 13)
+  </code>
+</pre>
 
 <li><code>eq-n?</code></li>
 <li><code>lt-n?</code></li>
 <li><code>lte-n?</code></li>
 <li><code>gt-n?</code></li>
 <li><code>gte-n?</code></li>
+<pre>
+  <code>
+    (eq-n? 2 -5)
+    (lt-n? 2 -5)
+    (lte-n? 2 -5)
+    (gt-n? 2 -5)
+    (gte-n? 2 -5)
+  </code>
+</pre>
+
 <li><code>+f</code></li>
 <li><code>-f</code></li>
 <li><code>*f</code></li>
 <li><code>/f</code></li>
+<pre>
+  <code>
+    (+f 3.14159 2.71828)
+    (-f 3.14159 2.71828)
+    (*f 3.14159 2.71828)
+    (/f 3.14159 2.71828)
+  </code>
+</pre>
+
 <li><code>eq-f?</code></li>
 <li><code>lt-f?</code></li>
 <li><code>lte-f?</code></li>
 <li><code>gt-f?</code></li>
 <li><code>gte-f?</code></li>
+<pre>
+  <code>
+    (eq-f? 3.14159 2.71828)
+    (lt-f? 3.14159 2.71828)
+    (lte-f? 3.14159 2.71828)
+    (gt-f? 3.14159 2.71828)
+    (gte-f? 3.14159 2.71828)
+  </code>
+</pre>
+
 <li><code>neg</code></li>
 <li><code>abs</code></li>
+<pre>
+  <code>
+    (neg -89)
+    (abs -89)
+  </code>
+</pre>
+
 <li><code>sqrt</code></li>
 <li><code>exp</code></li>
 <li><code>log</code></li>
+<pre>
+  <code>
+    (sqrt 2.71828)
+    (exp 2.71828)
+    (log 2.71828)
+  </code>
+</pre>
+
+
 <li><code>sin</code></li>
 <li><code>cos</code></li>
 <li><code>tan</code></li>
+<pre>
+  <code>
+    (sin 2.71828)
+    (cos 2.71828)
+    (tan 2.71828)
+  </code>
+</pre>
+
 <li><code>asin</code></li>
 <li><code>acos</code></li>
 <li><code>atan</code></li>
+<pre>
+  <code>
+    (asin 0.41078)
+    (acos 0.41078)
+    (atan 0.41078)
+  </code>
+</pre>
+
 <li><code>sinh</code></li>
 <li><code>cosh</code></li>
 <li><code>tanh</code></li>
+<pre>
+  <code>
+    (sinh 2.71828)
+    (cosh 2.71828)
+    (tanh 2.71828)
+  </code>
+</pre>
+
 <li><code>asinh</code></li>
 <li><code>acosh</code></li>
 <li><code>atanh</code></li>
+<pre>
+  <code>
+    (asinh 3.14159)
+    (acosh 3.14159)
+    (atanh 3.14159)
+  </code>
+</pre>
+
 <li><code>round</code></li>
 <li><code>floor</code></li>
 <li><code>ceiling</code></li>
 <li><code>truncate</code></li>
+<pre>
+  <code>
+    (round -2.71828)
+    (floor -2.71828)
+    (ceiling -2.71828)
+    (truncate -2.71828)
+  </code>
+</pre>
+
 <li><code>eq?</code></li>
-<p>
-It takes two arguments, and returns whether they are the same or not.<br/>
-The two arguments are limited to built-in data.<br/>
-You can't use the function to examine two inductive data are equal.
-</p>
+<pre>
+  <code>
+    (eq? 3.14159 "This is pi.")
+    (eq? "Can you use Egison?" 'Y')
+    (eq? 1 1.0)
+  </code>
+</pre>
 
 <li><code>lt?</code></li>
 <li><code>lte?</code></li>
 <li><code>gt?</code></li>
 <li><code>gte?</code></li>
+<pre>
+  <code>
+    (lt? 3.14159 144)
+    (lte? 3.14159 144)
+    (gt? 3.14159 144)
+    (gte? 3.14159 144)
+  </code>
+</pre>
+
 <li><code>string-append</code></li>
+<pre>
+  <code>
+    (string-append "That's nothing but list of examples using the primitive functions.\n" "If you want to get more examples, you will find it in libraries.")
+  </code>
+</pre>
+
 
 <hr/>
 
