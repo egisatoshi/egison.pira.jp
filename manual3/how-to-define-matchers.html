@@ -139,7 +139,7 @@ Obviously, the first example returns <code>{}</code> and the second one returns 
 The body of the last one is <code>{tgt}</code>, and then returns <code>{&lt;Equal&gt;}</code>.
 If the tuple of matchers in the <code>&lt;primitive-pattern-clause&gt;</code> isn't null, then Egison does the next pattern matching with a tuple of patterns that match <code>$</code> and an object in the result using the tuple of matchers.
 In the example, the pattern is <code>$x</code>, the object is <code>&lt;Equal&gt;</code>, and the matcher is <code>something</code>.
-Here, <code>something</code> is the unique built-in matcher, which contains just wildcard and pattern variables.
+Here, <code>something</code> is the unique built-in matcher, which contains only wildcard and pattern variables.
 Since <code>$x</code> is a pattern variable, <code>&lt;Equal&gt;</code> is bound to <code>x</code>, and then the result of the formula is <code>{&lt;Equal&gt;}</code>.
 Now, we can drop the assumption.
 Since the tuple of matchers in the <code>primitive-pattern-clause</code> is null, the result of successful pattern matching is <code>{[]}</code>, and Egison considers the pattern matching successful.
@@ -258,231 +258,40 @@ In this section, we show the definition of list as example, and explain the beha
 
 <p>
 A definition of a matcher for collection data may contains <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, and <code>(primitive-snoc-collection)</code>.
-The above examples contains all of them.
+Indeed, the above examples contains all of them.
 In the following, we explain the behaviour of them.
 </p>
 
 <p>
-As is evident, just null collection matches <code>(primitive-null-collection)</code>.
+As is evident, all matches <code>(primitive-null-collection)</code> is the null collection.
 Any non-null collection matches both <code>(primitive-cons-collection)</code> and <code>(primitive-snoc-collection)</code>.
 The difference between <code>(primitive-cons-collection)</code> and <code>(primitive-snoc-collection)</code> is how to deconstruct the collection.
 Recall they take the two arguments.
-In <code>(primitive-cons-collection)</code>, the head of the collection matches the first argument, and the rest matches the second one.
-In contrast, the head matches the second argument, and the rest does the first one in <code>(primitive-snoc-collection)</code>.
+In <code>(primitive-cons-collection)</code>, the head of the collection matches the first argument, and the rest match the second one.
+In contrast, the tail matches the second argument, and the rest do the first one in <code>(primitive-snoc-collection)</code>.
 </p>
+
+<pre>
+  <code>
+    (match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]])
+    (match-all {1 2 3 4} (list integer) [&lt;snoc $x $xs&gt; [x xs]])
+  </code>
+</pre>
 
 <hr/>
-
 <p>
-  <code>list</code> is defined as a function that gets a matcher and returns a matcher.<br/>
-  The argument matcher is the matcher for elements of lists.<br/>
-  Therefore, <code>(list integer)</code> means a matcher of a list of integers, and <code>(list (list integer))</code> means a matcher of a list of lists of integers.<br/>
+  [<a href="../index.html">Egison Top</a>]
+  [<a href="./index.html">Egison Manual Top</a>]
 </p>
-
-<p>
-  A <code>matcher</code> expression defines a matcher.<br/>
-  The pattern matching process of Egison is recursively defined.<br/>
-  The input of the pattern matching process are a pattern, a target, and a matcher, and the pattern matching process decompose the input pattern and target according to the matcher definition.<br/>
-  The decomposed patterns and targets are passed to next pattern matching process with the matchers that is specified in the matcher definition.<br/>
-  A <code>matcher</code> expression defines the way of destruction of each one step in whole recursive destruction.<br/>
-  You can see pattern matching process samples in <a href="./mechanism.html">next section</a>.<br/>
-</p>
-
-<p>
-  A <code>matcher</code> expression is constituted of a collection of <i>primitive-pattern-clauses</i>.<br/>
-  A primitive-pattern-clause is a tuple of a <i>primitive-pattern-pattern</i>, a <i>next-matcher-expression</i> and a collection of <i>primitive-data-clauses</i>.<br/>
-</p>
-
-<p>
-  A <i>primitive-pattern-pattern</i> is a pattern for patterns.<br/>
-  The pattern is pattern matched with the primitive-pattern-patterns from the head of the primitive-pattern-clauses.<br/>
-  If one of the primitive-pattern-pattern is matched with the pattern, 
-  the primitive-pattern-clauses of that primitive-pattern-pattern is used to get the targets and the matchers for next pattern matching.<br/>
-</p>
-
-<pre>
-<code>
-&lt;primitive-pp&gt; ::= `$'                                (primitive pattern variable)
-                 | `,$' var-name                      (value-pat pattern)
-                 |  `&lt;' cons-name &lt;primitive-pp&gt;* `&gt;' (primitive inductive pattern)
-</code>
-</pre>
-
-<p>
-  Here is syntax of <i>primitive-pattern-patterns</i>.<br/>
-  A primitive-pattern-pattern is an inductive data whose element is a `<code>$</code>' or a value-pattern pattern.<br/>
-  A primitive-pattern-pattern which is enclosed with `<code>&lt;</code>' and `<code>&gt;</code>' matches with the inductive pattern whose pattern constructor is same.<br/>
-</p>
-
-<p>
-  An value-pattern-pattern is matched with the value pattern and bind its value to <code>var-name</code>.<br/>
-  These bindings are used in the evaluation of the primitive-data-clause.<br/>
-</p>
-
-<p>
-  `<code>_</code>' is matched with any pattern, and the pattern which is matched with the wildcard is passed as the pattern for next pattern matching.<br/>
-</p>
-
-<p>
-  A primitive-data-clause is constituted of <i>primitive-data-pattern</i> and a body expression which is evaluated to next pattern matching targets.<br/>
-  The way of Pattern matching of primitive-data-pattern is same with the ordinary pattern matching.<br/>
-  It has only one result, and not allow repeated pattern variables.<br/>
-  Here is syntax of primitive data patterns.<br/>
-</p>
-
-<pre>
-<code>
-&lt;primitive-dp&gt; ::= `_'
-                 | `$' var-name
-                 | `&lt;' cons-name &lt;primitive-dp&gt;* `&gt;'
-                 | `{}'
-                 | `{' &lt;primitive-dp&gt; .&lt;primitive-dp&gt;  `}'
-                 | `{' .&lt;primitive-dp&gt; &lt;primitive-dp&gt;  `}'
-</code>
-</pre>
-
-<p>
-  '<code>_</code>' is a <i>primitive wild card</i>.<br/>
-  It matches with any values.<br/>
-</p>
-
-<p>
-  A pattern variable which appears in the primitive pattern is a <i>primitive pattern variable</i>.<br/>
-  It matches with any value, and the value is bound to it.<br/>
-</p>
-
-<p>
-  <code>&lt;cons-name &lt;primitive-dp&gt;*&gt;</code> is a <i>primitive inductive pattern</i>.<br/>
-  This pattern matches when the target value is an inductive value whose constructor is the same with <code>cons-name</code>.<br/>
-  Pattern matchings for each argument are recursively executed.<br/>
-</p>
-
-<p>
-  <code>{}</code> is a <i>primitive empty pattern</i>.<br/>
-  This pattern matches when the target value is an empty collection.<br/>
-</p>
-
-<p>
-  <code>{&lt;primitive-dp&gt; .&lt;primitive-dp&gt;}</code> is a <i>primitive cons pattern</i>.<br/>
-  This pattern matches when the target collection contain more than one element.<br/>
-  The first <code>primitive-dp</code> is matched with the first element of the target collection, and the second <code>primitive-dp</code> is matched with the rest elements of the target collection.<br/>
-</p>
-
-<p>
-  <code>{.&lt;primitive-dp&gt; &lt;primitive-dp&gt;}</code> is a <i>primitive snoc pattern</i>.<br/>
-  This pattern matches when the target collection contain more than one element.<br/>
-  The second <code>{primitive-dp} is matched with the last element of the target collection, and the first <code>primitive-dp</code> is matched with the rest elements of the target collection.<br/>
-</p>
-
-<p>
-  These three primitive patterns are the primitive operation for collections.<br/>
-  All operations for collections derive from these.<br/>
-  Collections are matched as a list in primitive pattern matching.<br/>
-</p>
-
-<p>
-  Now, I've explained all components of matcher expressions.<br/>
-  Then, we walk through how patterm matching proceed with an example.<br/>
-  Let's consider the case that the matcher is <code>(list integer)</code>,
-  the pattern is <code>&lt;join $xs &lt;cons _ $ys&gt;&gt;</coee>,
-and the target is <code>{1 2 3}</code>.<br/>
-</p>
-
-<p>
-  The both argument pattern constructor <code>join</code> is not a value pattern.<br/>
-  So, the primitive-pattern-pattern of sixth primitive-pattern-clause <code>&lt;join _ _&gt;</code> is matched with the input pattern.<br/>
-  First `<code>_</code>' of the primitive-pattern-pattern is matched with <code>$xs</code>,
-  and second `<code>_</code>' of the primitive-pattern-pattern is matched with <code>&lt;cons _ $ys&gt;</code>.<br/>
-  Therefore <code>$xs</code> and <code>&lt;cons _ $xs&gt;</code> are passed to next pattern matching process as next patterns.<br/>
-</p>
-
-<p>
-  The next-matcher-expression of matched matcher-clause is <code>[(list a) (list a)]</code>,
-  and <code>a</code> is bound to <code>integer</code>.<br/>
-  Therefore  <code>(list integer)</code> and <code>(list integer)</code> are passed to next pattern matching process as next matchers.<br/>
-</p>
-
-<p>
-  The primitive-match-cluases return a collection of next matchers.<br/>
-  The primitive-match-cluases of this matcher-caluse has only one prmitive-match-cluase.<br/>
-  The primitive-data-pattern of this primitive-data-clause is <code>$tgt</code>,
-  and it is matched with and bound to the target data <code>{1 2 3}</code>.<br/>
-  The body of primitive-data-clause is evaluated and it returns
-  <code>{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}</code>.<br/>
-  All elements of this collection are passed to next pattern mathing as next targets.<br/>
-  There are multiple ways to destruct the collection with <code>join</code> pattern constructor.<br/>
-  Pattern matching process are recursively executed for all these destruction.<br/>
-</p>
-
-<p>
-  Next matchers, next patterns, and next targets have same number of elements.<br/>
-  That is, the first next targets are <code>[{} {1 2 3}]</code>, so the <code>{}</code> is matched with the pattern <code>$xs</code> as <code>(list integer)</code>,
-  and the <code>{1 2 3}</code> is matched with the pattern <code>&lt;cons _ $xs&gt;</code> as <code>(list integer)</code>, in next pattern matching.<br/>
-</p>
-
-<p>
-...
-</p>
-
-<p>
-  The difference between the <code>join</code> and <code>nioj</code> pattern constructor is the order of evaluation of pattern matching process.
-</p>
-
-<pre>
-<code>
-(define $multiset
-  (lambda [$a]
-    (matcher
-      {[,$val []
-        {[$tgt (match [val tgt] [(list a) (multiset a)]
-                 {[[&lt;nil&gt; &lt;nil&gt;] {[]}]
-                  [[&lt;cons $x $xs&gt; &lt;cons ,x ,xs&gt;] {[]}]
-                  [[_ _] {}]})]}]
-       [&lt;nil&gt; []
-        {[{} {[]}]
-         [_ {}]}]
-       [&lt;cons ,$px $&gt; [(multiset a)]
-        {[$tgt (match tgt (list a)
-                 {[&lt;join $hs &lt;cons ,px $ts&gt;&gt; {{@hs @ts}}]
-                  [_ {}]})]}]
-       [&lt;cons $ $&gt; [a (multiset a)]
-        {[$tgt (match-all tgt (list a)
-                 [&lt;join $hs &lt;cons $x $ts&gt;&gt; [x {@hs @ts}]])]}]
-       [&lt;join ,$pxs $&gt; [(multiset a)]
-        {[$tgt undefined]}]
-       [$ [something]
-        {[$tgt {tgt}]}]
-       })))
-
-(define $set
-  (lambda [$a]
-    (matcher
-      {[&lt;nil&gt; []
-        {[{} {[]}]
-         [_ {}]}]
-       [&lt;cons ,$px $&gt; [(set a)]
-        {[$tgt (match tgt (list a)
-                 {[&lt;join _ &lt;cons ,px _&gt;&gt; {tgt}]
-                  [_ {}]})]}]
-       [&lt;cons $ $&gt; [a (set a)]
-        {[$tgt (match-all tgt (list a)
-                 [&lt;join _ &lt;cons $x _&gt;&gt; [x tgt]])]}]
-       [$ [something]
-        {[$tgt {tgt}]}]
-       })))
-
-</code>
-</pre>
 
 </body>
 
 <footer>
-  <hr size=1 noshade>
   <table width=100% border=0 cellspacing=0>
     <tr>
-      <td align=right>
+      <td align=left>
         <i>
-          <a href="http://egi.pira.jp">Egi Satoshi</a>
+          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
         </i>
     </tr>
   </table>

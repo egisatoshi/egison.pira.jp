@@ -286,7 +286,7 @@ The second argument is a formula, which is the body of the function.
   From ver.3.0, a lambda expression is equipped with simpler notation.<br/>
   In this notation, you can omit to write "lambda" and the arguments of the function.<br/>
   You can refer to the i-th argument by writing concatenation of <code>$</code> and i.<br/>
-  If the order of occurences of the arguments is the same with the order of the arguments and their occurences are exactly one, then you can omit a number after <code>$</code>.<br/>
+  If the order of occurences of the arguments is the same as the order of the arguments and their occurences are exactly one, then you can omit a number after <code>$</code>.<br/>
   That is, <code>(lambda [$x $y] (+ x y))</code>, <code>(+ $1 $2)</code>, and <code>(+ $ $)</code> are the same.<br/>
   Altough this notation is so powerful, it is limited to specific functions.<br/>
   The body of such a function has to be simple.<br/>
@@ -346,7 +346,7 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
 </pre>
 
 <p>
-  A letrec expression is the same with a let expression except the fact that you can use recursive definition in the first argument.<br/>
+  A letrec expression is the same as a let expression except the fact that you can use recursive definition in the first argument.<br/>
   Mutual recursion is also allowed.
 </p>
 
@@ -472,7 +472,7 @@ are the same.
 
 If you have a function and its arguments as a tuple, and want to get the result of the application, then you should use this expression.<br/>
 The result of the evaluation of an apply expression is the result of application of the function with the arguments.<br/>
-That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is the same thing with <code>(f x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>)</code>.
+That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is the same thing as <code>(f x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>)</code>.
 
 <h3>Patterns</h3>
 
@@ -689,7 +689,6 @@ Such a pattern is called "and-pattern".
 </pre>
 
 <hr/>
-
 <p>
   [<a href="../index.html">Egison Top</a>]
   [<a href="./index.html">Egison Manual Top</a>]
@@ -698,12 +697,11 @@ Such a pattern is called "and-pattern".
 </body>
 
 <footer>
-  <hr size=1 noshade>
   <table width=100% border=0 cellspacing=0>
     <tr>
-      <td align=right>
+      <td align=left>
         <i>
-          <a href="http://egi.pira.jp">Egi Satoshi</a>
+          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
         </i>
     </tr>
   </table>
