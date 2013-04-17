@@ -198,8 +198,8 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 </p>
 
 <p>
-  Since Egison execute pattern matching from left to right,
-  a pattern variable bound to a value can be referred to in its right side of the pattern.
+  Since Egison executes pattern matching from left to right,
+  a bound pattern variable can be referred to in its right side of the pattern.
   In this example, at first, the variable <code>n</code> is bound to any element of the collection.
   Then, Egison examines the pattern <code>,n</code>.
   It places the right side of <code>$n</code>, it is evaluated to the value where <code>n</code> is bound.
@@ -208,10 +208,10 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
   Therefore, after successful pattern matching, <code>n</code> is bound to an element contained at least two in the target collection.
 </p>
 
-<hr/>
-
 <p>
   Here is another example.
+  Suppose you have three collections of integers, and need the integers contained in all of the collections.
+  You can do the task using the following simple code.
 </p>
 
 <pre>
@@ -224,144 +224,9 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 </pre>
 
 <p>
-  With Egison, we are able to do pattern matching with nested data types easily.
-  The target value is a collection of collections of integers.
-  It is matched as a list of multisets of integers.
-  This pattern extracts an element from each collection, which is an element of the target collection.
-</p>
-
-<h2 id="cut-patterns">Cut Patterns</h2>
-
-<pre>
-  <code>
-&gt; (test (match {2 7 7 2 7} (multiset integer)
-          {[&lt;cons $m &lt;cons ,m &lt;cons ,m
-             &lt;cons $n !&lt;cons ,n !&lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
-            &lt;ok&gt;]
-           [_ &lt;ko&gt;]}))
-
-&lt;ok&gt;
-  </code>
-</pre>
-
-<p>
-  Egison also has <code>match</code> expressions.
-  A <code>match</code> expression takes a collection of match clauses.
-  Matching process is executed from the top of the match clauses.
-  The body of first succeeded match clause is evalated.
-</p>
-
-<p>
-  The pattern of the first match clause matches if the target value is collection which contains three same number and other two same number.
-  The target matches with the pattern of the first match clause, so the return value is <code><ok></code>.
-</p>
-
-<p>
-  A pattern which has '<code>!</code>' at the head is called a <i>cut pattern</i>.
-  If there are several matchings to the point of the cut pattern, one of them are taken and pattern matching for the rest of the pattern is executed.
-  If pattern matching after the position of the cut pattern fails, backtracking before the position of the cut pattern is not executed.
-  Cut patterns are used to avoid unnecessary search.
-  In the above case, since there is only one combination that three same number appears among the collection which has five elements,
-  further search is not required if pattern matching failed after a triple of three same number is found.
-  This cut pattern represent this fact.
-</p>
-
-<p>
-  If pattern matching after the cut pattern succeed, backtracking before the position of the cut pattern is executed as there is no cut pattern.
-</p>
-
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3} (multiset integer)
-          [&lt;cons $x &lt;cons $y &lt;cons $z !&lt;nil&gt;&gt;&gt;&gt; [x y z]]))
-
-{[1 2 3] [1 3 2] [2 1 3] [2 3 1] [3 1 2] [3 2 1]}
-  </code>
-</pre>
-
-<p>
-  The cut pattern is especially useful for pattern matching with multisets.
-  The power of cut patterns is demonstrated with the code that determines poker hands.
-  (<a href="./poker-hands.html">Example1. Poker Hands</a>)
-</p>
-
-<h2>Reucrsive Patterns</h2>
-
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3 4} (list integer)
-          [&lt;join _ &lt;cons $m &lt;join _ &lt;cons $n _&gt;&gt;&gt;&gt; [m n]]))
-
-{[1 2] [1 3] [1 4] [2 3] [2 4] [3 4]}
-  </code>
-</pre>
-
-<p>
-  The output of the above expression is all combinations of two elements from the target collection.
-  The output consists of <i>nC2</i> elements where <code>n</code> is the length of the target collection.
-  The first '<code>_</code>' matches with some front part of the target collection,
-  and <code>$m</code> matches with the element behind it.
-  The second '<code>_</code>' matches with some subcollection that follows after the element bound to <code>\$m</code>,
-  and <code>$n</code> matches with the element behind it.
-  The last '<code>_</code>' matches with the rest of collection.
-  For example, the case <code>$m</code> bound to <code>1</code> and <code>$n</code> bound to <code>2</code>,
-  the first and the second '<code>_</code>' matches with empty collection,
-  and the last '<code>_</code>' matches with the collection <code>{3 4}</code>.
-</p>
-
-<p>
-  The pattern which generates <i>nCk</i> combinations of elements can be written for any fixed <i>k</i> in the same way.
-  However, it is not possible to write a pattern for dynamically changing <i>k</i> in the same way.
-  This is because we cannot write patterns including a parameter that determines the count of pattern variables in them.
-  Egison has the special pattern syntax, <code>loop</code> expressions and <i>subscripted variables</i> to enable it.
-</p>
-
-<p>
-  A variable whose name contains `_' and an expression which returns integer in its tail is called a subscripted variable.
-  It is similar to an array of other programming languages.
-  A difference is it can be used in patterns as a pattern variable.
-  We can append several subscritions to one variable.
-</p>
-
-<p>
-  A <code>loop</code> expression takes a <i>recursive variable</i>, an <i>lindex variable</i>, a <i>range expression</i>, a <i>middle expression</i>, and a <i>tail expression</i>.
-  A range expression returns a index collection.
-  The index variable runs through its elements.
-  A <code>loop</code> expression is expanded to the middle expression when it has one and more elements.
-  When there are no elements, a <code>loop</code> expression is expanded to the tail expression.
-  The loop variable in the middle expression is expanded to the next middle expression when there is the next element in the index collection.
-  If there is no unused element in the index collection, the loop variable in the middle expression is expanded to the tail expression.
-</p>
-
-<pre>
-  <code>
-&gt; (define $combination
-    (lambda [$xs $k]
-      (match-all xs (list something)
-        [(loop $l $i (between 1 k) &lt;join _ &lt;cons $a_i l&gt;&gt; _)
-         [@(loop $l $i (between 1 k) {a_i @l} {})]])))
-
-&gt; (test (combination {1 2 3 4} 3))
-
-{[1 2 3] [1 2 4] [1 3 4][2 3 4]}
-  </code>
-</pre>
-
-<p>
-  <code>between</code> is a function which take two arguments and return a sequence of numbers between them.
-</p>
-
-<pre>
-  <code>
-&gt; (test (between 2 4))
-
-{2 3 4}
-  </code>
-</pre>
-
-<p>
-  With a loop pattern, we can represent patterns for Hamilton path or cycle of graphs in a single pattern.
-  (<a href="./graph.html">Example2. Graphs</a>)
+  Probably, you understand how strong the pattern matching of Egison is.
+  In this chapter, we show the inductive patterns of the matchers <code>list</code>, <code>multiset</code>, and <code>set</code>.
+  If you want to make your own matcher or understand matchers more deeply, you should read the next chapter.
 </p>
 
 <hr/>
