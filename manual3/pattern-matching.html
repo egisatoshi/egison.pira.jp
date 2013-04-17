@@ -82,9 +82,9 @@
   In this case, it means "deconstruct an object in the way defined as cons, and then bind adequate objects to <code>x</code> and <code>xs</code>".
   The meaning of <code>cons</code>, i.e., what kind of objects matches and what are bound to <code>x</code> and <code>xs</code> depends on matchers.
   In general, it divides a collection into an element and the rest of the collection.
-  If a matcher is list, <code>x</code> is the head of the collection and <code>xs</code> is th rest as ordinary programming languages.
+  If a matcher is <code>list</code>, <code>x</code> is the head of the collection and <code>xs</code> is th rest as ordinary programming languages.
   For example, in the above case, <code>x</code> is 1 and <code>xs</code> is {2 3 4}.
-  In the case of multiset, that is, a matcher of a collection whose order is meaningless, any element in the target is bound to <code>x</code>.
+  In the case of <code>multiset</code>, that is, a matcher of a collection whose order is meaningless, any element in the target is bound to <code>x</code>.
   The above example shows the possible pairs <code>[x xs]</code> are <code>[1 {2 3 4}]</code>, <code>[2 {3 4 1}]</code>, <code>[3 {4 1 2}]</code>, and <code>[4 {1 2 3}]</code>.
   Note its order is also meaningless.
   When the numbers of occurences of elements in the collection is also meaningless, that is, it is a set, an element bound to <code>x</code> can be contained in the collection bound to <code>xs</code>.
@@ -112,15 +112,29 @@
   </code>
 </pre>
 
-<hr/>
+<p>
+  <code>join</code> is a pattern that divides a collection into two collections, the two arguments of it.
+  Intuitively, <code>join</code> is "<code>cons</code> iteration".
+  That is, <code>&lt;join $x $y&gt;</code> is <code>&lt;cons $x1 &lt;cons $x2 &lt;...&lt;cons $xn $y&gt;...&gt;&gt;&gt;</code> and <code>x</code> is equal to <code>{x1 x2 ... xn}</code>.
+  Matchers <code>list</code> and <code>multiset</code> are equipped with <code>join</code>.
+  The way <code>list</code> divides a collection preserves the order of the collection.
+  For example, all matches <code>&lt;join ,{1 2} ,{3}&gt;</code> is <code>{1 2 3}</code>.
+  By contrast, <code>multiset</code> breaks the order.
+  In the example, the pattern is matched by <code>{1 2 3}</code>, <code>{1 3 2}</code>, <code>{2 1 3}</code>, and so on.
+</p>
 
 <p>
-  The pattern constructor <code>join</code> takes two arguments.
-  Programmers use it to divide a collection into two collections.
-  A target collection matches <code>join</code> pattern when the target is the union of collections matching both arguments of <code>join</code>.
-  The meaning of union differs from type to type.
-  For example, <code>&lt;join ,{1 2} ,{3 4}&gt;</code> is matched only by <code>{1 2 3 4}</code> in list, but, in multiset, it is done by <code>{1 2 3 4}</code>, <code>{1 4 3 2}</code>, <code>{4 3 2 1}</code>, and so on.
+  An interesting example using <code>cons</code> and <code>join</code> is nondeterministic pattern matching for a list.
+  For example, you want to divide an even-number element by 2.
 </p>
+
+<pre>
+  <code>
+&gt; (test (match-all {1 2 3 4} (list integer) [&lt;join $xs &lt;cons (&amp; $y) $zs&gt;&gt; {@xs y @zs}]))
+  </code>
+</pre>
+
+<hr/>
 
 <p>
   The list data type has special pattern constructors, <code>snoc</code> and <code>nioj</code>.
