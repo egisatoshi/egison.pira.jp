@@ -222,11 +222,11 @@ The second argument is a formula, which is the body of the function.
   From ver.3.0, a lambda expression is equipped with simpler notation.<br/>
   In this notation, you can omit to write "lambda" and the arguments of the function.<br/>
   You can refer to the i-th argument by writing concatenation of <code>$</code> and i.<br/>
-  If the order of occurences of the arguments is the same as the order of the arguments and their occurences are exactly one, then you can omit a number after <code>$</code>.<br/>
+  If the order of occurrences of the arguments is the same as the order of the arguments and their occurrences are exactly one, then you can omit a number after <code>$</code>.<br/>
   That is, <code>(lambda [$x $y] (+ x y))</code>, <code>(+ $1 $2)</code>, and <code>(+ $ $)</code> are the same.<br/>
-  Altough this notation is so powerful, it is limited to specific functions.<br/>
+  Although this notation is so powerful, it is limited to specific functions.<br/>
   The body of such a function has to be simple.<br/>
-  Namely, it is application of a function and its arguments, and all occurences of <code>$i</code> are the arguments.<br/>
+  Namely, it is application of a function and its arguments, and all occurrences of <code>$i</code> are the arguments.<br/>
   For example, you can't write <code>(+ $1 (* $2 2))</code> or <code>(if $1 #f #t)</code>
 </p>
 
@@ -330,7 +330,7 @@ See <a href="./how-to-define-matchers.html">How to Define Matchers</a>.
 <pre><code>  (function <i>matcher</i> {[<i>pattern</i> <i>formula</i>] ...})</code></pre>
 
 <p>
-Like a lambda expression, a function expression creates a function with an arugment.<br/>
+Like a lambda expression, a function expression creates a function with an argument.<br/>
 Pattern matching is done with the argument.<br/>
 Roughly speaking,
 <code>(function <i>X</i> {[<i>Y</i> <i>Z</i>] ...})</code> 
@@ -357,7 +357,7 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
   This feature makes Egison a powerful language.<br/>
   In the following, we show various patterns of Egison.<br/>
   Here, we only show the special pattern <i>wild card</i> `<code>_</code>'.<br/>
-  Any object mathces this pattern.
+  Any object matches this pattern.
 </p>
 
 <pre><code>&gt; (test (match 1 something {[_ &lt;OK&gt;]}))
@@ -376,7 +376,7 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
 <p>
   As a datum, a pattern can be defined inductively.<br/>
   Notation of inductive patterns is similar to ones of inductive data.<br/>
-  The exception is, in indutive patterns, the head of an identifier is lowercase.<br/>
+  The exception is, in inductive patterns, the head of an identifier is lowercase.<br/>
   The behaviour of inductive patterns is defined in a matcher.<br/>
   Then, matchers sometimes define inductive patterns having the same name.<br/>
   Indeed, the inductive pattern <code>cons</code> is defined in matchers <code>list</code>, <code>multiset</code>, and <code>set</code>.
@@ -390,7 +390,7 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
 <pre><code>  <i>variable</i></code></pre>
 
 <p>
-You can use varibales as patterns.
+You can use variables as patterns.
 These patterns are called "pattern variables".<br/>
 Any object matches this pattern, and then is locally bound to the variable.<br/>
 Moreover, you can use the pattern in inductive patterns.<br/>
@@ -411,7 +411,7 @@ This usage allows us to deconstruct an object.
 <pre><code>  ,<i>value</i></code></pre>
 
 <p>
-  A value pattern is a pattern that objects equal to a paticular object match.<br/>
+  A value pattern is a pattern that objects equal to a particular object match.<br/>
   The meaning of "equal" is defined in matchers, and then vary by matcher.<br/>
   You should not forget to place COMMA before a value.
 </p>

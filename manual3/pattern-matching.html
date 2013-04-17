@@ -82,7 +82,7 @@
   In this case, it means "deconstruct an object in the way defined as cons, and then bind <code>x</code> and <code>xs</code> to adequate objects".
   The meaning of <code>cons</code>, i.e., what kind of objects matches and where <code>x</code> and <code>xs</code> are bound depends on matchers.
   In general, it divides a collection into an element and the rest of the collection.
-  If a matcher is <code>list</code>, <code>x</code> is the head of the collection and <code>xs</code> is th rest as ordinary programming languages.
+  If a matcher is <code>list</code>, <code>x</code> is the head of the collection and <code>xs</code> is the rest as ordinary programming languages.
   For example, in the above case, <code>x</code> is 1 and <code>xs</code> is {2 3 4}.
   In the case of <code>multiset</code>, that is, a matcher of a collection whose order is meaningless, <code>x</code> is bound to any element in the target.
   The above example shows the possible pairs <code>[x xs]</code> are <code>[1 {2 3 4}]</code>, <code>[2 {3 4 1}]</code>, <code>[3 {4 1 2}]</code>, and <code>[4 {1 2 3}]</code>.
@@ -124,7 +124,7 @@
 </p>
 
 <p>
-  An interesting example using <code>cons</code> and <code>join</code> is nondeterministic pattern matching for a list.
+  An interesting example using <code>cons</code> and <code>join</code> is non-deterministic pattern matching for a list.
   For example, you want to divide even-number elements by 2 recursively.
   The following function <code>div2</code> gives the list you want to get.
   You may be able to confirm the function works correctly.
@@ -177,7 +177,7 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 <h2 id="non-linear-patterns">Non-linear Patterns</h2>
 
 <p>
-  Egison allows programers to "bind and use" variables in a pattern.
+  Egison allows programmers to "bind and use" variables in a pattern.
   A pattern that contains multiple occurrences of a variable is called a <i>non-linear pattern</i>.
   Egison is the first language that non-linear patterns can be used in pattern matching for unfree data.
   The following is an example of non-linear patterns.
