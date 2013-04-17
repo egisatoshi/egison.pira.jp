@@ -221,6 +221,15 @@ Therefore, Egison denies a variable bound to a pattern.
 </p>
 
 <p>
+However, you probably want to reuse your own pattern.
+Egison prepares pattern-constructors for such a purpose.
+</p>
+
+<pre><code>  (pattern-constructor [<i>variable</i> ...] <i>formula</i>)</code></pre>
+
+<p>
+You notice that it is similar to <code>lambda</code> expression.
+Actually, a pattern-constructor is a function that returns a pattern.
 </p>
 
 <hr/>
