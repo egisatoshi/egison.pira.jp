@@ -23,7 +23,7 @@
 <p>
   In this section, we will describe the program that determine the poker hands.<br/>
   We do pattern matching collections of cards as a multiset of cards.<br/>
-  The program codes that we describe in this section can are in <code>lib/poker-hands.egi</code> and <code>sample/poker-hands-test.egi</code>.<br/>
+  The program codes that we describe in this section can are in <code>sample/poker-hands-test.egi</code>.<br/>
 </p>
 
 <p>
@@ -38,29 +38,8 @@
 <pre>
   <code>
 (define $suit
-  (matcher
-    {[,$val []
-      {[$tgt (match [val tgt] [suit suit]
-               {[[&lt;spade&gt; &lt;spade&gt;] {[]}]
-                [[&lt;heart&gt; &lt;heart&gt;] {[]}]
-                [[&lt;club&gt; &lt;club&gt;] {[]}]
-                [[&lt;diamond&gt; &lt;diamond&gt;] {[]}]
-                [[_ _] {}]})]}]
-     [&lt;spade&gt; []
-      {[&lt;Spade&gt; {[]}]
-       [_ {}]}]
-     [&lt;heart&gt; []
-      {[&lt;Heart&gt; {[]}]
-       [_ {}]}]
-     [&lt;club&gt; []
-      {[&lt;Club&gt; {[]}]
-       [_ {}]}]
-     [&lt;diamond&gt; []
-      {[&lt;Diamond&gt; {[]}]
-       [_ {}]}]
-     [$ [something]
-      {[$tgt {tgt}]}]
-     }))
+  (algebraic-data-matcher
+    (| &lt;spade&gt; &lt;heart&gt; &lt;club&gt; &lt;diamond&gt; )))
   </code>
 </pre>
 
@@ -91,16 +70,8 @@
 <pre>
   <code>
 (define $card
-  (matcher
-    {[,$val []
-      {[$tgt (match [val tgt] [card card]
-               {[[&lt;card $s $n&gt; &lt;card ,s ,n&gt;] {[]}]
-                [[_ _] {}]})]}]
-     [&lt;card $ $&gt; [suit integer]
-      {[&lt;Card $s $n&gt; {[s n]}]}]
-     [$ [something]
-      {[$tgt {tgt}]}]
-     }))
+  (algebraic-data-matcher
+    (| &lt;card suit integer&gt; )))
   </code>
 </pre>
 

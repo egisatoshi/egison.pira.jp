@@ -22,7 +22,7 @@ First of all, we show the formal definition of <code>matcher</code>.
 
 <pre>
   <code>
-    &lt;matcher-sentence&gt;          := `(' matcher `{' &lt;primitive-pattern-clause&gt;* `}' `)'
+    &lt;matcher-sentence&gt;          := `(' "matcher" `{' &lt;primitive-pattern-clause&gt;* `}' `)'
     &lt;primitive-pattern-clause&gt;  := `[' &lt;primitive-pp&gt; `[' &lt;matcher&gt;* `]' `{' &lt;primitive-data-clause&gt;* `}' `]'
     &lt;primitive-data-clause&gt;     := `[' &lt;primitive-dp&gt; &lt;body&gt; `]'
     &lt;primitive-pp&gt;              := `$'                                             (primitive-pattern-variable)
