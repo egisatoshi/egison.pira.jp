@@ -79,15 +79,15 @@
   That is, a <i>match-clause</i> has the form <code>[<i>pattern</i> <i>body</i>]</code>.
   In the above examples, their match-clauses are all "<code>[&lt;cons $x $xs&gt; [x xs]]</code>", and the body of it is "<code>{[x xs]}</code>".
   A match-clause defines a sequence of actions in the pattern matching.
-  In this case, it means "deconstruct an object in the way defined as cons, and then bind adequate objects to <code>x</code> and <code>xs</code>".
-  The meaning of <code>cons</code>, i.e., what kind of objects matches and what are bound to <code>x</code> and <code>xs</code> depends on matchers.
+  In this case, it means "deconstruct an object in the way defined as cons, and then bind <code>x</code> and <code>xs</code> to adequate objects".
+  The meaning of <code>cons</code>, i.e., what kind of objects matches and where <code>x</code> and <code>xs</code> are bound depends on matchers.
   In general, it divides a collection into an element and the rest of the collection.
   If a matcher is <code>list</code>, <code>x</code> is the head of the collection and <code>xs</code> is th rest as ordinary programming languages.
   For example, in the above case, <code>x</code> is 1 and <code>xs</code> is {2 3 4}.
-  In the case of <code>multiset</code>, that is, a matcher of a collection whose order is meaningless, any element in the target is bound to <code>x</code>.
+  In the case of <code>multiset</code>, that is, a matcher of a collection whose order is meaningless, <code>x</code> is bound to any element in the target.
   The above example shows the possible pairs <code>[x xs]</code> are <code>[1 {2 3 4}]</code>, <code>[2 {3 4 1}]</code>, <code>[3 {4 1 2}]</code>, and <code>[4 {1 2 3}]</code>.
   Note its order is also meaningless.
-  When the numbers of occurences of elements in the collection is also meaningless, that is, it is a set, an element bound to <code>x</code> can be contained in the collection bound to <code>xs</code>.
+  When the numbers of occurrences of elements in the collection is also meaningless, that is, it is a set, an element where <code>x</code> are bound can be contained in the collection that <code>xs</code> are bound to.
   You can confirm the fact by the above example.
 </p>
 
@@ -143,10 +143,11 @@
   </code>
 </pre>
 
-<hr/>
-
 <p>
-  The list data type has special pattern constructors, <code>snoc</code> and <code>nioj</code>.
+The matcher <code>list</code> can deconstruct a collection into the tail and the others.
+The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
+Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
+Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
 </p>
 
 <pre>
@@ -177,7 +178,7 @@
 
 <p>
   Egison allows programers to "bind and use" variables in a pattern.
-  A pattern that contains multiple occurences of a variable is called a <i>non-linear pattern</i>.
+  A pattern that contains multiple occurrences of a variable is called a <i>non-linear pattern</i>.
   Egison is the first language that non-linear patterns can be used in pattern matching for unfree data.
   The following is an example of non-linear patterns.
 </p>
@@ -191,19 +192,23 @@
   </code>
 </pre>
 
+
 <p>
-  The output of this example is a collection of numbers which are contained in the target collection at least twice.
+  The output of this example is a collection of numbers contained two or more in the target collection.
 </p>
 
 <p>
-  Since pattern matching of Egison is executed from left to right,
-  the value bound to a pattern variable can be referred to in its right side of the pattern.
-  In this case, when the matching process proceeds to the pattern <code>,n</code>,
-  the expression <code>n</code> is evaluated to the value to which <code>$n</code> is bound.
-  The pattern <code>,n</code> is matched as an integer, so if the target value is equal to the value bound to <code>$n</code> as an integer,
-  the pattern matching succeeds.
-  '<code>_</code>' is a <i>wild card</i> which matches with any values.
+  Since Egison execute pattern matching from left to right,
+  a pattern variable bound to a value can be referred to in its right side of the pattern.
+  In this example, at first, the variable <code>n</code> is bound to any element of the collection.
+  Then, Egison examines the pattern <code>,n</code>.
+  It places the right side of <code>$n</code>, it is evaluated to the value where <code>n</code> is bound.
+  When an object matches the pattern <code>,n</code>, it is equal to the value as 
+<code>integer</code>.
+  Therefore, after successful pattern matching, <code>n</code> is bound to an element contained at least two in the target collection.
 </p>
+
+<hr/>
 
 <p>
   Here is another example.
