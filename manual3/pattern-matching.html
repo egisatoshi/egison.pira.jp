@@ -125,12 +125,21 @@
 
 <p>
   An interesting example using <code>cons</code> and <code>join</code> is nondeterministic pattern matching for a list.
-  For example, you want to divide an even-number element by 2.
+  For example, you want to divide even-number elements by 2 recursively.
+  The following function <code>div2</code> gives the list you want to get.
+  You may be able to confirm the function works correctly.
+  Note that there is no guarantee that <code>div2</code> divides elements from the head.
 </p>
 
 <pre>
   <code>
-&gt; (test (match-all {1 2 3 4} (list integer) [&lt;join $xs &lt;cons (&amp; $y) $zs&gt;&gt; {@xs y @zs}]))
+&gt; (define $div2
+     (lambda [$x]
+        (match x (list integer)
+           {[&lt;join $xs &lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $y) $zs&gt;&gt;  (div2 {@xs (quotient y 2) @zs})]
+            [_ x]})))
+&gt; (test (div2 {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610}))
+{1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}
   </code>
 </pre>
 
