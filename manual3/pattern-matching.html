@@ -21,10 +21,10 @@
 <h1>Pattern Matching</h1>
 <hr/>
 <p>
-  How do you express a set?
+  How do you express a set in a program?
   Probably, most of you represents it as a list.
-  But, this representation raises another question.
-  Why do you choose the order? Is it meaningful?
+  However, we would like to ignore the order of the elements of a collectrion.
+  We can't ignore it if we represent it as a list.
   Data such as sets have no normal form, and are called <i>unfree data</i>.
   Unfortunately, it has been difficult to do pattern matching for them.
   Egison gives various pattern matching for those data.
@@ -178,8 +178,8 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 
 <p>
   Egison allows programmers to "bind and use" variables in a pattern.
-  A pattern that contains multiple occurrences of a variable is called a <i>non-linear pattern</i>.
-  Egison is the first language that non-linear patterns can be used in pattern matching for unfree data.
+  A pattern that contains multiple occurrences of same variable is called a <i>non-linear pattern</i>.
+  Egison is the first programming language that non-linear patterns can be used in pattern matching for unfree data.
   The following is an example of non-linear patterns.
 </p>
 
@@ -194,7 +194,7 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 
 
 <p>
-  The output of this example is a collection of numbers contained two or more in the target collection.
+  The output of this example is a collection of duplicated numbers in the target collection.
 </p>
 
 <p>
