@@ -23,8 +23,8 @@
 <p>
   How do you express a set in a program?
   Probably, most of you represents it as a list.
-  However, we would like to ignore the order of the elements of a collectrion.
-  We can't ignore it if we represent it as a list.
+  However, a list differs from a set in that it has the order.
+  Then, even if we would like to ignore the order, we have to care about it when we represent a set as a list.
   Data such as sets have no normal form, and are called <i>unfree data</i>.
   Unfortunately, it has been difficult to do pattern matching for them.
   Egison gives various pattern matching for those data.
@@ -124,10 +124,10 @@
 {1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}</code></pre>
 
 <p>
-The matcher <code>list</code> can deconstruct a collection into the tail and the others.
-The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
-Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
-Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
+  The matcher <code>list</code> can deconstruct a collection into the tail and the others.
+  The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
+  Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
+  Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
 </p>
 
 <pre><code>&gt; (test (match-all {1 2 3} (list integer)
@@ -140,7 +140,7 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 
 <p>
   The arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.
-  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way with the head of it.
+  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way as the head of it.
   A pattern constructor <code>nioj</code> is similar to <code>join</code>, and used to divide a target collection into two collections.
   The difference between <code>join</code> and <code>nioj</code> is the order of pattern matching, as its name suggests.
   In case of <code>nioj</code>, pattern matching is executed from the back-side of a collection.
@@ -151,18 +151,18 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 
 <p>
   Egison allows programmers to "bind and use" variables in a pattern.
-  A pattern that contains multiple occurrences of same variable is called a <i>non-linear pattern</i>.
+  A pattern that contains multiple occurrences of a variable is called a <i>non-linear pattern</i>.
   Egison is the first programming language that non-linear patterns can be used in pattern matching for unfree data.
   The following is an example of non-linear patterns.
 </p>
 
 <pre><code>&gt; (test (match-all {1 2 3 1 2} (multiset integer)
           [&lt;cons $n &lt;cons ,n _&gt;&gt; n]))
-{1 2}</code></pre>
+{1 2 1 2}</code></pre>
 
 
 <p>
-  The output of this example is a collection of duplicated numbers in the target collection.
+  The output of this example is the collection of numbers duplicated in the target collection.
 </p>
 
 <p>
@@ -195,7 +195,7 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 <h2 id="pattern-constructor">Pattern-Constructor</h2>
 
 <p>
-You may meet the error as follows.
+  You may meet the error as follows.
 </p>
 
 <pre><code>&gt; (define $p &lt;cons $x $xs&gt;)
@@ -203,33 +203,63 @@ You may meet the error as follows.
 Error: cannot use variable in pattern</code></pre>
 
 <p>
-Egison prohibits using a variable as a pattern in <i>match-clause</i>.
-To see why, assume that there is no such a restriction.
-Moreover, assume the above <code>p</code> is defined in library.
-Obviously, it is the pattern matched by any non-null collection.
-Using this <code>p</code>, a programmer will write code as follows.
+  Egison prohibits using a variable as a pattern in <i>match-clause</i>.
+  To see why, assume that there is no such a restriction.
+  Moreover, assume the above <code>p</code> is defined in library.
+  Obviously, it is the pattern matched by any non-null collection.
+  Using this <code>p</code>, a programmer will write code as follows.
 </p>
 
-<pre><code>&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons p &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
-&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons p &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]]))</pre></code>
+<pre><code>  (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons p &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]])
+  (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons p &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]])</pre></code>
 
 <p>
-As you can see, variables <code>x</code> and <code>xs</code> conflict in the upper example.
-Then, although the above two examples have the same form, they may result different values.
-It's too confusing.
-Therefore, Egison denies a variable bound to a pattern.
+  As you can see, variables <code>x</code> and <code>xs</code> conflict in the upper example.
+  Then, although the above two examples have the same form, they may result different values.
+  It's too confusing.
+  Therefore, Egison denies a variable bound to a pattern.
 </p>
 
 <p>
-However, you probably want to reuse your own pattern.
-Egison prepares pattern-constructors for such a purpose.
+  However, you probably want to reuse your own pattern.
+  Egison prepares pattern-constructors for such a purpose.
 </p>
 
 <pre><code>  (pattern-constructor [<i>variable</i> ...] <i>formula</i>)</code></pre>
 
 <p>
-You notice that it is similar to <code>lambda</code> expression.
-Actually, a pattern-constructor is a function that returns a pattern.
+  You may notice that it is similar to <code>lambda</code> expression.
+  Actually, a pattern-constructor is a function that returns a pattern.
+  (Note that you should not create such a function "using <code>lambda</code>".
+  Although you can now, that will be prohibited in the future.)
+  Shown as follows, you can reuse a pattern via a pattern-constructor, which has its own namespace.
+</p>
+
+<pre><code>&gt; (define $p (pattern-constructor [] &lt;cons $x $xs&gt;))
+&gt; (test (match {1 2 3} (list integer) {[(p) #t] [_ #f]}))
+#t
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
+{[4 {5 6}]}
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]]))
+{[4 {5 6}]}
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
+Unbound variable: x</code></pre>
+
+<p>
+  The last result means that you cannot use almost all variables that occur in a pattern-constructor.
+  The exceptions are the arguments of a pattern-constructor.
+</p>
+
+<pre><code>&gt; (define $twin (pattern-constructor [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
+&gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin $n _)&gt; n]))
+{1 1 1 1}
+&gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
+{#t #t #t #t}
+&gt; (test (match-all {2 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
+{}</code></pre>
+
+<p>
+  
 </p>
 
 <hr/>
