@@ -24,10 +24,10 @@
   How do you express a set in a program?
   Probably, most of you represents it as a list.
   However, a list differs from a set in that it has the order.
-  Then, even if we would like to ignore the order, we have to care about it when we represent a set as a list.
+  Then, even if you want to ignore the order, you have to care about it when we represent a set as a list.
   Data such as sets have no normal form, and are called <i>unfree data</i>.
   Unfortunately, it has been difficult to do pattern matching for them.
-  Egison gives various pattern matching for those data.
+  Egison gives strong pattern matching for those data.
   We demonstrate it here with many examples, which contain pattern matching for lists, multisets, and sets.
 </p>
 
@@ -217,7 +217,7 @@ Error: cannot use variable in pattern</code></pre>
   As you can see, variables <code>x</code> and <code>xs</code> conflict in the upper example.
   Then, although the above two examples have the same form, they may result different values.
   It's too confusing.
-  Therefore, Egison denies a variable bound to a pattern.
+  That's why Egison denies a variable bound to a pattern.
 </p>
 
 <p>
@@ -232,7 +232,11 @@ Error: cannot use variable in pattern</code></pre>
   Actually, a pattern-constructor is a function that returns a pattern.
   (Note that you should not create such a function "using <code>lambda</code>".
   Although you can now, that will be prohibited in the future.)
-  Shown as follows, you can reuse a pattern via a pattern-constructor, which has its own namespace.
+</p>
+<p>
+  Shown as follows, you can reuse a pattern via a pattern-constructor.
+  Since a pattern-constructor has its own namespace, variables don't conflict with variables in a pattern-constructor.
+  Then, you don't have to care about which variable occurs in a pattern-constructor.
 </p>
 
 <pre><code>&gt; (define $p (pattern-constructor [] &lt;cons $x $xs&gt;))
@@ -242,11 +246,13 @@ Error: cannot use variable in pattern</code></pre>
 {[4 {5 6}]}
 &gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]]))
 {[4 {5 6}]}
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons &lt;cons $x $xs&gt; &lt;cons (p) &lt;nil&gt;&gt;&gt; [x xs]]))
+{[1 {2 3}]}
 &gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
 Unbound variable: x</code></pre>
 
 <p>
-  The last result means that you cannot use almost all variables that occur in a pattern-constructor.
+  The last result means that you can't use almost all variables that occur in a pattern-constructor.
   The exceptions are the arguments of a pattern-constructor.
 </p>
 
