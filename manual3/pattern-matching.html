@@ -265,7 +265,133 @@ Unbound variable: x</code></pre>
 {}</code></pre>
 
 <p>
-  
+Although Egison restricts use of variables in a match-clause, what you can do isn't limited at all.
+On the contrary, you can reuse your own patterns with parameters.
+</p>
+
+<h2 id="index-loop">Index-loop</h2>
+
+<p>
+  Can you write a function <code>comb2</code> that takes a collection as the argument, and returns the 2-combinations of it?
+  This is an easy exercise, and our answer is as follows.
+</p>
+
+<pre><code>&gt; (define $comb2
+      (lambda [$xs]
+        (match-all xs (list something) 
+          [&lt;join _ &lt;cons $x1 &lt;join _ &lt;cons $x2 _&gt;&gt;&gt;&gt; [| x1 x2 |]])))
+&gt; (test (comb2 {1 2 3 4 5}))
+{[|1 2|] [|1 3|] [|2 3|] [|1 4|] [|2 4|] [|3 4|] [|1 5|] [|2 5|] [|3 5|] [|4 5|]}</code></pre>
+
+<p>
+  Next, can you write a <code>comb3</code>?
+  You will easily rewrite <code>comb2</code> to <code>comb3</code> as follows.
+</p>
+
+<pre><code>&gt; (define $comb3
+      (lambda [$xs]
+        (match-all xs (list something) 
+          [&lt;join _ &lt;cons $x1 &lt;join _ &lt;cons $x2 &lt;join _ &lt;cons $x3 _&gt;&gt;&gt;&gt;&gt;&gt; [| x1 x2 x3|]])))
+&gt; (test (comb3 {1 2 3 4 5}))
+{[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}</code></pre>
+
+<p>
+  If you can, how about <code>comb4</code>, <code>comb5</code>, and so on?
+  These <code>combX</code> have the same form, and then it is possible to generalise them.
+  You can do such a thing using <code>index-loop</code>.
+</p>
+
+<pre><code> (index-loop <i>variable</i> <i>variale</i> <i>variable</i> <i>variable</i> <i>collection</i> <i>formula</i> <i>formula</i>)
+</code></pre>
+
+<p>
+The first five arguments of index-loop represent the name of the index-loop, an array-variable, an index-variable, and a range of the index.
+Since it takes too many arguments, it is difficult to understnd what it does.
+Then, at first, we give <code>comb</code> as an example.
+</p>
+
+<pre><code>&gt; (define $comb
+    (lambda [$xs $n]
+      (match-all xs (list something)
+        [(index-loop $l $p $i $a (between 1 n)
+           &lt;join _ &lt;cons p_i l&gt;&gt;
+           _)
+         a])))
+&gt; (test (comb {1 2 3 4 5} 3))
+{[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}
+</code></pre>
+
+<p>
+We will describe the outline of behaviour of a index-loop.
+It's roughly correct and easier to understand.
+Precise definition is given at the end of this section.
+</p>
+
+<p>
+Egison evaluates and returns the last argument of an index-loop if its fifth argument, a collection, is null.
+In the last argument, you can't use the arguments from first to third (in the above example, <code>l</code>, <code>p</code>, and <code>i</code>).
+</p>
+
+<p>
+Otherwise, Egison evaluates the sixth argument.
+Unlike the seventh argument, you can use the arguments from first to third in the sixth arguments.
+Egison binds the third variable to the head of the collection, the fifth argument, removes the head from the collection, and then binds the first variable to the index-loop.
+That is, the first variable is bound to an index-loop that is the same as the original index-loop except it lacks the head of the collection.
+In the above example, 
+</p>
+
+<pre><code>  (index-loop $l $p $i $a {1 2 3 4 5}
+    &lt;join _ &lt;cons p_i l&gt;&gt;
+    _)</code></pre>
+
+<p>
+is "the same as"
+</p>
+
+<pre><code>  &lt;join _ &lt;cons p_1 (index-loop $l $p $i $a {2 3 4 5}
+                      &lt;join _ &lt;cons p_i l&gt;&gt;
+                      _)&gt;&gt;</code></pre>
+
+<p>
+The second argument is bound to a pattern variable.
+As a pattern-constructor, an index-loop has its own namespace, and the second argument belongs to it.
+Then, all you can use the second argument in is the sixth argument.
+For example, the above example is "the same as"
+</p>
+
+<pre><code>  &lt;join _ &lt;cons $m_1 (index-loop $l $p $i $a {2 3 4 5}
+                      &lt;join _ &lt;cons p_i l&gt;&gt;
+                      _)&gt;&gt;</code></pre>
+
+<p>
+Repeating those execution, Egison returns
+</p>
+
+<pre><code>  &lt;join _ &lt;cons $m_1 &lt;join _ &lt;cons $m_2 &lt;join _ &lt;cons $m_3 &lt;join _ &lt;cons $m_4 &lt;join _ &lt;cons $m_5 _ &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
+
+<p>
+In the end of the evaluation, the fourth argument is bound to a value where the second argument is bound.
+The fourth argument is accessible from out of the index-loop, although the second can't.
+</p>
+
+<p>
+Precisely, <code>index-loop</code> is just a syntactic sugar.
+Actually, the above <code>comb</code> is desugard to
+</p>
+
+<pre><code>(define $comb
+  (lambda [$n]
+    (pattern-constructor [$a]
+      (((letrec {[$helper (lambda [$ns]
+                            (pattern-constructor [$q]
+                              (match ns (list something)
+                                {[&lt;cons $i $ns&gt;
+                                  &lt;join _ &lt;cons q_i ((helper ns) q)&gt;&gt;]
+                                 [&lt;nil&gt; _]})))]} helper) (between 1 n))
+       a))))</code></pre>
+
+<p>
+The readers interested in how the interpreter Egison executes pattern matching (including pattern-constructors) are recommend you to read the chapter <a href="./mechanism.html">Pattern Matching Mechanism</a>.
 </p>
 
 <hr/>
