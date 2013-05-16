@@ -8,7 +8,7 @@
 <h1>How to Define Matchers</h1>
 <hr/>
 <p>
-  As described in previous chapters, matchers define how to do pattern matching.
+  As described in previous chapters, matchers define how to do pattern-matching.
   In this section, we explain how to define matchers using libraries as examples.
 </p>
 <hr/>
@@ -45,7 +45,7 @@ Here, <code>&lt;body&gt;</code> is a formula of Egison.
 <h2>Definitions of Simple Matchers</h2>
 
 <p>
-A matcher determines how to do pattern matching.
+A matcher determines how to do pattern-matching.
 Generally speaking, given a pattern and an object, a matcher returns the candidates of <code>match-all</code> with the pattern and the object.
 <code>match</code> returns one of them, if it isn't null.
 Given a pattern and an object, what Egison does is the followings.
@@ -97,9 +97,9 @@ They are described in the next section.
 
 <p>
 We start to explain the behaviour from step 1 in the above list.
-In the step, Egison examines whether the pattern matches a <code>&lt;primitive-pattern-pattern&gt;</code> or not.
+In the step, Egison examines whether the pattern-matches a <code>&lt;primitive-pattern-pattern&gt;</code> or not.
 See the definitions of <code>&lt;primitive-pattern-pattern&gt;</code>.
-Any value pattern and inductive pattern match <code>(value-pattern-pattern)</code> and <code>(primitive-inductive-pattern)</code>, respectively.
+Any value pattern and inductive pattern-match <code>(value-pattern-pattern)</code> and <code>(primitive-inductive-pattern)</code>, respectively.
 <code>(primitive-pattern-variable)</code> is matched by any pattern.
 For example, consider evaluating the following code.
 </p>
@@ -132,17 +132,17 @@ In the rest, namely, the third one, the object matches the first <code>&lt;primi
 <p>
 Now, we see the last step.
 In the third example, the body is <code>{[]}</code>, and then returns it.
-For a moment, assume that the result is <code>{[]}</code> if the pattern matching succeeds, or <code>{}</code> otherwise.
+For a moment, assume that the result is <code>{[]}</code> if the pattern-matching succeeds, or <code>{}</code> otherwise.
 With the assumption, you can get the result of the first two examples.
-They do pattern matching for <code>[&lt;Less&gt; &lt;Equal&gt;]</code> and <code>[&lt;Equal&gt; &lt;Equal&gt;]</code>.
+They do pattern-matching for <code>[&lt;Less&gt; &lt;Equal&gt;]</code> and <code>[&lt;Equal&gt; &lt;Equal&gt;]</code>.
 Obviously, the first example returns <code>{}</code> and the second one returns <code>{[]}</code>.
 The body of the last one is <code>{tgt}</code>, and then returns <code>{&lt;Equal&gt;}</code>.
-If the tuple of matchers in the <code>&lt;primitive-pattern-clause&gt;</code> isn't null, then Egison does the next pattern matching with a tuple of patterns that match <code>$</code> and an object in the result using the tuple of matchers.
+If the tuple of matchers in the <code>&lt;primitive-pattern-clause&gt;</code> isn't null, then Egison does the next pattern-matching with a tuple of patterns that match <code>$</code> and an object in the result using the tuple of matchers.
 In the example, the pattern is <code>$x</code>, the object is <code>&lt;Equal&gt;</code>, and the matcher is <code>something</code>.
 Here, <code>something</code> is the unique built-in matcher, which contains only wildcard and pattern variables.
 Since <code>$x</code> is a pattern variable, <code>&lt;Equal&gt;</code> is bound to <code>x</code>, and then the result of the formula is <code>{&lt;Equal&gt;}</code>.
 Now, we can drop the assumption.
-Since the tuple of matchers in the <code>primitive-pattern-clause</code> is null, the result of successful pattern matching is <code>{[]}</code>, and Egison considers the pattern matching successful.
+Since the tuple of matchers in the <code>primitive-pattern-clause</code> is null, the result of successful pattern-matching is <code>{[]}</code>, and Egison considers the pattern-matching successful.
 </p>
 
 <p>
@@ -182,8 +182,8 @@ Then, we give another matcher, <code>integer-tree</code>.
 
 <p>
   Since the pattern is <code>&lt;node &lt;leaf $n&gt; &lt;node _ _&gt;&gt;</code>, it matches <code>&lt;node $ $&gt;</code>. <code>&lt;leaf $n&gt;</code> and <code>&lt;node _ _&gt;</code> are "bound" to the first <code>$</code> and the second <code>$</code>, respectively.
-  The binding in the <code>&lt;primitive-data-pattern&gt;</code> is that <code>l</code> is <code>&lt;Leaf 3&gt;</code> and <code>r</code> is <code>&lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;</code>. Then, in the next, Egison does pattern matching for the object <code>[&lt;Leaf 3&gt; &lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;]</code> with the pattern <code>[&lt;leaf $n&gt; &lt;node _ _&gt;]</code> using the matcher <code>[integer-tree integer-tree]</code>.
-When a result of current pattern matching contains an element, next pattern matching is done in series.
+  The binding in the <code>&lt;primitive-data-pattern&gt;</code> is that <code>l</code> is <code>&lt;Leaf 3&gt;</code> and <code>r</code> is <code>&lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;</code>. Then, in the next, Egison does pattern-matching for the object <code>[&lt;Leaf 3&gt; &lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;]</code> with the pattern <code>[&lt;leaf $n&gt; &lt;node _ _&gt;]</code> using the matcher <code>[integer-tree integer-tree]</code>.
+When a result of current pattern-matching contains an element, next pattern-matching is done in series.
 </p>
 
 <p>
@@ -285,7 +285,7 @@ In contrast, the tail matches the second argument, and the rest do the first one
 <p>
 We deconstruct <code>{1 2 3 4}</code> by <code>(primitive-cons-collection)</code>.
 In the above example, <code>&lt;cons $x $xs&gt;</code> matches <code>(primitive-inductive-pattern)</code>, and then Egison examines whether <code>{1 2 3 4}</code> matches <code>(primitive-inductive-pattern)</code>, <code>{$x @$xs}</code>.
-Recalling their behaviour, the pattern matching succeeds, and <code>x</code> and <code>xs</code> are bound to <code>1</code> and <code>{2 3 4}</code>, respectively.
+Recalling their behaviour, the pattern-matching succeeds, and <code>x</code> and <code>xs</code> are bound to <code>1</code> and <code>{2 3 4}</code>, respectively.
 By contrast, if you substitute <code>&lt;snoc $x $xs&gt;</code> for <code>&lt;cons $x $xs&gt;</code> in the above example, <code>x</code> is bound to the last element, <code>4</code>, and <code>xs</code> is bound to <code>{1 2 3}</code>.
 Note that the null collection matches neither <code>(primitive-cons-collection)</code> nor <code>(primitive-snoc-collection)</code>. For example, when you evaluate the following code, you will get the null collection <code>{}</code>.
 </p>
