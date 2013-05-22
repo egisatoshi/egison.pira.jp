@@ -63,10 +63,19 @@
   A <code>load-file</code> expression takes a full-path to the Egison program file.<br/>
 </p>
 
+<h3>Execute Expressions</h3>
+
+<p>
+  Like other programming language, you can manipulate IO via Egison.
+  In such a purpose, <code>execute</code> expressions are used.
+  To explain the expression, we need to explain IO in Egison.
+  We will do at another chapter.
+</p>
+
 <h2>Built-in Data</h2>
 
 <p>
-  Booleans, integers, float numbers, and characters are implemented as built-in data in Egison.<br/>
+  Booleans, integers, float numbers, and characters are implemented as built-in data in Egison.
 </p>
 
 <h3>Booleans</h3>
@@ -124,18 +133,32 @@
 "cde\n"
 ...</code></pre>
 
-<h2>Syntax of Egison</h2>
+<h3>Undefined</h3>
 
-<h3>Four Enclosures</h3>
+<p>
+  As shown follows, you can use an array in Egison.
+  Moreover, you can access any index in an array, even if it is out of range of array.
+  For example, you can try to get the 123456th element of an array whose size is 10.
+  In such a case, you get <code>undefined</code>.
+  Of course, you can use <code>undefined</code> in any other case.
+</p>
 
-First of all, we explain the enclosures of Egison.<br/>
-Perhaps you are surprised at how many kinds of enclosures in Egison when you first see code of Egison.<br/>
-In Egison, there are four kinds of enclosures, i.e. parentheses `()', brackets `<>', square brackets `[]', and braces `{}'.<br/>
-They represents procedure call, an <a href="#inductive-data">inductive datum</a>, a <a href="#tuple">tuple</a>, and a <a href="#collection">collection</a>.</br>
-Roughly speaking, you should use parentheses as LISP, brackets when you want to create patterns or your own data.<br/>
+<pre><code>undefined</code></pre>
+
+<h2>Objects</h2>
+
+<h3>Five Enclosures</h3>
+
+<p>
+First of all, we explain the enclosures of Egison.
+Perhaps you are surprised at how many kinds of enclosures in Egison when you first see code of Egison.
+In Egison, there are five kinds of enclosures, i.e. parentheses `()', brackets `<>', square brackets `[]', braces `{}', and double brackets `[||]'.
+They represents procedure call, an <a href="#inductive-data">inductive datum</a>, a <a href="#tuple">tuple</a>, a <a href="#collection">collection</a>, and an <a href="#array">array</a>.
+Roughly speaking, you should use parentheses as LISP, brackets when you want to create patterns or your own data, and double brackts to create an array.
 Square brackets and braces are both used to collect values.
-The difference between them is the number of values.<br/>
+The difference between them is the number of values.
 The former are used to collect the fixed number of values, but the latter are used to collect the others.
+</p>
 
 <h3 id="inductive-data">Inductive Data</h3>
 
@@ -194,6 +217,13 @@ Using this notation, you can construct a collection from subcollections.
 {1 2 3}
 &gt; (test {@{@{1}} @{2 @{3}}})
 {1 2 3}</code></pre>
+
+<h3 id="array">Array</h3>
+
+<p>
+</p>
+
+<h2>Syntax of Egison</h2>
 
 <h3><code>lambda</code> expressions</h3>
 
