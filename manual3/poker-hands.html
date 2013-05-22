@@ -39,7 +39,7 @@
   <code>
 (define $suit
   (algebraic-data-matcher
-    (| &lt;spade&gt; &lt;heart&gt; &lt;club&gt; &lt;diamond&gt; )))
+    {&lt;spade&gt; &lt;heart&gt; &lt;club&gt; &lt;diamond&gt;}))
   </code>
 </pre>
 
@@ -71,7 +71,7 @@
   <code>
 (define $card
   (algebraic-data-matcher
-    (| &lt;card suit integer&gt; )))
+    {&lt;card suit integer&gt;}))
   </code>
 </pre>
 
