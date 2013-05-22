@@ -23,11 +23,11 @@
 <p>
   How do you express a set in a program?
   Probably, most of you represents it as a list.
-  However, we would like to ignore the order of the elements of a collectrion.
-  We can't ignore it if we represent it as a list.
+  However, a list differs from a set in that it has the order.
+  Then, even if you want to ignore the order, you have to care about it when we represent a set as a list.
   Data such as sets have no normal form, and are called <i>unfree data</i>.
   Unfortunately, it has been difficult to do pattern matching for them.
-  Egison gives various pattern matching for those data.
+  Egison gives strong pattern matching for those data.
   We demonstrate it here with many examples, which contain pattern matching for lists, multisets, and sets.
 </p>
 
@@ -41,26 +41,17 @@
   We explain its meaning later.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3 4} (list integer)
+<pre><code>&gt; (test (match-all {1 2 3 4} (list integer)
           [&lt;cons $x $xs&gt; [x xs]]))
-
 {[1 {2 3 4}]}
-
 
 &gt; (test (match-all {1 2 3 4} (multiset integer)
           [&lt;cons $x $xs&gt; [x xs]]))
-
 {[1 {2 3 4}] [2 {1 3 4}] [3 {1 2 4}] [4 {1 2 3}]}
-
 
 &gt; (test (match-all {1 2 3 4} (set integer)
           [&lt;cons $x $xs&gt; [x xs]]))
-
-{[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}
-  </code>
-</pre>
+{[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}</code></pre>
 
 <p>
   All of them say "take an element from the collection <code>{1 2 3 4}</code>".
@@ -96,24 +87,17 @@
   Here is another example, <code>join</code>.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3} (list integer)
+<pre><code>&gt; (test (match-all {1 2 3} (list integer)
           [&lt;join $xs $ys&gt; [xs ys]]))
-
 {[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
-
 
 &gt; (test (match-all {1 2 3} (multiset integer)
           [&lt;join $xs $ys&gt; [xs ys]]))
-
 {[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}]
- [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
-  </code>
-</pre>
+ [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}</code></pre>
 
 <p>
-  <code>join</code> is a pattern that divides a collection into two collections, the two arguments of it.
+<code>join</code> is a pattern that divides a collection into two collections, the two arguments of it.
   Intuitively, <code>join</code> is "<code>cons</code> iteration".
   That is, <code>&lt;join $x $y&gt;</code> is <code>&lt;cons $x1 &lt;cons $x2 &lt;...&lt;cons $xn $y&gt;...&gt;&gt;&gt;</code> and <code>x</code> is equal to <code>{x1 x2 ... xn}</code>.
   Matchers <code>list</code> and <code>multiset</code> are equipped with <code>join</code>.
@@ -131,43 +115,32 @@
   Note that there is no guarantee that <code>div2</code> divides elements from the head.
 </p>
 
-<pre>
-  <code>
-&gt; (define $div2
+<pre><code>&gt; (define $div2
      (lambda [$x]
         (match x (list integer)
            {[&lt;join $xs &lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $y) $zs&gt;&gt;  (div2 {@xs (quotient y 2) @zs})]
             [_ x]})))
 &gt; (test (div2 {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610}))
-{1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}
-  </code>
-</pre>
+{1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}</code></pre>
 
 <p>
-The matcher <code>list</code> can deconstruct a collection into the tail and the others.
-The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
-Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
-Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
+  The matcher <code>list</code> can deconstruct a collection into the tail and the others.
+  The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
+  Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
+  Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3} (list integer)
+<pre><code>&gt; (test (match-all {1 2 3} (list integer)
           [&lt;snoc $x $xs&gt; [x xs]]))
-
 {[3 {1 2}]}
-
       
 &gt; (test (match-all {1 2 3} (list integer)
           [&lt;nioj $xs $ys&gt; [xs ys]]))
-
-{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}
-  </code>
-</pre>
+{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}</code></pre>
 
 <p>
   The arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.
-  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way with the head of it.
+  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way as the head of it.
   A pattern constructor <code>nioj</code> is similar to <code>join</code>, and used to divide a target collection into two collections.
   The difference between <code>join</code> and <code>nioj</code> is the order of pattern matching, as its name suggests.
   In case of <code>nioj</code>, pattern matching is executed from the back-side of a collection.
@@ -178,23 +151,18 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 
 <p>
   Egison allows programmers to "bind and use" variables in a pattern.
-  A pattern that contains multiple occurrences of same variable is called a <i>non-linear pattern</i>.
+  A pattern that contains multiple occurrences of a variable is called a <i>non-linear pattern</i>.
   Egison is the first programming language that non-linear patterns can be used in pattern matching for unfree data.
   The following is an example of non-linear patterns.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3 1 2} (multiset integer)
+<pre><code>&gt; (test (match-all {1 2 3 1 2} (multiset integer)
           [&lt;cons $n &lt;cons ,n _&gt;&gt; n]))
-
-{1 2}
-  </code>
-</pre>
+{1 2 1 2}</code></pre>
 
 
 <p>
-  The output of this example is a collection of duplicated numbers in the target collection.
+  The output of this example is the collection of numbers duplicated in the target collection.
 </p>
 
 <p>
@@ -214,19 +182,176 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
   You can do the task using the following simple code.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (list (multiset integer))
+<pre><code>&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (list (multiset integer))
           [&lt;cons &lt;cons $n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;nil&gt;&gt;&gt;&gt; n]))
-
-{1 4}
-  </code>
-</pre>
+{1 4}</code></pre>
 
 <p>
   Probably, you understand how strong the pattern matching of Egison is.
   In this chapter, we show the inductive patterns of the matchers <code>list</code>, <code>multiset</code>, and <code>set</code>.
   If you want to make your own matcher or understand matchers more deeply, you should read the next chapter.
+</p>
+
+<h2 id="pattern-function">Pattern Functions</h2>
+
+<p>
+  You probably want to reuse your own pattern.
+  Egison prepares pattern functions for such a purpose.
+</p>
+
+<pre><code>  (pattern-function [<i>variable</i> ...] <i>formula</i>)</code></pre>
+
+<p>
+  You may notice that it is similar to <code>lambda</code> expressions.
+  Actually, a pattern function is a function that takes patterns and returns a pattern.
+  (Note that you cannot create such a function using <code>lambda</code> expressions.)
+</p>
+<p>
+  Shown as follows, you can reuse a pattern via a pattern function.
+  Since a pattern function has its own namespace, variables don't conflict with variables in a pattern function.
+  Then, you don't have to care about which variable occurs in a pattern function.
+</p>
+
+<pre><code>&gt; (define $p (pattern-function [] &lt;cons $x $xs&gt;))
+&gt; (test (match {1 2 3} (list integer) {[(p) #t] [_ #f]}))
+#t
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
+{[4 {5 6}]}
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]]))
+{[4 {5 6}]}
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons &lt;cons $x $xs&gt; &lt;cons (p) &lt;nil&gt;&gt;&gt; [x xs]]))
+{[1 {2 3}]}
+&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
+Unbound variable: x</code></pre>
+
+<p>
+  The last result means that you cannot use almost all variables that occur in a pattern function.
+  The exceptions are the arguments of a pattern function.
+</p>
+
+<pre><code>&gt; (define $twin (pattern-function [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
+&gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin $n _)&gt; n]))
+{1 1 1 1}
+&gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
+{#t #t #t #t}
+&gt; (test (match-all {2 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
+{}</code></pre>
+
+<p>
+Although Egison restricts use of variables in a match-clause, what you can do isn't limited at all.
+On the contrary, you can reuse your own patterns with parameters.
+</p>
+
+<h2 id="loop patterns">Loop Patterns</h2>
+
+<p>
+  Can you write a function <code>comb2</code> that takes a collection as the argument, and returns the 2-combinations of it?
+  This is an easy exercise, and our answer is as follows.
+</p>
+
+<pre><code>&gt; (define $comb2
+      (lambda [$xs]
+        (match-all xs (list something) 
+          [&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 _&gt;&gt;&gt;&gt; a])))
+&gt; (test (comb2 {1 2 3 4 5}))
+{[|1 2|] [|1 3|] [|2 3|] [|1 4|] [|2 4|] [|3 4|] [|1 5|] [|2 5|] [|3 5|] [|4 5|]}</code></pre>
+
+<p>
+  Next, can you write a <code>comb3</code>?
+  You will easily rewrite <code>comb2</code> to <code>comb3</code> as follows.
+</p>
+
+<pre><code>&gt; (define $comb3
+      (lambda [$xs]
+        (match-all xs (list something) 
+          [&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 _&gt;&gt;&gt;&gt;&gt;&gt; a])))
+&gt; (test (comb3 {1 2 3 4 5}))
+{[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}</code></pre>
+
+<p>
+  If you can, how about <code>comb4</code>, <code>comb5</code>, and so on?
+  Patterns in these <code>combX</code> have the same form, <code>&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 ... _&gt;...&gt;&gt;&gt;</code> and then it seems to be possible to generalise them.
+  You can do such a thing using a <code>loop</code> pattern.
+</p>
+
+<pre><code> (loop <i>variable</i> <i>collection</i> <i>formula</i> <i>formula</i>)
+</code></pre>
+
+<p>
+The arguments of a loop pattern represent an index-variable, a range of the index, a pattern repeated, and a pattern representing the end.
+When the second argument is null, a loop pattern is "the same as" the last argument.
+Otherwise, it is "the same as" the third argument substituted itself for <code>...</code> and the head of the second argument for the index-variable with removing the head of the second argument.
+It is difficult to understnd what it means.
+Then, we give <code>comb</code> as an example, and will describe the meaning of a loop pattern using the example.
+It's roughly correct and easier to understand.
+</p>
+
+<pre><code>&gt; (define $comb
+    (lambda [$xs $n]
+      (match-all xs (list something)
+        [(loop $i (between 1 n)
+           &lt;join _ &lt;cons $a_i ...&gt;&gt;
+           _)
+         a])))
+&gt; (test (comb {1 2 3 4 5} 3))
+{[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}
+</code></pre>
+
+<p>
+</p>
+
+<p>
+We consider the case <code>n</code> is three.
+Then, a loop pattern is 
+</p>
+
+<pre><code>(loop $i {1 2 3}
+  &lt;join _ &lt;cons $a_i ...&gt;&gt;
+  _)</code></pre>
+
+<p>
+When the range of the index is non-null, a loop pattern "evaluates" the third argument regarding <code>...</code> in the argument as the loop pattern itself.
+Since <code>{1 2 3}</code> isn't null, the above example is "evaluated to"
+</p>
+
+<pre><code>&lt;join _ &lt;cons $a_1 (loop $i {2 3}
+  &lt;join _ &lt;cons $a_i ...&gt;&gt;
+  _)&gt;&gt;</code></pre>
+
+<p>
+Note that in the "evaluation", the index-variable <code>i</code> is "replaced with" the head of the collection, <code>1</code> in the example.
+Moreover, the collection argument of the loop pattern loses its head.
+That is, <code>{1 2 3}</code> is "replaced with" <code>{2 3}</code>
+Repeating this "evaluation", 
+</p>
+
+<pre><code>&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 (loop $i {}
+           &lt;join _ &lt;cons $a_i ...&gt;&gt;
+           _)&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
+
+<p>
+In the case, the second argument of the loop pattern is null, Egison "evaluates" the last argument <code>_</code>. Then,
+</p>
+
+<pre><code>&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 _&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
+
+<p>
+It is the same as what we used in <code>comb3</code>!
+Actually, since a loop pattern is just a pattern, Egison doesn't evaluate a loop pattern.
+However, a claim that the above patterns are the same is true.
+Then, recalling "the result of evaluation", you can use a loop pattern.
+</p>
+
+<p>
+In this subsection, we omit explanation of restriction.
+<code>...</code> must be placed at the end of the second argument.
+For example, <code>&lt;cons ... &lt;nil&gt;&gt;</code> is prohibited.
+This restriction decides which loop patterns a given <code>...</code> belongs to, and then allows us to write nested loop patterns.
+You can find an example of nested loop patterns in <a href="./n-queen.html">Example 3. N-Queen</a>.
+</p>
+
+<p>
+The readers interested in how the interpreter Egison executes pattern matching (including pattern functions) are recommend you to read the chapter <a href="./mechanism.html">Pattern Matching Mechanism</a>.
 </p>
 
 <hr/>
