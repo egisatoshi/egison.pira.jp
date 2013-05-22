@@ -258,11 +258,11 @@ MState [stack : {}
   Thefore, the result of the whole pattern matching is `<code>{[m 2]}</code>' and `<code>{[m 7]}</code>'.<br/>
 </p>
 
-<h3>Example 2. Application of Pattern Constructor Inside Pattern</h3>
+<h3>Example 2. Application of Pattern Function Inside Pattern</h3>
 
 <pre><code>
 (define $twin
-  (pattern-constructor [$pat1 $pat2]
+  (pattern-function [$pat1 $pat2]
     &lt;cons (& $pat pat1)
      &lt;cons ,pat
       pat2&gt;&gt;))

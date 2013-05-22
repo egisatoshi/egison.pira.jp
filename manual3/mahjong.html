@@ -33,105 +33,42 @@
 <pre>
   <code>
 (define $suit
-  (matcher
-    {[,$val []
-      {[$tgt (match [val tgt] [suit suit]
-               {[[&lt;wan&gt; &lt;wan&gt;] {[]}]
-                [[&lt;pin&gt; &lt;pin&gt;] {[]}]
-                [[&lt;sou&gt; &lt;sou&gt;] {[]}]
-                [_ {}]})]}]
-     [&lt;wan&gt; []
-      {[&lt;Wan&gt; {[]}]
-       [_ {}]}]
-     [&lt;pin&gt; []
-      {[&lt;Pin&gt; {[]}]
-       [_ {}]}]
-     [&lt;sou&gt; []
-      {[&lt;Sou&gt; {[]}]
-       [_ {}]}]
-     [$ [something]
-      {[$tgt {tgt}]}]
-     }))
+  (algebraic-data-matcher
+    {&lt;wan&gt; &lt;pin&gt; &lt;sou&gt;}))
 
 (define $honor
-  (matcher
-    {[,$val []
-      {[$tgt (match [val tgt] [honor honor]
-               {[[&lt;ton&gt; &lt;ton&gt;] {[]}]
-                [[&lt;nan&gt; &lt;nan&gt;] {[]}]
-                [[&lt;sha&gt; &lt;sha&gt;] {[]}]
-                [[&lt;pe&gt; &lt;pe&gt;] {[]}]
-                [[&lt;haku&gt; &lt;haku&gt;] {[]}]
-                [[&lt;hatsu&gt; &lt;hatsu&gt;] {[]}]
-                [[&lt;chun&gt; &lt;chun&gt;] {[]}]
-                [_ {}]})]}]
-     [&lt;ton&gt; []
-      {[&lt;Ton&gt; {[]}]
-       [_ {}]}]
-     [&lt;nan&gt; []
-      {[&lt;Nan&gt; {[]}]
-       [_ {}]}]
-     [&lt;sha&gt; []
-      {[&lt;Sha&gt; {[]}]
-       [_ {}]}]
-     [&lt;pe&gt; []
-      {[&lt;Pe&gt; {[]}]
-       [_ {}]}]
-     [&lt;haku&gt; []
-      {[&lt;Haku&gt; {[]}]
-       [_ {}]}]
-     [&lt;hatsu&gt; []
-      {[&lt;Hatsu&gt; {[]}]
-       [_ {}]}]
-     [&lt;chun&gt; []
-      {[&lt;Chun&gt; {[]}]
-       [_ {}]}]
-     [$ [something]
-      {[$tgt {tgt}]}]
-     }))
+  (algebraic-data-matcher
+    {&lt;ton&gt; &lt;nan&gt; &lt;sha&gt; &lt;pe&gt; &lt;haku&gt; &lt;hatsu&gt; &lt;chun&gt;}))
 
 (define $hai
-  (matcher
-    {[,$val []
-      {[$tgt (match [val tgt] [hai hai]
-               {[[&lt;num $s $n&gt; &lt;num ,s ,n&gt;] {[]}]
-                [[&lt;ji $h&gt; &lt;ji ,h&gt;] {[]}]
-                [[_ _] {}]})]}]
-     [&lt;num $ $&gt; [suit integer]
-      {[&lt;Num $s $n&gt; {[s n]}]
-       [_ {}]}]
-     [&lt;ji $&gt; [honor]
-      {[&lt;Ji $h&gt; {h}]
-       [_ {}]}]
-     [$ [something]
-      {[$tgt {tgt}]}]
-     }))
+  (algebraic-data-matcher
+    {&lt;num suit integer&gt; &lt;ji honor&gt;}))
   </code>
 </pre>
 
 <p>
-  Here are pattern constructors useful to match with mahjong hands.
+  Here are pattern functions useful to match with mahjong hands.
 </p>
 
 <pre>
   <code>
 (define $shuntsu
-  (pattern-constructor [$pat1 $pat2]
-    &lt;cons (& &lt;num $s $n&gt; pat1)
+  (pattern-function [$pat1 $pat2]
+    &lt;cons (&amp; &lt;num $s $n&gt; pat1)
      &lt;cons &lt;num ,s ,(+ n 1)&gt;
       &lt;cons &lt;num ,s ,(+ n 2)&gt;
        pat2&gt;&gt;&gt;))
 
 (define $kohtsu
-  (pattern-constructor [$pat1 $pat2]
-    &lt;cons (& $pat pat1)
+  (pattern-function [$pat1 $pat2]
+    &lt;cons (&amp; $pat pat1)
      &lt;cons ,pat
       &lt;cons ,pat
        pat2&gt;&gt;&gt;))
 
 (define $twin
-  (pattern-constructor [$pat1 $pat2]
-    &lt;cons (& $pat pat1)
+  (pattern-function [$pat1 $pat2]
+    &lt;cons (&amp; $pat pat1)
      &lt;cons ,pat
       pat2&gt;&gt;))
   </code>
@@ -144,7 +81,7 @@
 <pre>
   <code>
 (define $agari?
-  (function (multiset hai)
+  (match-lambda (multiset hai)
     {[(twin $th_1 (| (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (shuntsu $sh_4 &lt;nil&gt;))))
                      (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (kohtsu $kh_1 &lt;nil&gt;))))
                      (shuntsu $sh_1 (shuntsu $sh_2 (kohtsu $kh_1 (kohtsu $kh_2 &lt;nil&gt;))))
