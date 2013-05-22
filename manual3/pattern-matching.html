@@ -192,54 +192,27 @@
   If you want to make your own matcher or understand matchers more deeply, you should read the next chapter.
 </p>
 
-<h2 id="pattern-constructor">Pattern-Constructor</h2>
+<h2 id="pattern-function">Pattern Functions</h2>
 
 <p>
-  You may meet the error as follows.
+  You probably want to reuse your own pattern.
+  Egison prepares pattern functions for such a purpose.
 </p>
 
-<pre><code>&gt; (define $p &lt;cons $x $xs&gt;)
-&gt; (test (match {1 2 3} (list integer) {[p #t] [_ #f]}))
-Error: cannot use variable in pattern</code></pre>
+<pre><code>  (pattern-function [<i>variable</i> ...] <i>formula</i>)</code></pre>
 
 <p>
-  Egison prohibits using a variable as a pattern in <i>match-clause</i>.
-  To see why, assume that there is no such a restriction.
-  Moreover, assume the above <code>p</code> is defined in library.
-  Obviously, it is the pattern matched by any non-null collection.
-  Using this <code>p</code>, a programmer will write code as follows.
-</p>
-
-<pre><code>  (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons p &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]])
-  (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons p &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]])</pre></code>
-
-<p>
-  As you can see, variables <code>x</code> and <code>xs</code> conflict in the upper example.
-  Then, although the above two examples have the same form, they may result different values.
-  It's too confusing.
-  That's why Egison denies a variable bound to a pattern.
-</p>
-
-<p>
-  However, you probably want to reuse your own pattern.
-  Egison prepares pattern-constructors for such a purpose.
-</p>
-
-<pre><code>  (pattern-constructor [<i>variable</i> ...] <i>formula</i>)</code></pre>
-
-<p>
-  You may notice that it is similar to <code>lambda</code> expression.
-  Actually, a pattern-constructor is a function that returns a pattern.
-  (Note that you should not create such a function "using <code>lambda</code>".
-  Although you can now, that will be prohibited in the future.)
+  You may notice that it is similar to <code>lambda</code> expressions.
+  Actually, a pattern function is a function that takes patterns and returns a pattern.
+  (Note that you cannot create such a function using <code>lambda</code> expressions.)
 </p>
 <p>
-  Shown as follows, you can reuse a pattern via a pattern-constructor.
-  Since a pattern-constructor has its own namespace, variables don't conflict with variables in a pattern-constructor.
-  Then, you don't have to care about which variable occurs in a pattern-constructor.
+  Shown as follows, you can reuse a pattern via a pattern function.
+  Since a pattern function has its own namespace, variables don't conflict with variables in a pattern function.
+  Then, you don't have to care about which variable occurs in a pattern function.
 </p>
 
-<pre><code>&gt; (define $p (pattern-constructor [] &lt;cons $x $xs&gt;))
+<pre><code>&gt; (define $p (pattern-function [] &lt;cons $x $xs&gt;))
 &gt; (test (match {1 2 3} (list integer) {[(p) #t] [_ #f]}))
 #t
 &gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
@@ -252,11 +225,11 @@ Error: cannot use variable in pattern</code></pre>
 Unbound variable: x</code></pre>
 
 <p>
-  The last result means that you can't use almost all variables that occur in a pattern-constructor.
-  The exceptions are the arguments of a pattern-constructor.
+  The last result means that you cannot use almost all variables that occur in a pattern function.
+  The exceptions are the arguments of a pattern function.
 </p>
 
-<pre><code>&gt; (define $twin (pattern-constructor [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
+<pre><code>&gt; (define $twin (pattern-function [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
 &gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin $n _)&gt; n]))
 {1 1 1 1}
 &gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
@@ -269,7 +242,7 @@ Although Egison restricts use of variables in a match-clause, what you can do is
 On the contrary, you can reuse your own patterns with parameters.
 </p>
 
-<h2 id="index-loop">Index-loop</h2>
+<h2 id="loop patterns">Loop Patterns</h2>
 
 <p>
   Can you write a function <code>comb2</code> that takes a collection as the argument, and returns the 2-combinations of it?
@@ -279,7 +252,7 @@ On the contrary, you can reuse your own patterns with parameters.
 <pre><code>&gt; (define $comb2
       (lambda [$xs]
         (match-all xs (list something) 
-          [&lt;join _ &lt;cons $x1 &lt;join _ &lt;cons $x2 _&gt;&gt;&gt;&gt; [| x1 x2 |]])))
+          [&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 _&gt;&gt;&gt;&gt; a])))
 &gt; (test (comb2 {1 2 3 4 5}))
 {[|1 2|] [|1 3|] [|2 3|] [|1 4|] [|2 4|] [|3 4|] [|1 5|] [|2 5|] [|3 5|] [|4 5|]}</code></pre>
 
@@ -291,30 +264,33 @@ On the contrary, you can reuse your own patterns with parameters.
 <pre><code>&gt; (define $comb3
       (lambda [$xs]
         (match-all xs (list something) 
-          [&lt;join _ &lt;cons $x1 &lt;join _ &lt;cons $x2 &lt;join _ &lt;cons $x3 _&gt;&gt;&gt;&gt;&gt;&gt; [| x1 x2 x3|]])))
+          [&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 _&gt;&gt;&gt;&gt;&gt;&gt; a])))
 &gt; (test (comb3 {1 2 3 4 5}))
 {[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}</code></pre>
 
 <p>
   If you can, how about <code>comb4</code>, <code>comb5</code>, and so on?
-  These <code>combX</code> have the same form, and then it is possible to generalise them.
-  You can do such a thing using <code>index-loop</code>.
+  Patterns in these <code>combX</code> have the same form, <code>&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 ... _&gt;...&gt;&gt;&gt;</code> and then it seems to be possible to generalise them.
+  You can do such a thing using a <code>loop</code> pattern.
 </p>
 
-<pre><code> (index-loop <i>variable</i> <i>variale</i> <i>variable</i> <i>variable</i> <i>collection</i> <i>formula</i> <i>formula</i>)
+<pre><code> (loop <i>variable</i> <i>collection</i> <i>formula</i> <i>formula</i>)
 </code></pre>
 
 <p>
-The first five arguments of index-loop represent the name of the index-loop, an array-variable, an index-variable, and a range of the index.
-Since it takes too many arguments, it is difficult to understnd what it does.
-Then, at first, we give <code>comb</code> as an example.
+The arguments of a loop pattern represent an index-variable, a range of the index, a pattern repeated, and a pattern representing the end.
+When the second argument is null, a loop pattern is "the same as" the last argument.
+Otherwise, it is "the same as" the third argument substituted itself for <code>...</code> and the head of the second argument for the index-variable with removing the head of the second argument.
+It is difficult to understnd what it means.
+Then, we give <code>comb</code> as an example, and will describe the meaning of a loop pattern using the example.
+It's roughly correct and easier to understand.
 </p>
 
 <pre><code>&gt; (define $comb
     (lambda [$xs $n]
       (match-all xs (list something)
-        [(index-loop $l $p $i $a (between 1 n)
-           &lt;join _ &lt;cons p_i l&gt;&gt;
+        [(loop $i (between 1 n)
+           &lt;join _ &lt;cons $a_i ...&gt;&gt;
            _)
          a])))
 &gt; (test (comb {1 2 3 4 5} 3))
@@ -322,76 +298,62 @@ Then, at first, we give <code>comb</code> as an example.
 </code></pre>
 
 <p>
-We will describe the outline of behaviour of a index-loop.
-It's roughly correct and easier to understand.
-Precise definition is given at the end of this section.
 </p>
 
 <p>
-Egison evaluates and returns the last argument of an index-loop if its fifth argument, a collection, is null.
-In the last argument, you can't use the arguments from first to third (in the above example, <code>l</code>, <code>p</code>, and <code>i</code>).
+We consider the case <code>n</code> is three.
+Then, a loop pattern is 
+</p>
+
+<pre><code>(loop $i {1 2 3}
+  &lt;join _ &lt;cons $a_i ...&gt;&gt;
+  _)</code></pre>
+
+<p>
+When the range of the index is non-null, a loop pattern "evaluates" the third argument regarding <code>...</code> in the argument as the loop pattern itself.
+Since <code>{1 2 3}</code> isn't null, the above example is "evaluated to"
+</p>
+
+<pre><code>&lt;join _ &lt;cons $a_1 (loop $i {2 3}
+  &lt;join _ &lt;cons $a_i ...&gt;&gt;
+  _)&gt;&gt;</code></pre>
+
+<p>
+Note that in the "evaluation", the index-variable <code>i</code> is "replaced with" the head of the collection, <code>1</code> in the example.
+Moreover, the collection argument of the loop pattern loses its head.
+That is, <code>{1 2 3}</code> is "replaced with" <code>{2 3}</code>
+Repeating this "evaluation", 
+</p>
+
+<pre><code>&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 (loop $i {}
+           &lt;join _ &lt;cons $a_i ...&gt;&gt;
+           _)&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
+
+<p>
+In the case, the second argument of the loop pattern is null, Egison "evaluates" the last argument <code>_</code>. Then,
+</p>
+
+<pre><code>&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 _&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
+
+<p>
+It is the same as what we used in <code>comb3</code>!
+Actually, since a loop pattern is just a pattern, Egison doesn't evaluate a loop pattern.
+However, a claim that the above patterns are the same is true.
+Then, recalling "the result of evaluation", you can use a loop pattern.
 </p>
 
 <p>
-Otherwise, Egison evaluates the sixth argument.
-Unlike the seventh argument, you can use the arguments from first to third in the sixth arguments.
-Egison binds the third variable to the head of the collection, the fifth argument, removes the head from the collection, and then binds the first variable to the index-loop.
-That is, the first variable is bound to an index-loop that is the same as the original index-loop except it lacks the head of the collection.
-In the above example, 
+In this subsection, we omit explanation of restriction.
+<code>...</code> must be placed at the end of the second argument.
+For example, <code>&lt;cons ... &lt;nil&gt;&gt;</code> is prohibited.
+This restriction decides which loop patterns a given <code>...</code> belongs to, and then allows us to write nested loop patterns.
+For example,
 </p>
 
-<pre><code>  (index-loop $l $p $i $a {1 2 3 4 5}
-    &lt;join _ &lt;cons p_i l&gt;&gt;
-    _)</code></pre>
+
 
 <p>
-is "the same as"
-</p>
-
-<pre><code>  &lt;join _ &lt;cons p_1 (index-loop $l $p $i $a {2 3 4 5}
-                      &lt;join _ &lt;cons p_i l&gt;&gt;
-                      _)&gt;&gt;</code></pre>
-
-<p>
-The second argument is bound to a pattern variable.
-As a pattern-constructor, an index-loop has its own namespace, and the second argument belongs to it.
-Then, all you can use the second argument in is the sixth argument.
-For example, the above example is "the same as"
-</p>
-
-<pre><code>  &lt;join _ &lt;cons $m_1 (index-loop $l $p $i $a {2 3 4 5}
-                      &lt;join _ &lt;cons p_i l&gt;&gt;
-                      _)&gt;&gt;</code></pre>
-
-<p>
-Repeating those execution, Egison returns
-</p>
-
-<pre><code>  &lt;join _ &lt;cons $m_1 &lt;join _ &lt;cons $m_2 &lt;join _ &lt;cons $m_3 &lt;join _ &lt;cons $m_4 &lt;join _ &lt;cons $m_5 _ &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
-
-<p>
-In the end of the evaluation, the fourth argument is bound to a value where the second argument is bound.
-The fourth argument is accessible from out of the index-loop, although the second can't.
-</p>
-
-<p>
-Precisely, <code>index-loop</code> is just a syntactic sugar.
-Actually, the above <code>comb</code> is desugard to
-</p>
-
-<pre><code>(define $comb
-  (lambda [$n]
-    (pattern-constructor [$a]
-      (((letrec {[$helper (lambda [$ns]
-                            (pattern-constructor [$q]
-                              (match ns (list something)
-                                {[&lt;cons $i $ns&gt;
-                                  &lt;join _ &lt;cons q_i ((helper ns) q)&gt;&gt;]
-                                 [&lt;nil&gt; _]})))]} helper) (between 1 n))
-       a))))</code></pre>
-
-<p>
-The readers interested in how the interpreter Egison executes pattern matching (including pattern-constructors) are recommend you to read the chapter <a href="./mechanism.html">Pattern Matching Mechanism</a>.
+The readers interested in how the interpreter Egison executes pattern matching (including pattern functions) are recommend you to read the chapter <a href="./mechanism.html">Pattern Matching Mechanism</a>.
 </p>
 
 <hr/>
