@@ -545,25 +545,6 @@ MState [stack : {(MNode [stack : [p : &lt;cons ,pat pat2&gt;
 
 <hr/>
 
-<h2>Parallelize Egison Pattern Matching</h2>
-
-<p>
-  Each matching state has no dependency, so the order of reduction between matching states has no restriction.<br/>
-  Therefore, we can parallelize reduction of matching states.<br/>
-</p>
-
-<p>
-  The difference between each matching state is only the targets of the matching atoms and the reslut of pattern matching in progress.<br/>
-  The structure of the matching state and the patterns and the matchers inside it is same.<br/>
-  Therefore, pattern matching process of each matching state is almost same.<br/>
-<!--
-  I think it will be able to execute on GPU on parallel.<br/>
-  We are now developing this system at Murakumo.<br/>
--->
-</p>
-
-<hr/>
-
 <p>
   [<a href="../index.html">Egison Top</a>]
   [<a href="./index.html">Egison Manual Top</a>]
