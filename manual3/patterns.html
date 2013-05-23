@@ -102,7 +102,7 @@ This usage allows us to deconstruct an object.
 
 <p>
   A value pattern is a pattern that objects equal to a particular object match.
-  The meaning of "equal" is defined in matchers, and then vary by matcher.
+  The meaning of "equal" is defined in matchers, and then varies by matcher.
   You shouldn't forget to place COMMA before a value.
 </p>
 
@@ -180,8 +180,8 @@ Such a pattern is called "and-pattern".
   If you want to get an object that matches one of given patterns, you should use or-pattern.
 </p>
 
-<pre><code>(| 1 2 3)
-(| #t #f)
+<pre><code>(| ,1 ,2 ,3)
+(| ,#t ,#f)
 (|)</code></pre>
 
 <pre><code>&gt; (test (match {1 3 3} (list integer) {[(| &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
