@@ -410,8 +410,9 @@ are the same.
 </p>
 <p>
   Shown as follows, you can reuse a pattern via a pattern-function.
-  Since a pattern-function has its own namespace, variables don't conflict with variables in a pattern-function.
-  Then, you don't have to care about which variable occurs in a pattern-function.
+  Since a pattern-function has static scoping as a normal function by <code>lambda</code>,
+  bindings to pattern-variables in the argument patterns and the body of pattern-functions don't conflict.
+  Then, you don't have to care about which pattern-variable occurs in a pattern-function.
 </p>
 
 <pre><code>&gt; (define $p (pattern-function [] &lt;cons $x $xs&gt;))
@@ -427,8 +428,7 @@ are the same.
 Unbound variable: x</code></pre>
 
 <p>
-  The last result means that you cannot use almost all variables that occur in a pattern-function.
-  The exceptions are the arguments of a pattern-function.
+  The last result means that you cannot use bindings to the pattern-variables that occur in the body of a pattern-function applied in a pattern.
 </p>
 
 <pre><code>&gt; (define $twin (pattern-function [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
@@ -440,7 +440,7 @@ Unbound variable: x</code></pre>
 {}</code></pre>
 
 <p>
-Although Egison restricts use of variables in a match-clause, what you can do isn't limited at all.
+Although Egison restricts use of patterns in a match-clause, what you can do isn't limited at all.
 On the contrary, you can reuse your own patterns with parameters.
 </p>
 
