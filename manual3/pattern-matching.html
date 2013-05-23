@@ -23,11 +23,11 @@
 <p>
   How do you express a set in a program?
   Probably, most of you represents it as a list.
-  However, we would like to ignore the order of the elements of a collectrion.
-  We can't ignore it if we represent it as a list.
+  However, a list differs from a set in that it has the order.
+  Then, even if you want to ignore the order, you have to care about it when we represent a set as a list.
   Data such as sets have no normal form, and are called <i>unfree data</i>.
   Unfortunately, it has been difficult to do pattern matching for them.
-  Egison gives various pattern matching for those data.
+  Egison gives strong pattern matching for those data.
   We demonstrate it here with many examples, which contain pattern matching for lists, multisets, and sets.
 </p>
 
@@ -41,26 +41,17 @@
   We explain its meaning later.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3 4} (list integer)
+<pre><code>&gt; (test (match-all {1 2 3 4} (list integer)
           [&lt;cons $x $xs&gt; [x xs]]))
-
 {[1 {2 3 4}]}
-
 
 &gt; (test (match-all {1 2 3 4} (multiset integer)
           [&lt;cons $x $xs&gt; [x xs]]))
-
 {[1 {2 3 4}] [2 {1 3 4}] [3 {1 2 4}] [4 {1 2 3}]}
-
 
 &gt; (test (match-all {1 2 3 4} (set integer)
           [&lt;cons $x $xs&gt; [x xs]]))
-
-{[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}
-  </code>
-</pre>
+{[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}</code></pre>
 
 <p>
   All of them say "take an element from the collection <code>{1 2 3 4}</code>".
@@ -96,24 +87,17 @@
   Here is another example, <code>join</code>.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3} (list integer)
+<pre><code>&gt; (test (match-all {1 2 3} (list integer)
           [&lt;join $xs $ys&gt; [xs ys]]))
-
 {[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
-
 
 &gt; (test (match-all {1 2 3} (multiset integer)
           [&lt;join $xs $ys&gt; [xs ys]]))
-
 {[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}]
- [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}
-  </code>
-</pre>
+ [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}</code></pre>
 
 <p>
-  <code>join</code> is a pattern that divides a collection into two collections, the two arguments of it.
+<code>join</code> is a pattern that divides a collection into two collections, the two arguments of it.
   Intuitively, <code>join</code> is "<code>cons</code> iteration".
   That is, <code>&lt;join $x $y&gt;</code> is <code>&lt;cons $x1 &lt;cons $x2 &lt;...&lt;cons $xn $y&gt;...&gt;&gt;&gt;</code> and <code>x</code> is equal to <code>{x1 x2 ... xn}</code>.
   Matchers <code>list</code> and <code>multiset</code> are equipped with <code>join</code>.
@@ -131,43 +115,32 @@
   Note that there is no guarantee that <code>div2</code> divides elements from the head.
 </p>
 
-<pre>
-  <code>
-&gt; (define $div2
+<pre><code>&gt; (define $div2
      (lambda [$x]
         (match x (list integer)
            {[&lt;join $xs &lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $y) $zs&gt;&gt;  (div2 {@xs (quotient y 2) @zs})]
             [_ x]})))
 &gt; (test (div2 {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610}))
-{1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}
-  </code>
-</pre>
+{1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}</code></pre>
 
 <p>
-The matcher <code>list</code> can deconstruct a collection into the tail and the others.
-The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
-Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
-Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
+  The matcher <code>list</code> can deconstruct a collection into the tail and the others.
+  The inductive pattern, named <code>snoc</code>, is the "dual" of <code>cons</code>.
+  Of course, since a (multi)set has no order, neither <code>multiset</code> nor <code>set</code> has <code>snoc</code>.
+  Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3} (list integer)
+<pre><code>&gt; (test (match-all {1 2 3} (list integer)
           [&lt;snoc $x $xs&gt; [x xs]]))
-
 {[3 {1 2}]}
-
       
 &gt; (test (match-all {1 2 3} (list integer)
           [&lt;nioj $xs $ys&gt; [xs ys]]))
-
-{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}
-  </code>
-</pre>
+{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}</code></pre>
 
 <p>
   The arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.
-  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way with the head of it.
+  Note that, in Egison, extraction of an element from the tail of a collection is represented in the same way as the head of it.
   A pattern constructor <code>nioj</code> is similar to <code>join</code>, and used to divide a target collection into two collections.
   The difference between <code>join</code> and <code>nioj</code> is the order of pattern matching, as its name suggests.
   In case of <code>nioj</code>, pattern matching is executed from the back-side of a collection.
@@ -178,23 +151,18 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
 
 <p>
   Egison allows programmers to "bind and use" variables in a pattern.
-  A pattern that contains multiple occurrences of same variable is called a <i>non-linear pattern</i>.
+  A pattern that contains multiple occurrences of a variable is called a <i>non-linear pattern</i>.
   Egison is the first programming language that non-linear patterns can be used in pattern matching for unfree data.
   The following is an example of non-linear patterns.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {1 2 3 1 2} (multiset integer)
+<pre><code>&gt; (test (match-all {1 2 3 1 2} (multiset integer)
           [&lt;cons $n &lt;cons ,n _&gt;&gt; n]))
-
-{1 2}
-  </code>
-</pre>
+{1 2 1 2}</code></pre>
 
 
 <p>
-  The output of this example is a collection of duplicated numbers in the target collection.
+  The output of this example is the collection of numbers duplicated in the target collection.
 </p>
 
 <p>
@@ -214,19 +182,20 @@ Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>jo
   You can do the task using the following simple code.
 </p>
 
-<pre>
-  <code>
-&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (list (multiset integer))
+<pre><code>&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (list (multiset integer))
           [&lt;cons &lt;cons $n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;nil&gt;&gt;&gt;&gt; n]))
-
-{1 4}
-  </code>
-</pre>
+{1 4}</code></pre>
 
 <p>
   Probably, you understand how strong the pattern matching of Egison is.
   In this chapter, we show the inductive patterns of the matchers <code>list</code>, <code>multiset</code>, and <code>set</code>.
   If you want to make your own matcher or understand matchers more deeply, you should read the next chapter.
+</p>
+
+<hr/>
+
+<p>
+The readers interested in how the interpreter Egison executes pattern matching (including pattern functions) are recommend you to read the chapter <a href="./mechanism.html">Pattern Matching Mechanism</a>.
 </p>
 
 <hr/>
