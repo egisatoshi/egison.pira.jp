@@ -194,6 +194,32 @@
 
 <hr/>
 
+<h2 id="first-class-pattern-functions">First Class Pattern-Functions</h2>
+
+<p>
+  You can reuse a pattern via a pattern-function.
+  A <a href="./patterns.html#pattern-function">pattern-function</a> is a function that takes patterns and returns a pattern.
+</p>
+
+<p>
+  Patterns are not first class objects.
+  So you can NOT replace a pattern with an object, and vice versa.
+  For example, <code>(test _)</code> is illegal, because <code>_</code> is not an object but a pattern as shown below.
+  However, pattern-functions are first class objects.
+  So you can define pattern-functions and apply it as an argument of a fuction in anywhere of programs.
+</p>
+
+<p>
+  Egison programmers reuse a pattern via a pattern-function.
+  Although this restriction seems to be too strict, this makes modularization of patterns clear.
+</p>
+
+<p>
+  See <a href="./mahjong.html">mahjong example</a> to see how to use pattern-functions.
+</p>
+
+<hr/>
+
 <p>
 The readers interested in how the interpreter Egison executes pattern matching (including pattern functions) are recommend you to read the chapter <a href="./mechanism.html">Pattern Matching Mechanism</a>.
 </p>
