@@ -46,7 +46,16 @@
   There are two kinds of <i>top expressions</i> in above input, <code>define</code> expressions and <code>test</code> expressions.<br/>
   A <code>define</code> expression binds the value or the function to the variable.<br/>
   A <code>test</code> expression evaluates the given expression.<br/>
+  On the interpreter, you can omit <code>test</code>.
+  That is, you can write as follows.
 </p>
+
+<pre><code>&gt; (define $x 2)
+&gt; (+ x 3)
+5
+&gt; (define $f (lambda [$x $y] [(+ x y) (* x y)]))
+&gt; (f x 4)
+[6 8]</code></pre>
 
 <h3>Load Expressions</h3>
 
