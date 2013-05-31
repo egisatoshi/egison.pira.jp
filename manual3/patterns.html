@@ -94,6 +94,29 @@ This usage allows us to deconstruct an object.
 &gt; (test (match {1} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
 [1 {}]</code></pre>
 
+<h3>Indexed Variable Patterns</h3>
+
+<pre><code>  <i>variable</i>_<i>integer</i> </code></pre>
+
+<p>
+An indexed variable pattern is a special variable pattern.
+In this pattern, the <i>variable</i> is regarded as an <a href="./basics.html#array">array</a>, and then the <i>integer</i>-th element is bound to the matched object.
+Note that an <i>integer</i> is arbitrary.
+</p>
+
+<pre><code>&gt; (test (match 1 something {[$x_1 x]}))
+[|1|]
+&gt; (test (match 1 something {[$x_1 x_1]}))
+1
+&gt; (test (match #t something {[$x_3 x]}))
+[|#t|]
+&gt; (test (match #t something {[$x_3 x_1]}))
+undefined
+&gt; (test (match #t something {[$x_3 x_3]}))
+#t
+&gt; (test (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $a_2 $a_1&gt; a]}))
+[|{2 3} 1|]</code></pre>
+
 <h3>Value Patterns</h3>
 
 <pre><code>  ,<i>value</i></code></pre>
@@ -120,7 +143,7 @@ This usage allows us to deconstruct an object.
 <pre><code>  ?function</code></pre>
 
 <p>
-Here, <code>function</code> is a function that takes an argument and returns a boolean.
+Here, <code>function</code> is a function that takes an argument and returns a boolean value.
 A predicate pattern is a pattern that an object matches if the result of application of <code>function</code> and the object is <code>#t</code>.
 </p>
 
@@ -269,7 +292,7 @@ This is simple but useful usage of not-patterns.
 The arguments of a loop-pattern represent an index-variable, a range of the index, a pattern repeated, and a pattern representing the end.
 When the second argument is null, a loop-pattern is "the same as" the last argument.
 Otherwise, it is "the same as" the third argument substituted itself for <code>...</code> and the head of the second argument for the index-variable with removing the head of the second argument.
-It is difficult to understnd what it means.
+It is difficult to understand what it means.
 Then, we give <code>comb</code> as an example, and will describe the meaning of a loop-pattern using the example.
 It's roughly correct and easier to understand.
 </p>

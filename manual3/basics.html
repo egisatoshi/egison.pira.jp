@@ -75,10 +75,10 @@
 <h2>Built-in Data</h2>
 
 <p>
-  Booleans, integers, float numbers, and characters are implemented as built-in data in Egison.
+  Boolean values, integers, float numbers, and characters are implemented as built-in data in Egison.
 </p>
 
-<h3>Booleans</h3>
+<h3>Boolean Values</h3>
 
 <p>
   `<code>#t</code>' represents true.<br/>
@@ -154,7 +154,7 @@ First of all, we explain the enclosures of Egison.
 Perhaps you are surprised at how many kinds of enclosures in Egison when you first see code of Egison.
 In Egison, there are five kinds of enclosures, i.e. parentheses `( )', brackets `< >', square brackets `[ ]', braces `{ }', and double brackets `[| |]'.
 They represents procedure call, an <a href="#inductive-data">inductive datum</a>, a <a href="#tuple">tuple</a>, a <a href="#collection">collection</a>, and an <a href="#array">array</a>.
-Roughly speaking, you should use parentheses as LISP, brackets when you want to create patterns or your own data, and double brackts to create an array.
+Roughly speaking, you should use parentheses as LISP, brackets when you want to create patterns or your own data, and double brackets to create an array.
 Square brackets and braces are both used to collect values.
 The difference between them is the number of values.
 The former are used to collect the fixed number of values, but the latter are used to collect the others.
@@ -247,7 +247,7 @@ undefined</code></pre>
 
 <p>
 An array can have another array as its element.
-It allows us to use multi-dimensionl arrays.
+It allows us to use multi-dimensional arrays.
 </p>
 
 <pre><code>&gt; (test [| [| 1 2 3 |] [| 4 5 6 |] [| 7 8 9 |] |])
@@ -259,9 +259,9 @@ It allows us to use multi-dimensionl arrays.
 
 <p>
 Egison prepares special syntax for arrays.
-They are <a href="#generate-array">generate-array</a> and <a href="#array-size">aray-size</a>.
+They are <a href="#generate-array">generate-array</a> and <a href="#array-size">array-size</a>.
 The former gives an easy way to create complicated arrays, and the latter shows the size of arrays. 
-The defails are described in each subsection.
+The details are described in each subsection.
 </p>
 
 <h2>Syntax of Egison</h2>
@@ -346,7 +346,7 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
 
 <p>
   It's ordinary <code>if</code>.<br/>
-  But, note the result of an evaluation of the first argument must be a boolean (i.e. <code>#t</code> or <code>#f</code>).<br/>
+  But, note the result of an evaluation of the first argument must be a boolean value (i.e. <code>#t</code> or <code>#f</code>).<br/>
 </p>
 
 <pre><code>&gt; (test (if #f "YES" "NO"))
@@ -373,7 +373,7 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
 
 <p>
 Egison is equipped with two ways to generate an array.
-One is to write elemenets explicitly using double brackets `[| |]'.
+One is to write elements explicitly using double brackets `[| |]'.
 The other is this <code>generate-array</code> expression.
 </p>
 
