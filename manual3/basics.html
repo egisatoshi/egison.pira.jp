@@ -133,11 +133,11 @@
 "cde\n"
 ...</code></pre>
 
-<h3>Undefined</h3>
+<h3 id="undefined">Undefined</h3>
 
 <p>
   As shown follows, you can use an array in Egison.
-  Moreover, you can access any index in an array, even if it is out of range of array.
+  You can access any index in an array, even if it is out of range of array.
   For example, you can try to get the 123456th element of an array whose size is 10.
   In such a case, you get <code>undefined</code>.
   Of course, you can use <code>undefined</code> in any other case.
@@ -152,7 +152,7 @@
 <p>
 First of all, we explain the enclosures of Egison.
 Perhaps you are surprised at how many kinds of enclosures in Egison when you first see code of Egison.
-In Egison, there are five kinds of enclosures, i.e. parentheses `()', brackets `<>', square brackets `[]', braces `{}', and double brackets `[||]'.
+In Egison, there are five kinds of enclosures, i.e. parentheses `( )', brackets `< >', square brackets `[ ]', braces `{ }', and double brackets `[| |]'.
 They represents procedure call, an <a href="#inductive-data">inductive datum</a>, a <a href="#tuple">tuple</a>, a <a href="#collection">collection</a>, and an <a href="#array">array</a>.
 Roughly speaking, you should use parentheses as LISP, brackets when you want to create patterns or your own data, and double brackts to create an array.
 Square brackets and braces are both used to collect values.
@@ -166,10 +166,10 @@ The former are used to collect the fixed number of values, but the latter are us
 
 <p>
   You can create an object whose name you want.
-  It is called an inductive datum.<br/>
+  It is called an inductive datum.
   An inductive datum can have values.
   In particular, it can have any inductive data.
-  This is why it is called "inductive".<br/>
+  This is why it is called "inductive".
   Note that the name has to start with uppercase.
 </p>
 
@@ -182,8 +182,7 @@ The former are used to collect the fixed number of values, but the latter are us
 <pre><code>  [<i>value</i> ...]</code></pre>
 
 <p>
-A tuple is expressed as a sequence of elements enclosed in square brackets.<br/>
-If a tuple consists of an element, the tuple and the element are the same.
+A tuple is expressed as a sequence of elements enclosed in square brackets.
 </p>
 
 <pre><code>[]
@@ -191,13 +190,22 @@ If a tuple consists of an element, the tuple and the element are the same.
 [#t "abc" 4]
 [1]</code></pre>
 
+<p>
+If a tuple consists of an element, the tuple and the element are the same.
+</p>
+
+<pre><code>&gt; (test (eq? [1] 1))
+#t
+&gt; (test (eq? [[[[[[[[[[["too many"]]]]]]]]]]] "too many"))
+#t</code></pre>
+
 <h3 id="collection">Collections</h3>
 
 <pre><code>  {<i>value</i> ...}</code></pre>
 
 <p>
-A collection is a sequence of elements enclosed in braces.<br/>
-Unlike a tuple, a collection of an element and its unique element differ.<br/>
+A collection is a sequence of elements enclosed in braces.
+Unlike a tuple, a collection of an element and its unique element differ.
 </p>
 
 <pre><code>{}
@@ -206,10 +214,10 @@ Unlike a tuple, a collection of an element and its unique element differ.<br/>
 {1}</code></pre>
 
 <p>
-A collection may contain a collection as its element.<br/>
-Generally, an element of a collection that is an element of a collection isn't an element of the outer collection.<br/>
-But, <code>@</code> placed before a collection breaks the collection.<br/>
-Then, an element of a collection with <code>@</code> that is an element of a collection is an element of the outer collection.<br/>
+A collection may contain a collection as its element.
+Generally, an element of a collection that is an element of a collection isn't an element of the outer collection.
+`@' placed before a collection breaks the collection.
+Then, an element of a collection with <code>@</code> that is an element of a collection is an element of the outer collection.
 Using this notation, you can construct a collection from subcollections.
 </p>
 
@@ -220,7 +228,40 @@ Using this notation, you can construct a collection from subcollections.
 
 <h3 id="array">Array</h3>
 
+<pre><code>  [|<i>value</i> ...|]</code></pre>
+
 <p>
+An array is a sequence of elements enclosed in double brackets.
+Adding an underscore `_' and an index at the end, you can get the associated element of an array.
+If the index is larger than the size of an array, (which can be got by <a href="#array-size">array-size</a>,) you will get <a href="#undefined">undefined</a>.
+</p>
+
+<pre><code>&gt; (test (array-size [| 1 2 3 4 5 |]))
+5
+&gt; (test [| 1 2 3 4 5 |]_1)
+1
+&gt; (test [| 1 2 3 4 5 |]_4)
+4
+&gt; (test [| 1 2 3 4 5 |]_8)
+undefined</code></pre>
+
+<p>
+An array can have another array as its element.
+It allows us to use multi-dimensionl arrays.
+</p>
+
+<pre><code>&gt; (test [| [| 1 2 3 |] [| 4 5 6 |] [| 7 8 9 |] |])
+[|[|1 2 3|] [|4 5 6|] [|7 8 9|]|]
+&gt; (test [| [| 1 2 3 |] [| 4 5 6 |] [| 7 8 9 |] |]_2)
+[|4 5 6|]
+&gt; (test [| [| 1 2 3 |] [| 4 5 6 |] [| 7 8 9 |] |]_2_3)
+6</code></pre>
+
+<p>
+Egison prepares special syntax for arrays.
+They are <a href="#generate-array">generate-array</a> and <a href="#array-size">aray-size</a>.
+The former gives an easy way to create complicated arrays, and the latter shows the size of arrays. 
+The defails are described in each subsection.
 </p>
 
 <h2>Syntax of Egison</h2>
@@ -317,12 +358,86 @@ NO
 
 <pre><code>  (apply <i>function</i> [<i>value</i> ...])</code></pre>
 
+<p>
 If you have a function and its arguments as a tuple, and want to get the result of the application, then you should use this expression.<br/>
 The result of the evaluation of an apply expression is the result of application of the function with the arguments.<br/>
 That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is the same thing as <code>(f x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>)</code>.
+</p>
 
 <pre><code>&gt; (test (apply + [1 2]))
 3</code></pre>
+
+<h3 id="generate-array"><code>generate-array</code> expressions</h3>
+
+<pre><code>  (generate-array [<i>variable</i> ...] [<i>integer</i> ...] <i>formula</i>)</code></pre>
+
+<p>
+Egison is equipped with two ways to generate an array.
+One is to write elemenets explicitly using double brackets `[| |]'.
+The other is this <code>generate-array</code> expression.
+</p>
+
+<pre><code>&gt; (test (generate-array [$x] [5] x))
+[|1 2 3 4 5|]
+&gt; (test (generate-array [$x] [5] (* x 2)))
+[|2 4 6 8 10|]</code></pre>
+
+<p>
+The first argument is the index variable, the second is the size of each dimension, and the third argument determines each element of the array.
+Note the first argument and the second argument have the same number of elements.
+For example, the above and the followings are examples to create an array whose size is 5 and 5&times;3, respectively.
+</p>
+
+<pre><code>&gt; (test (generate-array [$x $y] [5 3] (* x y)))
+[|[|1 2 3|] [|2 4 6|] [|3 6 9|] [|4 8 12|] [|5 10 15|]|]
+&gt; (test (generate-array [$x $y] [5 3] (+ (* 10 x) y)))
+[|[|11 12 13|] [|21 22 23|] [|31 32 33|] [|41 42 43|] [|51 52 53|]|]
+&gt; (test (generate-array [$x $y] [5 3] [x y]))
+[|[|[1 1] [1 2] [1 3]|] [|[2 1] [2 2] [2 3]|] [|[3 1] [3 2] [3 3]|] [|[4 1] [4 2] [4 3]|] [|[5 1] [5 2] [5 3]|]|]</code></pre>
+
+<h3 id="array-size"><code>array-size</code> expressions</h3>
+
+<pre><code>  (array-size <i>array</i>)</code></pre>
+
+<p>
+An <code>array-size</code> expression tells us the number of elements in a given array.
+</p>
+
+<pre><code>&gt; (test (array-size [| 1 2 3 4 5 6 |]))
+6
+&gt; (test (array-size [| 1 2 3 6 |]))
+4
+&gt; (test (array-size [| 1 2 3 |]))
+3
+&gt; (test (array-size [| |]))
+0
+&gt; (test (array-size [| [| 1 2 3 |] |]))
+1</code></pre>
+
+<p>
+Note that an <code>array-size</code> expression returns not the maximum index but the NUMBER of ELEMENTS.
+See the followings.
+</p>
+
+<pre><code>&gt; (test (match 2 integer {[$a_2 a]}))
+[|2|]
+&gt; (test (match 2 integer {[$a_2 (array-size a)]}))
+1</code></pre>
+
+<p>
+To understand the above, you have to read the next chapter.
+Here, you can assume these code binds the second element of <code>a</code> to <code>2</code>, the former shows such <code>a</code>, and the latter shows <code>array-size</code> of <code>a</code>.
+</p>
+
+<pre><code>&gt; (test (match 2 integer {[$a_2 a_1]}))
+undefined
+&gt; (test (match 2 integer {[$a_2 a_2]}))
+2</code></pre>
+
+<p>
+The above show <code>a</code> does not have the first element, but have the second element
+You should be careful how to use <code>array-size</code>.
+</p>
 
 <hr/>
 <p>
