@@ -2,11 +2,22 @@
 <head>
 <title>Programming Language Egison Users Manual</title>
 <meta http-equiv="Content-Matcher" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 
 <body>
+    
+<nav>
+  <ul>
+    <li><a href="./pattern-matching.html">Prev</a></li>
+    <li><a href="./io.html">Next</a></li>
+    <li><a href="./index.html">Home</a></li>
+  </ul>
+  <p>Egison User Manual Version 3</p>
+</nav>
+
 <h1>How to Define Matchers</h1>
-<hr/>
+
 <p>
   As described in previous chapters, matchers define how to do pattern-matching.
   In this section, we explain how to define matchers using libraries as examples.
@@ -20,22 +31,19 @@ You can define a matcher using <code>matcher</code>.
 First of all, we show the formal definition of <code>matcher</code>.
 </p>
 
-<pre>
-  <code>
-    &lt;matcher-sentence&gt;          := `(' "matcher" `{' &lt;primitive-pattern-clause&gt;* `}' `)'
-    &lt;primitive-pattern-clause&gt;  := `[' &lt;primitive-pp&gt; `[' &lt;matcher&gt;* `]' `{' &lt;primitive-data-clause&gt;* `}' `]'
-    &lt;primitive-data-clause&gt;     := `[' &lt;primitive-dp&gt; &lt;body&gt; `]'
-    &lt;primitive-pp&gt;              := `$'                                             (primitive-pattern-variable)
-                                 | `,$' &lt;identifier&gt;                               (value-pattern-pattern)
-                                 |  `&lt;' &lt;identifier&gt; &lt;primitive-pp&gt;* `&gt;'           (primitive-inductive-pattern)
-    &lt;primitive-dp&gt;              := `_'                                             (wildcard)
-                                 | `$' &lt;identifier&gt;                                (primitive-data-variable)
-                                 | `&lt;' &lt;Identifier&gt; &lt;primitive-dp&gt;* `&gt;'            (primitive-inductive-data)
-                                 | `{}'                                            (primitive-null-collection)
-                                 | `{' &lt;primitive-dp&gt; @&lt;primitive-dp&gt; `}'          (primitive-cons-collection)
-                                 | `{' @&lt;primitive-dp&gt; &lt;primitive-dp&gt; `}'          (primitive-snoc-collection)
-  </code>
-</pre>
+<pre><code>&lt;matcher-sentence&gt;          := `(' "matcher" `{' &lt;primitive-pattern-clause&gt;* `}' `)'
+&lt;primitive-pattern-clause&gt;  := `[' &lt;primitive-pp&gt; `[' &lt;matcher&gt;* `]' `{' &lt;primitive-data-clause&gt;* `}' `]'
+&lt;primitive-data-clause&gt;     := `[' &lt;primitive-dp&gt; &lt;body&gt; `]'
+&lt;primitive-pp&gt;              := `$'                                             (primitive-pattern-variable)
+                             | `,$' &lt;identifier&gt;                               (value-pattern-pattern)
+                             |  `&lt;' &lt;identifier&gt; &lt;primitive-pp&gt;* `&gt;'           (primitive-inductive-pattern)
+&lt;primitive-dp&gt;              := `_'                                             (wildcard)
+                             | `$' &lt;identifier&gt;                                (primitive-data-variable)
+                             | `&lt;' &lt;Identifier&gt; &lt;primitive-dp&gt;* `&gt;'            (primitive-inductive-data)
+                             | `{}'                                            (primitive-null-collection)
+                             | `{' &lt;primitive-dp&gt; @&lt;primitive-dp&gt; `}'          (primitive-cons-collection)
+                             | `{' @&lt;primitive-dp&gt; &lt;primitive-dp&gt; `}'          (primitive-snoc-collection)
+</code></pre>
 
 <p>
 Here, <code>&lt;body&gt;</code> is a formula of Egison.
@@ -65,9 +73,7 @@ If found, return the result of an evaluation of the associated <code>&lt;body&gt
 In the section, we explain the basics of matcher using <code>ordering</code>.
 </p>
 
-<pre>
-  <code>
-(define $ordering
+<pre><code>(define $ordering
   (matcher
     {[,$val []
       {[$tgt (match [val tgt] [ordering ordering]
@@ -87,8 +93,7 @@ In the section, we explain the basics of matcher using <code>ordering</code>.
      [$ [something]
       {[$tgt {tgt}]}]
      }))
-  </code>
-</pre>
+</code></pre>
 
 <p>
 Note that we use neither <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, nor <code>(primitive-snoc-collection)</code>, in the definition of <code>ordering</code>.
@@ -104,14 +109,11 @@ Any value pattern and inductive pattern-match <code>(value-pattern-pattern)</cod
 For example, consider evaluating the following code.
 </p>
 
-<pre>
-  <code>
-    (match-all &lt;Equal&gt; ordering [,&lt;Less&gt; #t])
-    (match-all &lt;Equal&gt; ordering [,&lt;Equal&gt; #t])
-    (match-all &lt;Equal&gt; ordering [&lt;equal&gt; #t])
-    (match-all &lt;Equal&gt; ordering [$x x])
-  </code>
-</pre>
+<pre><code>(match-all &lt;Equal&gt; ordering [,&lt;Less&gt; #t])
+(match-all &lt;Equal&gt; ordering [,&lt;Equal&gt; #t])
+(match-all &lt;Equal&gt; ordering [&lt;equal&gt; #t])
+(match-all &lt;Equal&gt; ordering [$x x])
+</code></pre>
 
 <p>
 Since the patterns in the first two piece of code are both value patterns, they match <code>,$val</code>.
@@ -150,9 +152,7 @@ We feel it's a bit difficult to understand what happens if the tuple of matchers
 Then, we give another matcher, <code>integer-tree</code>.
 </p>
 
-<pre>
-  <code>
-(define $integer-tree
+<pre><code>(define $integer-tree
   (matcher
     {[,$val []
       {[$tgt (match [val tgt] [integer-tree integer-tree]
@@ -167,18 +167,15 @@ Then, we give another matcher, <code>integer-tree</code>.
        [_ {}]}]
      [$ [something]
       {[$tgt {tgt}]}]}))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   Consider executing the following example.
 </p>
 
-<pre>
-  <code>
-    (match-all &lt;Node &lt;Leaf 3&gt; &lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;&gt; integer-tree [&lt;node &lt;leaf $n&gt; &lt;node _ _&gt;&gt; n])
-  </code>
-</pre>
+<pre><code>
+(match-all &lt;Node &lt;Leaf 3&gt; &lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;&gt; integer-tree [&lt;node &lt;leaf $n&gt; &lt;node _ _&gt;&gt; n])
+</code></pre>
 
 <p>
   Since the pattern is <code>&lt;node &lt;leaf $n&gt; &lt;node _ _&gt;&gt;</code>, it matches <code>&lt;node $ $&gt;</code>. <code>&lt;leaf $n&gt;</code> and <code>&lt;node _ _&gt;</code> are "bound" to the first <code>$</code> and the second <code>$</code>, respectively.
@@ -192,16 +189,13 @@ Actually, in the library "base.egi", the matcher <code>ordering</code> is define
 The following code has the same meaning as the above definitions of <code>ordering</code> and <code>integer-tree</code>.
 </p>
 
-<pre>
-  <code>
-(define $ordering
+<pre><code>(define $ordering
   (algebraic-data-matcher 
     (| &lt;less&gt; &lt;equal&gt; &lt;greater&gt;)))
 (define $integer-tree
   (algebraic-data-matcher 
     (| &lt;leaf integer&gt; &lt;node integer-tree integer-tree&gt;)))
-  </code>
-</pre>
+</code></pre>
 
 <h2>Definitions of Matchers for Collection Data</h2>
 
@@ -210,9 +204,7 @@ We will explain how to define matchers for collection data, such as list, multis
 In this section, we show the definition of list as example, and explain the behaviour of it.
 </p>
 
-<pre>
-<code>
-(define $list
+<pre><code>(define $list
   (lambda [$a]
     (matcher
       {[,$val []
@@ -258,8 +250,7 @@ In this section, we show the definition of list as example, and explain the beha
        [$ [something]
         {[$tgt {tgt}]}]
        })))
-</code>
-</pre>
+</code></pre>
 
 <p>
 A definition of a matcher for collection data may contains <code>(primitive-null-collection)</code>, <code>(primitive-cons-collection)</code>, and <code>(primitive-snoc-collection)</code>.
@@ -276,11 +267,8 @@ In <code>(primitive-cons-collection)</code>, the head of the collection matches 
 In contrast, the tail matches the second argument, and the rest do the first one in <code>(primitive-snoc-collection)</code>.
 </p>
 
-<pre>
-  <code>
-    (match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]])
-  </code>
-</pre>
+<pre><code>(match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]])
+</code></pre>
 
 <p>
 We deconstruct <code>{1 2 3 4}</code> by <code>(primitive-cons-collection)</code>.
@@ -290,11 +278,8 @@ By contrast, if you substitute <code>&lt;snoc $x $xs&gt;</code> for <code>&lt;co
 Note that the null collection matches neither <code>(primitive-cons-collection)</code> nor <code>(primitive-snoc-collection)</code>. For example, when you evaluate the following code, you will get the null collection <code>{}</code>.
 </p>
 
-<pre>
-  <code>
-    (match-all {} (list integer) [&lt;cons $x $xs&gt; [x xs]])
-  </code>
-</pre>
+<pre><code>(match-all {} (list integer) [&lt;cons $x $xs&gt; [x xs]])
+</code></pre>
 
 <p>
 Now, you know how to define matchers, and then you can write your own matchers.
@@ -302,23 +287,10 @@ We recommend you to read libraries such as <code>lib/collection.egi</code>.
 There we have written many matchers, which are good examples for you.
 </p>
 
-<hr/>
-<p>
-  [<a href="../index.html">Egison Top</a>]
-  [<a href="./index.html">Egison Manual Top</a>]
-</p>
+<footer>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+</footer>
 
 </body>
-
-<footer>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=left>
-        <i>
-          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
-        </i>
-    </tr>
-  </table>
-</footer>
 
 </html>

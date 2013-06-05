@@ -2,6 +2,7 @@
 <head>
 <title>Programming Language Egison Users Manual</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -18,8 +19,18 @@
 </head>
 
 <body>
+    
+<nav>
+  <ul>
+    <li><a href="./primitives.html">Prev</a></li>
+    <li><a href="./n-queen.html">Next</a></li>
+    <li><a href="./index.html">Home</a></li>
+  </ul>
+  <p>Egison User Manual Version 3</p>
+</nav>
+
 <h1>Example : Poker Hands</h1>
-<hr/>
+
 <p>
   In this section, we will describe the program that determine the poker hands.<br/>
   We do pattern matching collections of cards as a multiset of cards.<br/>
@@ -35,22 +46,17 @@
   The definition of the <code>suit</code> is as below.<br/>
 </p>
 
-<pre>
-  <code>
-(define $suit
+<pre><code>(define $suit
   (algebraic-data-matcher
     {&lt;spade&gt; &lt;heart&gt; &lt;club&gt; &lt;diamond&gt;}))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   The definition of the <code>mod</code> is as below.<br/>
   This is included in "<code>lib/core/number.egi</code>".<br/>
 </p>
 
-<pre>
-  <code>
-(define $mod
+<pre><code>(define $mod
   (lambda [$m]
     (matcher
       {[,$n []
@@ -60,28 +66,22 @@
        [$ [something]
         {[$tgt {(modulo tgt m)}]}]
        })))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   The <code>card</code> matcher is defined using those two types defined above.<br/>
 </p>
 
-<pre>
-  <code>
-(define $card
+<pre><code>(define $card
   (algebraic-data-matcher
     {&lt;card suit integer&gt;}))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   If we defined the <code>card</code> matcher as abobe, we can define a function that determine poker hands as following.<br/>
 </p>
 
-<pre>
-  <code>
-(define $poker-hands
+<pre><code>(define $poker-hands
   (lambda [$cs]
     (match cs (multiset card)
       {[&lt;cons &lt;card $s $n&gt;
@@ -147,16 +147,13 @@
             &lt;cons _
              &lt;nil&gt;&gt;&gt;&gt;&gt;&gt;
         &lt;Nothing&gt;]})))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   We can use <code>poker-hands</code> function as follow.<br/>
 </p>
 
-<pre>
-  <code>
-&gt; (test (poker-hands {&lt;Card &lt;Heart&gt; 1&gt;
+<pre><code>&gt; (test (poker-hands {&lt;Card &lt;Heart&gt; 1&gt;
                       &lt;Card &lt;Heart&gt; 2&gt;
                       &lt;Card &lt;Heart&gt; 3&gt;
                       &lt;Card &lt;Heart&gt; 4&gt;
@@ -186,22 +183,13 @@
                       &lt;Card &lt;Heart&gt; 1&gt;
                       &lt;Card &lt;Diamond&gt; 3&gt;}))
 &lt;Nothing&gt;
-  </code>
-</pre>
-
-</body>
+</code></pre>
 
 <footer>
-  <hr size=1 noshade>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=right>
-        <i>
-          <a href="http://egi.pira.jp">Egi Satoshi</a>
-        </i>
-    </tr>
-  </table>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
 </footer>
+
+</body>
 
 </html>
 

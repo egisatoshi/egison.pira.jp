@@ -2,6 +2,7 @@
 <head>
 <title>Programming Language Egison Users Manual</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -19,8 +20,15 @@
 
 <body>
   
+<nav>
+  <ul>
+    <li><a href="./quick-demo.html">Next</a></li>
+    <li><a href="./index.html">Home</a></li>
+  </ul>
+  <p>Egison User Manual Version 3</p>
+</nav>
+
 <h1>Setting up Egison!!</h1>
-<hr/>
 
 <h2>How to install?</h2>
 
@@ -57,13 +65,11 @@
 <h2>How to update?</h2>
 <p>
   You can update Egison with the following commands.
-  <pre>
-    <code>
-% cabal update
-% cabal install egison
-    </code>
-  </pre>
 </p>
+
+<pre><code>% cabal update
+% cabal install egison
+</code></pre>
 
 <h2>Run Interpreter!!</h2>
 
@@ -71,16 +77,13 @@
   After you have installed Egison, you can run Egison interpreter with a command 'egison'. (<a href="./setting-up-egison.html">Setting up Egison!!</a>)<br/>
   Type Control-D to terminate the interpreter.
 </p>
-<pre>
-  <code>
-% egison
+<pre><code>% egison
 Egison, version X.X.X : http://egison.pira.jp
 Welcome to Egison Interpreter!
 &gt; ^D
 Leaving Egison.
 Byebye. See you again! (^^)/
-  </code>
-</pre>
+</code></pre>
 
 <h2>How to use Egison mode on your emacs</h2>
 <p>
@@ -88,31 +91,15 @@ Byebye. See you again! (^^)/
   to load-path of your emacs, and add following lines in your <code>.emacs</code>.
 </p>
 
-<pre>
-  <code>
-(autoload 'egison-mode "egison-mode" "Major mode for editing Egison code." t)
+<pre><code>(autoload 'egison-mode "egison-mode" "Major mode for editing Egison code." t)
 (setq auto-mode-alist
 (cons `("\\.egi$" . egison-mode) auto-mode-alist))
-  </code>
-</pre>
-
-<hr/>
-<p>
-  [<a href="../index.html">Egison Top</a>]
-  [<a href="./index.html">Egison Manual Top</a>]
-</p>
-
-</body>
+</code></pre>
 
 <footer>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=left>
-        <i>
-          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
-        </i>
-    </tr>
-  </table>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
 </footer>
+
+</body>
 
 </html>

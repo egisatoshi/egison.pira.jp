@@ -2,6 +2,7 @@
 <head>
 <title>Programming Language Egison Users Manual</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -18,8 +19,15 @@
 </head>
 
 <body>
+    
+<nav>
+  <ul>
+    <li><a href="./index.html">Home</a></li>
+  </ul>
+  <p>Egison User Manual Version 3</p>
+</nav>
+
 <h1>Pattern Matching Mechanism</h1>
-<hr/>
 
 <h2 id="notations">Notations</h2>
 
@@ -59,8 +67,7 @@
   Let's examin what will happen when Egison evaluate following pattern matching expressions.<br/>
 </p>
 
-<pre><code>
-&gt; (test (match-all {2 8 7 2 7} (multiset integer)
+<pre><code>&gt; (test (match-all {2 8 7 2 7} (multiset integer)
           [&lt;cons $m &lt;cons ,m _&gt;&gt; m]))
 </code></pre>
 
@@ -74,8 +81,7 @@
   `<code>env</code>' is the environment when the evalation process enters the `<code>match-all</code>' expression.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : &lt;cons $m &lt;cons ,m _&gt;&gt;
+<pre><code>MState [stack : {[p : &lt;cons $m &lt;cons ,m _&gt;&gt;
                   t : {2 8 7 2 7}
                   m : (multiset integer)]}]
        [env : env]
@@ -88,8 +94,7 @@ MState [stack : {[p : &lt;cons $m &lt;cons ,m _&gt;&gt;
   Matching states increases to 5 with this reduction as following.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $m
+<pre><code>MState [stack : {[p : $m
                   t : 2
                   m : integer]
                  [p : &lt;cons ,m _&gt;
@@ -140,8 +145,7 @@ MState [stack : {[p : $m
   It is following one.
 </p>
 
-<pre><code>
-MState [stack : {[p : $m
+<pre><code>MState [stack : {[p : $m
                   t : 2
                   m : integer]
                  [p : &lt;cons ,m _&gt;
@@ -158,8 +162,7 @@ MState [stack : {[p : $m
   It can match with a wildcard or a pattern variable.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $m
+<pre><code>MState [stack : {[p : $m
                   t : 2
                   m : something]
                  [p : &lt;cons ,m _&gt;
@@ -175,8 +178,7 @@ MState [stack : {[p : $m
   The matching atom of the top of the stack is popped out, and a new binding is added to the result of pattern matching.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : &lt;cons ,m _&gt;
+<pre><code>MState [stack : {[p : &lt;cons ,m _&gt;
                   t : {8 7 2 7}
                   m : (multiset integer)]}]
        [env : env]
@@ -188,8 +190,7 @@ MState [stack : {[p : &lt;cons ,m _&gt;
   The expression in the value pattern `<code>,m</code>' is evaluated with `<code>env</code>' the environment of the matching state, extended with `<code>{[m 2]}</code>' the result of pattern matching in progress.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : ,m
+<pre><code>MState [stack : {[p : ,m
                   t : 8
                   m : integer]
                  [p : _
@@ -232,8 +233,7 @@ MState [stack : {[p : ,m
   The matching atom of the top of the stack is popped out.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : _
+<pre><code>MState [stack : {[p : _
                   t : {8 7 7}
                   m : (multiset integer)]}]
        [env : env]
@@ -247,8 +247,7 @@ MState [stack : {[p : _
   The result of pattern matching of this matching state is `<code>{[m 2]}</code>'.<br/>
 </p>
 
-<pre><code>
-MState [stack : {}
+<pre><code>MState [stack : {}
        [env : env]
        [result : {[m 2]}]
 </code></pre>
@@ -260,8 +259,7 @@ MState [stack : {}
 
 <h3>Example 2. Application of Pattern Function Inside Pattern</h3>
 
-<pre><code>
-(define $twin
+<pre><code>(define $twin
   (pattern-function [$pat1 $pat2]
     &lt;cons (& $pat pat1)
      &lt;cons ,pat
@@ -275,8 +273,7 @@ MState [stack : {}
   The initial matching state is as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : &lt;cons $m (twin $n _)&gt;
+<pre><code>MState [stack : {[p : &lt;cons $m (twin $n _)&gt;
                   t : {1 2 1 3}
                   m : (multiset integer)]}]
        [env : env]
@@ -287,8 +284,7 @@ MState [stack : {[p : &lt;cons $m (twin $n _)&gt;
   This matching state is reduced as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $m
+<pre><code>MState [stack : {[p : $m
                   t : 1
                   m : integer]
                  [p : (twin $n _)
@@ -329,8 +325,7 @@ MState [stack : {[p : $m
   We focused on second matching state, becauase first matching state fails and vanishes.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $m
+<pre><code>MState [stack : {[p : $m
                   t : 2
                   m : integer]
                  [p : (twin $n _)
@@ -344,8 +339,7 @@ MState [stack : {[p : $m
   This matching state is reduced as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $m
+<pre><code>MState [stack : {[p : $m
                   t : 2
                   m : something]
                  [p : (twin $n _)
@@ -359,8 +353,7 @@ MState [stack : {[p : $m
   This matching state is reduced as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : (twin $n _)
+<pre><code>MState [stack : {[p : (twin $n _)
                   t : {1 1 3}
                   m : (multiset integer)]}]
        [env : env]
@@ -371,8 +364,7 @@ MState [stack : {[p : (twin $n _)
   This matching state is reduced as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {(MNode [stack : {[p : &lt;cons (& $pat pat1) &lt;cons ,pat pat2&gt;&gt;
+<pre><code>MState [stack : {(MNode [stack : {[p : &lt;cons (& $pat pat1) &lt;cons ,pat pat2&gt;&gt;
                                    t : {1 1 3}
                                    m : (multiset integer)]}]
                         [penv : {[pat1 $n] [pat2 _]}]
@@ -386,8 +378,7 @@ MState [stack : {(MNode [stack : {[p : &lt;cons (& $pat pat1) &lt;cons ,pat pat2
   This matching state is reduced as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {(MNode [stack : {[p : (& $pat pat1)
+<pre><code>MState [stack : {(MNode [stack : {[p : (& $pat pat1)
                                    t : 1
                                    m : integer]
                                   [p : &lt;cons ,pat pat2&gt;
@@ -428,8 +419,7 @@ MState [stack : {(MNode [stack : {[p : (& $pat pat1)
   We focused on first matching state.<br/>
 </p>
 
-<pre><code>
-MState [stack : {(MNode [stack : {[p : (& $pat pat1)
+<pre><code>MState [stack : {(MNode [stack : {[p : (& $pat pat1)
                                    t : 1
                                    m : integer]
                                   [p : &lt;cons ,pat pat2&gt;
@@ -447,8 +437,7 @@ MState [stack : {(MNode [stack : {[p : (& $pat pat1)
   The <i>and pattern</i> is expanded.<br/>
 </p>
 
-<pre><code>
-MState [stack : {(MNode [stack : {[p : $pat
+<pre><code>MState [stack : {(MNode [stack : {[p : $pat
                                    t : 1
                                    m : integer]
                                   [p : pat1
@@ -469,8 +458,7 @@ MState [stack : {(MNode [stack : {[p : $pat
   The matcher of the matching atom is changed to `<code>something</code>' from `<code>integer</code>'.<br/>
 </p>
 
-<pre><code>
-MState [stack : {(MNode [stack : {[p : pat1
+<pre><code>MState [stack : {(MNode [stack : {[p : pat1
                                    t : 1
                                    m : integer]
                                   [p : &lt;cons ,pat pat2&gt;
@@ -489,8 +477,7 @@ MState [stack : {(MNode [stack : {[p : pat1
   The value of the variable is refer from `<code>penv</code>' of the matching node.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $n
+<pre><code>MState [stack : {[p : $n
                   t : 1
                   m : integer]
                  (MNode [stack : {[p : &lt;cons ,pat pat2&gt;
@@ -508,8 +495,7 @@ MState [stack : {[p : $n
   The matching atom of the top of the stack is popped out, and a new binding is added to the result of pattern matching.<br/>
 </p>
 
-<pre><code>
-MState [stack : {[p : $n
+<pre><code>MState [stack : {[p : $n
                   t : 1
                   m : something]
                  (MNode [stack : {[p : &lt;cons ,pat pat2&gt;
@@ -526,8 +512,7 @@ MState [stack : {[p : $n
   This matching state is reduced as follow.<br/>
 </p>
 
-<pre><code>
-MState [stack : {(MNode [stack : {[p : &lt;cons ,pat pat2&gt;
+<pre><code>MState [stack : {(MNode [stack : {[p : &lt;cons ,pat pat2&gt;
                                    t : {1 3}
                                    m : (multiset integer)]}]
                         [penv : {[pat1 $n] [pat2 _]}]
@@ -542,25 +527,10 @@ MState [stack : {(MNode [stack : {[p : &lt;cons ,pat pat2&gt;
   I've explained most of the essential points, already.<br/>
 </p>
 
-
-<hr/>
-
-<p>
-  [<a href="../index.html">Egison Top</a>]
-  [<a href="./index.html">Egison Manual Top</a>]
-</p>
+<footer>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+</footer>
 
 </body>
-
-<footer>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=left>
-        <i>
-          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
-        </i>
-    </tr>
-  </table>
-</footer>
 
 </html>

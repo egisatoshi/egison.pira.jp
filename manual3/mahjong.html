@@ -2,6 +2,7 @@
 <head>
 <title>Programming Language Egison Users Manual</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -18,8 +19,17 @@
 </head>
 
 <body>
+    
+<nav>
+  <ul>
+    <li><a href="./n-queen.html">Prev</a></li>
+    <li><a href="./index.html">Home</a></li>
+  </ul>
+  <p>Egison User Manual Version 3</p>
+</nav>
+
 <h1>Example : Mahjong Hands</h1>
-<hr/>
+
 <p>
   In this section, we will describe the program that determine the mahjong hands.<br/>
   We do pattern matching collections of hais as a multiset of cards.<br/>
@@ -30,9 +40,7 @@
   First, we define matchers for mahjong.<br/>
 </p>
 
-<pre>
-  <code>
-(define $suit
+<pre><code>(define $suit
   (algebraic-data-matcher
     {&lt;wan&gt; &lt;pin&gt; &lt;sou&gt;}))
 
@@ -43,16 +51,13 @@
 (define $hai
   (algebraic-data-matcher
     {&lt;num suit integer&gt; &lt;ji honor&gt;}))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   Here are pattern functions useful to match with mahjong hands.
 </p>
 
-<pre>
-  <code>
-(define $shuntsu
+<pre><code>(define $shuntsu
   (pattern-function [$pat1 $pat2]
     &lt;cons (&amp; &lt;num $s $n&gt; pat1)
      &lt;cons &lt;num ,s ,(+ n 1)&gt;
@@ -71,16 +76,13 @@
     &lt;cons (&amp; $pat pat1)
      &lt;cons ,pat
       pat2&gt;&gt;))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   
 </p>
 
-<pre>
-  <code>
-(define $agari?
+<pre><code>(define $agari?
   (match-lambda (multiset hai)
     {[(twin $th_1 (| (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (shuntsu $sh_4 &lt;nil&gt;))))
                      (shuntsu $sh_1 (shuntsu $sh_2 (shuntsu $sh_3 (kohtsu $kh_1 &lt;nil&gt;))))
@@ -92,16 +94,13 @@
       #t]
      [_
       #f]}))
-  </code>
-</pre>
+</code></pre>
 
 <p>
   We can use <code>agari?</code> function as follow.<br/>
 </p>
 
-<pre>
-  <code>
-(test (agari? {&lt;Ji &lt;Haku&gt;&gt; &lt;Ji &lt;Haku&gt;&gt;
+<pre><code>(test (agari? {&lt;Ji &lt;Haku&gt;&gt; &lt;Ji &lt;Haku&gt;&gt;
                &lt;Num &lt;Wan&gt; 3&gt; &lt;Num &lt;Wan&gt; 4&gt; &lt;Num &lt;Wan&gt; 5&gt;
                &lt;Num &lt;Wan&gt; 6&gt; &lt;Num &lt;Wan&gt; 7&gt; &lt;Num &lt;Wan&gt; 8&gt;
                &lt;Num &lt;Pin&gt; 2&gt; &lt;Num &lt;Pin&gt; 3&gt; &lt;Num &lt;Pin&gt; 4&gt;
@@ -112,22 +111,13 @@
                &lt;Num &lt;Wan&gt; 3&gt; &lt;Num &lt;Wan&gt; 4&gt; &lt;Num &lt;Wan&gt; 5&gt;
                &lt;Num &lt;Pin&gt; 1&gt; &lt;Num &lt;Pin&gt; 3&gt; &lt;Num &lt;Pin&gt; 4&gt;
                &lt;Num &lt;Sou&gt; 6&gt; &lt;Num &lt;Sou&gt; 6&gt; &lt;Num &lt;Sou&gt; 6&gt;}))
-  </code>
-</pre>
-
-</body>
+</code></pre>
 
 <footer>
-  <hr size=1 noshade>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=right>
-        <i>
-          <a href="http://egi.pira.jp">Egi Satoshi</a>
-        </i>
-    </tr>
-  </table>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
 </footer>
+
+</body>
 
 </html>
 
