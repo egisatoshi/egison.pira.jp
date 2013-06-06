@@ -23,8 +23,9 @@
 <nav>
   <ul>
     <li><a href="./basics.html">Prev</a></li>
+    <li><a href="./index.html">Index</a></li>
     <li><a href="./pattern-matching.html">Next</a></li>
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="../index.html">Home</a></li>
   </ul>
   <p>Egison User Manual Version 3</p>
 </nav>
@@ -52,20 +53,20 @@
 <h3>Wildcards</h3>
 
 <p>
-  Here, we explain the special pattern <i>wildcard</i> `<code>_</code>'.
+  Here, we explain the special pattern <i>wildcard</i> <code>_</code>.
   Any object matches this pattern.
   We use <a href="#match-expression"><code>match</code> expressions</a> and <a href="#matchall-expression"><code>match-all</code> expressions</a>.
   Roughly speaking, they are syntax for pattern-matching.
   You should read the explanations of these expressions at the same time.
 </p>
 
-<pre><code>&gt; (test (match 1 something {[_ &lt;OK&gt;]}))
+<pre><code>&gt; (match 1 something {[_ &lt;OK&gt;]})
 &lt;OK&gt;
-&gt; (test (match #f something {[_ &lt;OK&gt;]}))
+&gt; (match #f something {[_ &lt;OK&gt;]})
 &lt;OK&gt;
-&gt; (test (match 'a' something {[_ &lt;OK&gt;]}))
+&gt; (match 'a' something {[_ &lt;OK&gt;]})
 &lt;OK&gt;
-&gt; (test (match "KO" something {[_ &lt;OK&gt;]}))
+&gt; (match "KO" something {[_ &lt;OK&gt;]})
 &lt;OK&gt;</code></pre>
 
 <h3>Inductive Patterns</h3>
@@ -96,13 +97,13 @@ Moreover, you can use the pattern in inductive patterns.
 This usage allows us to deconstruct an object.
 </p>
 
-<pre><code>&gt; (test (match 1 something {[$x x]}))
+<pre><code>&gt; (match 1 something {[$x x]})
 1
-&gt; (test (match #t something {[$z (not z)]}))
+&gt; (match #t something {[$z (not z)]})
 #f
-&gt; (test (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+&gt; (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]})
 [1 {2 3}]
-&gt; (test (match {1} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+&gt; (match {1} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]})
 [1 {}]</code></pre>
 
 <h3>Indexed Variable Patterns</h3>
@@ -115,17 +116,17 @@ In this pattern, the <i>variable</i> is regarded as an <a href="./basics.html#ar
 Note that an <i>integer</i> is arbitrary.
 </p>
 
-<pre><code>&gt; (test (match 1 something {[$x_1 x]}))
+<pre><code>&gt; (match 1 something {[$x_1 x]})
 [|1|]
-&gt; (test (match 1 something {[$x_1 x_1]}))
+&gt; (match 1 something {[$x_1 x_1]})
 1
-&gt; (test (match #t something {[$x_3 x]}))
+&gt; (match #t something {[$x_3 x]})
 [|#t|]
-&gt; (test (match #t something {[$x_3 x_1]}))
+&gt; (match #t something {[$x_3 x_1]})
 undefined
-&gt; (test (match #t something {[$x_3 x_3]}))
+&gt; (match #t something {[$x_3 x_3]})
 #t
-&gt; (test (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $a_2 $a_1&gt; a]}))
+&gt; (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $a_2 $a_1&gt; a]})
 [|{2 3} 1|]</code></pre>
 
 <h3>Value Patterns</h3>
@@ -138,15 +139,15 @@ undefined
   You shouldn't forget to place COMMA before a value.
 </p>
 
-<pre><code>&gt; (test (match 1 integer {[,1 &lt;OK&gt;] [_ &lt;KO&gt;]}))
+<pre><code>&gt; (match 1 integer {[,1 &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match 0 integer {[,1 &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match 0 integer {[,1 &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;KO&gt;
-&gt; (test (match {1 2 3} (list integer) {[,{1 2 3} &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 2 3} (list integer) {[,{1 2 3} &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match {1 2 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 2 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match {1 4 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 4 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;KO&gt;</code></pre>
 
 <h3>Predicate Patterns</h3>
@@ -158,9 +159,9 @@ Here, <code>function</code> is a function that takes an argument and returns a b
 A predicate pattern is a pattern that an object matches if the result of application of <code>function</code> and the object is <code>#t</code>.
 </p>
 
-<pre><code>&gt; (test (match-all {1 2 3 4 5 6} (list integer) [&lt;join $xs &lt;cons ?(lt-n? $ 4) $ys&gt;&gt; {@xs @ys}]))
+<pre><code>&gt; (match-all {1 2 3 4 5 6} (list integer) [&lt;join $xs &lt;cons ?(lt-n? $ 4) $ys&gt;&gt; {@xs @ys}])
 {{2 3 4 5 6} {1 3 4 5 6} {1 2 4 5 6}}
-&gt; (test (match-all {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987} (multiset integer) [&lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $x) _&gt; x]))
+&gt; (match-all {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987} (multiset integer) [&lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $x) _&gt; x])
 {2 8 34 144 610}</code></pre>
 
 <!-- <h3>Cut-Patterns</h3> -->
@@ -177,17 +178,17 @@ Such a pattern is called "and-pattern".
 <pre><code>(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;)
 (&)</code></pre>
 
-<pre><code>&gt; (test (match {1 3 2} (list integer) {[&lt;cons ,1 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+<pre><code>&gt; (match {1 3 2} (list integer) {[&lt;cons ,1 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match {1 3 2} (list integer) {[&lt;snoc ,2 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 3 2} (list integer) {[&lt;snoc ,2 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match {1 3 2} (list integer) {[(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 3 2} (list integer) {[(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match {1 3 3} (list integer) {[&lt;snoc ,2 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 3 3} (list integer) {[&lt;snoc ,2 _&gt; &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;KO&gt;
-&gt; (test (match {1 3 3} (list integer) {[(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match {1 3 3} (list integer) {[(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;KO&gt;
-&gt; (test (match #t something {[(&) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match #t something {[(&) &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;</code></pre>
 
 <p>
@@ -198,9 +199,9 @@ Such a pattern is called "and-pattern".
 
 <pre><code>(& &lt;cons _ _&gt; $xs)</code></pre>
 
-<pre><code>&gt; (test (match {1 2} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]}))
+<pre><code>&gt; (match {1 2} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]})
 {1 2}
-&gt; (test (match {} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]}))
+&gt; (match {} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]})
 #f</code></pre>
 
 <h3>Or-Patterns</h3>
@@ -216,9 +217,9 @@ Such a pattern is called "and-pattern".
 (| ,#t ,#f)
 (|)</code></pre>
 
-<pre><code>&gt; (test (match {1 3 3} (list integer) {[(| &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+<pre><code>&gt; (match {1 3 3} (list integer) {[(| &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;) &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;OK&gt;
-&gt; (test (match #t something {[(|) &lt;OK&gt;] [_ &lt;KO&gt;]}))
+&gt; (match #t something {[(|) &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;KO&gt;</code></pre>
 
 <p>
@@ -227,13 +228,13 @@ Such a pattern is called "and-pattern".
 </p>
 
 <pre><code>&gt; (define $f (pattern-function [] (| &lt;nil&gt; &lt;cons ,1 (f)&gt;)))
-&gt; (test (match-all {1} (list integer) [(f) &lt;OK&gt;]))
+&gt; (match-all {1} (list integer) [(f) &lt;OK&gt;])
 {&lt;OK&gt;}
-&gt; (test (match-all {1 1 1 1 1 1} (list integer) [(f) &lt;OK&gt;]))
+&gt; (match-all {1 1 1 1 1 1} (list integer) [(f) &lt;OK&gt;])
 {&lt;OK&gt;}
-&gt; (test (match-all {} (list integer) [(f) &lt;OK&gt;]))
+&gt; (match-all {} (list integer) [(f) &lt;OK&gt;])
 {&lt;OK&gt;}
-&gt; (test (match-all {1 1 1 2 1 1} (list integer) [(f) &lt;OK&gt;]))
+&gt; (match-all {1 1 1 2 1 1} (list integer) [(f) &lt;OK&gt;])
 {}</code></pre>
 
 <h3>Not-Patterns</h3>
@@ -245,9 +246,9 @@ Such a pattern is called "and-pattern".
   When the pattern-matching using <code><i>pattern</i></code> fails, the pattern-matching using the whole pattern <code>^<i>pattern</i></code> succeeds.
 </p>
 
-<pre><code>&gt; (test (match 1 integer {[,2 #t] [_ #f]}))
+<pre><code>&gt; (match 1 integer {[,2 #t] [_ #f]})
 #f
-&gt; (test (match 1 integer {[^,2 #t] [_ #f]}))
+&gt; (match 1 integer {[^,2 #t] [_ #f]})
 #t</code></pre>
 
 <p>
@@ -255,13 +256,13 @@ Using the patterns, we can write a pattern that represents "a collection doesn't
 This is simple but useful usage of not-patterns.
 </p>
 
-<pre><code>&gt; (test (match {2 3 4} (multiset integer) {[&lt;cons ,1 _&gt; #t] [_ #f]}))
+<pre><code>&gt; (match {2 3 4} (multiset integer) {[&lt;cons ,1 _&gt; #t] [_ #f]})
 #f
-&gt; (test (match {2 3 4} (multiset integer) {[^&lt;cons ,1 _&gt; #t] [_ #f]}))
+&gt; (match {2 3 4} (multiset integer) {[^&lt;cons ,1 _&gt; #t] [_ #f]})
 #t
-&gt; (test (match {1 1 2} (multiset integer) {[^&lt;cons ,1 _&gt; #t] [_ #f]}))
+&gt; (match {1 1 2} (multiset integer) {[^&lt;cons ,1 _&gt; #t] [_ #f]})
 #f
-&gt; (test (match {1 1 2} (multiset integer) {[&lt;cons ^,1 _&gt; #t] [_ #f]}))
+&gt; (match {1 1 2} (multiset integer) {[&lt;cons ^,1 _&gt; #t] [_ #f]})
 #t</code></pre>
 
 <h3 id="loop patterns">Loop-Patterns</h3>
@@ -275,7 +276,7 @@ This is simple but useful usage of not-patterns.
       (lambda [$xs]
         (match-all xs (list something) 
           [&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 _&gt;&gt;&gt;&gt; a])))
-&gt; (test (comb2 {1 2 3 4 5}))
+&gt; (comb2 {1 2 3 4 5})
 {[|1 2|] [|1 3|] [|2 3|] [|1 4|] [|2 4|] [|3 4|] [|1 5|] [|2 5|] [|3 5|] [|4 5|]}</code></pre>
 
 <p>
@@ -287,7 +288,7 @@ This is simple but useful usage of not-patterns.
       (lambda [$xs]
         (match-all xs (list something) 
           [&lt;join _ &lt;cons $a_1 &lt;join _ &lt;cons $a_2 &lt;join _ &lt;cons $a_3 _&gt;&gt;&gt;&gt;&gt;&gt; a])))
-&gt; (test (comb3 {1 2 3 4 5}))
+&gt; (comb3 {1 2 3 4 5})
 {[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}</code></pre>
 
 <p>
@@ -315,12 +316,9 @@ It's roughly correct and easier to understand.
            &lt;join _ &lt;cons $a_i ...&gt;&gt;
            _)
          a])))
-&gt; (test (comb {1 2 3 4 5} 3))
+&gt; (comb {1 2 3 4 5} 3)
 {[|1 2 3|] [|1 2 4|] [|1 3 4|] [|2 3 4|] [|1 2 5|] [|1 3 5|] [|1 4 5|] [|2 3 5|] [|2 4 5|] [|3 4 5|]}
 </code></pre>
-
-<p>
-</p>
 
 <p>
 We consider the case <code>n</code> is three.
@@ -388,9 +386,9 @@ But, unlike the below, this expression returns just one of the cases.
 For the details, see the next chapter.
 </p>
 
-<pre><code>&gt; (test (match {1 2 3 4} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+<pre><code>&gt; (match {1 2 3 4} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]})
 [1 {2 3 4}]
-&gt; (test (match {1 2 3 4} (set integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]}))
+&gt; (match {1 2 3 4} (set integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]})
 [1 {1 2 3 4}]</code></pre>
 
 <h3 id="matchall-expression"><code>match-all</code> expressions</h3>
@@ -403,9 +401,9 @@ For the details, see the next chapter.
   For the details, see the next chapter.
 </p>
 
-<pre><code>&gt; (test (match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]]))
+<pre><code>&gt; (match-all {1 2 3 4} (list integer) [&lt;cons $x $xs&gt; [x xs]])
 {[1 {2 3 4}]}
-&gt; (test (match-all {1 2 3 4} (set integer) [&lt;cons $x $xs&gt; [x xs]]))
+&gt; (match-all {1 2 3 4} (set integer) [&lt;cons $x $xs&gt; [x xs]])
 {[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}</code></pre>
 
 <h3><code>matcher</code> expressions</h3>
@@ -427,7 +425,7 @@ and <code>(lambda [$x] (match x <i>X</i> {[<i>Y</i> <i>Z</i>] ...}))</code>
 are the same.
 </p>
 
-<pre><code>&gt; (test (letrec {[$count (match-lambda (list something) {[&lt;nil&gt; 0] [&lt;cons _ $xs&gt; (+ (count xs) 1)]})]} (count {1 2 3})))
+<pre><code>&gt; (letrec {[$count (match-lambda (list something) {[&lt;nil&gt; 0] [&lt;cons _ $xs&gt; (+ (count xs) 1)]})]} (count {1 2 3}))
 3</code></pre>
 
 
@@ -450,15 +448,15 @@ are the same.
 </p>
 
 <pre><code>&gt; (define $p (pattern-function [] &lt;cons $x $xs&gt;))
-&gt; (test (match {1 2 3} (list integer) {[(p) #t] [_ #f]}))
+&gt; (match {1 2 3} (list integer) {[(p) #t] [_ #f]})
 #t
-&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
+&gt; (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $x $xs&gt; &lt;nil&gt;&gt;&gt; [x xs]])
 {[4 {5 6}]}
-&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]]))
+&gt; (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [y ys]])
 {[4 {5 6}]}
-&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons &lt;cons $x $xs&gt; &lt;cons (p) &lt;nil&gt;&gt;&gt; [x xs]]))
+&gt; (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons &lt;cons $x $xs&gt; &lt;cons (p) &lt;nil&gt;&gt;&gt; [x xs]])
 {[1 {2 3}]}
-&gt; (test (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [x xs]]))
+&gt; (match-all {{1 2 3} {4 5 6}} (list (list integer)) [&lt;cons (p) &lt;cons &lt;cons $y $ys&gt; &lt;nil&gt;&gt;&gt; [x xs]])
 Unbound variable: x</code></pre>
 
 <p>
@@ -466,11 +464,11 @@ Unbound variable: x</code></pre>
 </p>
 
 <pre><code>&gt; (define $twin (pattern-function [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
-&gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin $n _)&gt; n]))
+&gt; (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin $n _)&gt; n])
 {1 1 1 1}
-&gt; (test (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
+&gt; (match-all {1 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t])
 {#t #t #t #t}
-&gt; (test (match-all {2 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t]))
+&gt; (match-all {2 2 1 3} (multiset integer) [&lt;cons _ (twin ,1 _)&gt; #t])
 {}</code></pre>
 
 <p>
@@ -479,7 +477,7 @@ On the contrary, you can reuse your own patterns with parameters.
 </p>
 
 <footer>
-  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
 </footer>
 
 </body>

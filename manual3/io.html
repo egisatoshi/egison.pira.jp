@@ -23,8 +23,9 @@
 <nav>
   <ul>
     <li><a href="./how-to-define-matchers.html">Prev</a></li>
+    <li><a href="./index.html">Index</a></li>
     <li><a href="./primitives.html">Next</a></li>
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="../index.html">Home</a></li>
   </ul>
   <p>Egison User Manual Version 3</p>
 </nav>
@@ -98,18 +99,20 @@ $ egison argv.egi This is an argument . ; echo
 To do more complicated I/O tasks, you can use <code>do</code> expressions, which is similar to <code>let</code> and <code>letrec</code> expressions.
 The most special feature of <code>do</code> expressions is serial execution.
 If you know Haskell, you probably realize that it is the same as do in Haskell.
+Recall many I/O functions have no return values.
+In such cases, you can omit to write <code><i>variable</i></code> as follows.
 </p>
 
 <pre><code>(define $main
   (lambda [$argv]
-    (do {[[] (write-string "argv: ")]
-         [[] (write argv)]
-         [[] (write "\n")]}
+    (do {[(write-string "argv: ")]
+         [(write argv)]
+         [(write "\n")]}
       [])))</code></pre>
 
 <p>
 Let's see the above code. 
-When the code is executed, <code>(write-string "argv: ")</code>, <code>(write argv)</code>, and <code>(write "\n")</code> are executed in the order.
+When the code is executed, <code>(write-string "argv: ")</code>, <code>(write argv)</code> and <code>(write "\n")</code> are executed in the order.
 Note any <code>do</code> expression cannot be used out of <code>main</code>.
 </p>
 
@@ -123,12 +126,12 @@ You can return any value as follows.
 <pre><code>(define $main
   (lambda [$argv]
     (do {[$line (read-line)]
-         [[] (write-string line)]
-         [[] (write-char '\n')]}
+         [(write-string line)]
+         [(write-char '\n')]}
       #t)))</code></pre>
 
 <footer>
-  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
 </footer>
 
 </body>

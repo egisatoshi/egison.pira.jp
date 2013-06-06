@@ -23,8 +23,9 @@
 <nav>
   <ul>
     <li><a href="./patterns.html">Prev</a></li>
+    <li><a href="./index.html">Index</a></li>
     <li><a href="./how-to-define-matchers.html">Next</a></li>
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="../index.html">Home</a></li>
   </ul>
   <p>Egison User Manual Version 3</p>
 </nav>
@@ -52,16 +53,16 @@
   We explain its meaning later.
 </p>
 
-<pre><code>&gt; (test (match-all {1 2 3 4} (list integer)
-          [&lt;cons $x $xs&gt; [x xs]]))
+<pre><code>&gt; (match-all {1 2 3 4} (list integer)
+          [&lt;cons $x $xs&gt; [x xs]])
 {[1 {2 3 4}]}
 
-&gt; (test (match-all {1 2 3 4} (multiset integer)
-          [&lt;cons $x $xs&gt; [x xs]]))
+&gt; (match-all {1 2 3 4} (multiset integer)
+          [&lt;cons $x $xs&gt; [x xs]])
 {[1 {2 3 4}] [2 {1 3 4}] [3 {1 2 4}] [4 {1 2 3}]}
 
-&gt; (test (match-all {1 2 3 4} (set integer)
-          [&lt;cons $x $xs&gt; [x xs]]))
+&gt; (match-all {1 2 3 4} (set integer)
+          [&lt;cons $x $xs&gt; [x xs]])
 {[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}</code></pre>
 
 <p>
@@ -98,14 +99,18 @@
   Here is another example, <code>join</code>.
 </p>
 
-<pre><code>&gt; (test (match-all {1 2 3} (list integer)
-          [&lt;join $xs $ys&gt; [xs ys]]))
-{[{} {1 2 3}] [{1} {2 3}] [{1 2} {3}] [{1 2 3} {}]}
-
-&gt; (test (match-all {1 2 3} (multiset integer)
-          [&lt;join $xs $ys&gt; [xs ys]]))
-{[{} {1 2 3}] [{3} {1 2}] [{2} {1 3}] [{2 3} {1}]
- [{1} {2 3}] [{1 3} {2}] [{1 2} {3}] [{1 2 3} {}]}</code></pre>
+<pre><code>&gt; (match-all {1 2 3} (list integer)
+          [&lt;join ,{1} $xs&gt; xs])
+{{2 3}}
+&gt; (match-all {1 2 3} (multiset integer)
+          [&lt;join ,{1} $xs&gt; xs])
+{{2 3}}
+&gt; (match-all {2 1 3} (list integer)
+          [&lt;join ,{1} $xs&gt; xs])
+{}
+&gt; (match-all {2 1 3} (multiset integer)
+          [&lt;join ,{1} $xs&gt; xs])
+{{2 3}}</code></pre>
 
 <p>
 <code>join</code> is a pattern that divides a collection into two collections, the two arguments of it.
@@ -131,7 +136,7 @@
         (match x (list integer)
            {[&lt;join $xs &lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $y) $zs&gt;&gt;  (div2 {@xs (quotient y 2) @zs})]
             [_ x]})))
-&gt; (test (div2 {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610}))
+&gt; (div2 {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610})
 {1 1 1 3 5 1 13 21 17 55 89 9 233 377 305}</code></pre>
 
 <p>
@@ -141,13 +146,13 @@
   Similarly, <code>list</code> also has the "dual", <code>nioj</code>, of <code>join</code>.
 </p>
 
-<pre><code>&gt; (test (match-all {1 2 3} (list integer)
-          [&lt;snoc $x $xs&gt; [x xs]]))
+<pre><code>&gt; (match-all {1 2 3} (list integer)
+          [&lt;snoc $x $xs&gt; [x xs]])
 {[3 {1 2}]}
       
-&gt; (test (match-all {1 2 3} (list integer)
-          [&lt;nioj $xs $ys&gt; [xs ys]]))
-{[{} {1 2 3}] [{3} {1 2}] [{2 3} {1}] [{1 2 3} {}]}</code></pre>
+&gt; (match-all {1 2 3} (list integer)
+          [&lt;nioj $xs $ys&gt; [xs ys]])
+{[{1 2 3} {}] [{2 3} {1}] [{3} {1 2}] [{} {1 2 3}]}</code></pre>
 
 <p>
   The arguments of <code>snoc</code> matches with the last element of a target collection and the rest of it.
@@ -167,8 +172,8 @@
   The following is an example of non-linear patterns.
 </p>
 
-<pre><code>&gt; (test (match-all {1 2 3 1 2} (multiset integer)
-          [&lt;cons $n &lt;cons ,n _&gt;&gt; n]))
+<pre><code>&gt; (match-all {1 2 3 1 2} (multiset integer)
+          [&lt;cons $n &lt;cons ,n _&gt;&gt; n])
 {1 2 1 2}</code></pre>
 
 
@@ -193,8 +198,8 @@
   You can do the task using the following simple code.
 </p>
 
-<pre><code>&gt; (test (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (list (multiset integer))
-          [&lt;cons &lt;cons $n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;nil&gt;&gt;&gt;&gt; n]))
+<pre><code>&gt; (match-all {{1 2 3 4 5} {4 5 1} {6 1 7 4}} (list (multiset integer))
+          [&lt;cons &lt;cons $n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;cons &lt;cons ,n _&gt; &lt;nil&gt;&gt;&gt;&gt; n])
 {1 4}</code></pre>
 
 <p>
@@ -236,7 +241,7 @@ The readers interested in how the interpreter Egison executes pattern matching (
 </p>
 
 <footer>
-  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
 </footer>
 
 </body>

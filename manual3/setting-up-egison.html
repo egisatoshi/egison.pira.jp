@@ -22,8 +22,9 @@
   
 <nav>
   <ul>
+    <li><a href="./index.html">Index</a></li>
     <li><a href="./quick-demo.html">Next</a></li>
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="../index.html">Home</a></li>
   </ul>
   <p>Egison User Manual Version 3</p>
 </nav>
@@ -33,34 +34,41 @@
 <h2>How to install?</h2>
 
 <p>
-  Egison is implemented in Haskell.<br/>
-  Egison is distributed as a <a href="http://hackage.haskell.org/packages/hackage.html">Hackage</a> program.<br/>
+  Egison is implemented in Haskell and distributed as a <a href="http://hackage.haskell.org/packages/hackage.html">Hackage</a> program.<br/>
 </p>
 
 <p>
   To install Egison, you need to install <a href="http://www.haskell.org/ghc/">GHC</a> and
-  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>.<br/>
-  If you install <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>,
-  both of GHC and Cabal-install will be installed.<br/>
+  <a href="http://haskell.org/haskellwiki/Cabal-Install">Cabal-install</a>.
+  If you have installed neither GHC nor Cabal-install, we recommend you to install <a href="http://hackage.haskell.org/platform/">Haskell Platform</a>, which contains both.
 </p>
 
 <p>
   After you installed Haskell Platform, perform following commands.
-  <dl>
-    <dd><code>% cabal update</code></dd>
-    <dd><code>% cabal install egison</code></dd>
-  </dl>
-  If successfully installed, there will be an output where the binary file is generated.<br/>
-  Please add new path to $PATH variable of your shell, to make your shell be able to find egison command.<br/>
-  (If your OS is Windows, you don't need to configure the path of the shell.)
 </p>
+
+<pre><code>% cabal update
+% cabal install egison
+
+...
+Installing executable(s) in /home/xxx/.cabal/bin
+Registering egison-3.0.0...
+</code></pre>
+
+<p>
+  If successfully installed, there will be an output where the binary file is generated as above.
+  Please add new path to $PATH variable of your shell, to make your shell be able to find egison command.
+  (If your OS is Windows, you don't need to configure the path of the shell.) 
+  For example, if you use bash, you will execute commands as follows.
+</p>
+
+<pre><code>% echo "PATH=\$PATH:/home/xxx/.cabal/bin" &gt;&gt; ~/.bashrc
+% source ~/.bashrc</code></pre>
 
 <p>
   After that, you can use Egison with the following command.
-  <dl>
-    <dd><code>% egison</code></dd>
-  </dl>
 </p>
+<pre><code>% egison</code></pre>
 
 <h2>How to update?</h2>
 <p>
@@ -74,7 +82,7 @@
 <h2>Run Interpreter!!</h2>
 
 <p>
-  After you have installed Egison, you can run Egison interpreter with a command 'egison'. (<a href="./setting-up-egison.html">Setting up Egison!!</a>)<br/>
+  After you have installed Egison, you can run Egison interpreter with a command 'egison'.
   Type Control-D to terminate the interpreter.
 </p>
 <pre><code>% egison
@@ -97,7 +105,7 @@ Byebye. See you again! (^^)/
 </code></pre>
 
 <footer>
-  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
 </footer>
 
 </body>

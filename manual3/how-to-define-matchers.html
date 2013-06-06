@@ -10,8 +10,9 @@
 <nav>
   <ul>
     <li><a href="./pattern-matching.html">Prev</a></li>
+    <li><a href="./index.html">Index</a></li>
     <li><a href="./io.html">Next</a></li>
-    <li><a href="./index.html">Home</a></li>
+    <li><a href="../index.html">Home</a></li>
   </ul>
   <p>Egison User Manual Version 3</p>
 </nav>
@@ -80,7 +81,7 @@ In the section, we explain the basics of matcher using <code>ordering</code>.
                {[[&lt;less&gt; &lt;less&gt;] {[]}]
                 [[&lt;equal&gt; &lt;equal&gt;] {[]}]
                 [[&lt;greater&gt; &lt;greater&gt;] {[]}]
-                [_ {}]})]}]
+                [[_ _] {}]})]}]
      [&lt;less&gt; []
       {[&lt;Less&gt; {[]}]
        [_ {}]}]
@@ -158,7 +159,7 @@ Then, we give another matcher, <code>integer-tree</code>.
       {[$tgt (match [val tgt] [integer-tree integer-tree]
                {[[&lt;leaf $n&gt; &lt;leaf ,n&gt;] {[]}]
                 [[&lt;node $l $r&gt; &lt;node ,l ,r&gt;] {[]}]
-                [_ {}]})]}]
+                [[_ _] {}]})]}]
      [&lt;leaf $&gt; [integer]
       {[&lt;Leaf $n&gt; {n}]
        [_ {}]}]
@@ -191,10 +192,10 @@ The following code has the same meaning as the above definitions of <code>orderi
 
 <pre><code>(define $ordering
   (algebraic-data-matcher 
-    (| &lt;less&gt; &lt;equal&gt; &lt;greater&gt;)))
+    {&lt;less&gt; &lt;equal&gt; &lt;greater&gt;}))
 (define $integer-tree
   (algebraic-data-matcher 
-    (| &lt;leaf integer&gt; &lt;node integer-tree integer-tree&gt;)))
+    {&lt;leaf integer&gt; &lt;node integer-tree integer-tree&gt;}))
 </code></pre>
 
 <h2>Definitions of Matchers for Collection Data</h2>
@@ -288,7 +289,7 @@ There we have written many matchers, which are good examples for you.
 </p>
 
 <footer>
-  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
 </footer>
 
 </body>
