@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Egison Users Manual</title>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9772679-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body>
+    
+<nav>
+  <ul>
+    <li><a href="./poker-hands.html">Prev</a></li>
+    <li><a href="./index.html">Index</a></li>
+    <li><a href="./n-queen.html">Next</a></li>
+    <li><a href="../index.html">Home</a></li>
+  </ul>
+  <p>Egison User Manual Version 3</p>
+</nav>
+
+<h1>Example : Graphs</h1>
+
+<p>
+In Egison, directed graphs are regarded as multisets of nodes.
+Each node has its name, the multiset of outgoing nodes and the multiset of incoming nodes.
+</p>
+
+<pre><code>(define $nodeInfo
+  (lambda [$a]
+    (algebraic-data-matcher
+      {&lt;node a (multiset a) (multiset a)&gt;})))
+
+(define $graph
+  (lambda [$a]
+    (multiset (nodeInfo a))))
+</code></pre>
+
+<p>
+For example, the left side of the following is represented as the multiset <code>g1</code>.
+</p>
+
+<pre>
+<img src="./graph1.png" alt="graph1" style="float:left; height:250px;">
+<code>  (define $g1 {&lt;Node 1 {4} {2 3 5}&gt;
+               &lt;Node 2 {1} {3}&gt;
+               &lt;Node 3 {1 2} {4}&gt;
+               &lt;Node 4 {3} {1 5}&gt;
+               &lt;Node 5 {1 4} {}&gt;})</code>
+</pre>
+
+<p>
+One of the most important questions about a graph is to find Hamiltonian paths and cycles, which are paths and cycles where any node occurs only once.
+Patterns Hamiltonian paths and cycles match are as follows.
+</p>
+
+<pre><code>(define $hamilton-path
+  (pattern-function [$a]
+    (&amp; $g
+       &lt;cons &lt;node (&amp; a_1 $h_1) &lt;cons (&amp; a_2 $h_2) _&gt; _&gt;
+             (loop $i (between 3 (size g))
+               &lt;cons &lt;node ,h_(- i 1) &lt;cons (&amp; a_i $h_i) _&gt; _&gt;
+                     ...&gt;
+               &lt;cons &lt;node ,h_(size g) _ _&gt;
+                     &lt;nil&gt;&gt;)&gt;
+       )))
+
+(define $hamilton-cycle
+  (pattern-function [$a]
+    (&amp; $g
+       &lt;cons &lt;node (&amp; a_1 $h_1) &lt;cons (&amp; a_2 $h_2) _&gt; _&gt;
+             (loop $i (between 3 (size g))
+               &lt;cons &lt;node ,h_(- i 1) &lt;cons (&amp; a_i $h_i) _&gt; _&gt;
+                     ...&gt;
+               &lt;cons &lt;node ,h_(size g) &lt;cons ,h_1 _&gt; _&gt;
+                     &lt;nil&gt;&gt;)&gt;
+       )))
+</code></pre>
+
+<p>
+Indeed, you can find the Hamiltonian paths and cycles of <code>g1</code>.
+</p>
+
+<pre><code>&gt; (match-all g1 (graph integer) [(hamilton-path $a) a])
+{[|5 1 4 3 2|] [|5 4 3 2 1|]}
+&gt; (match-all g1 (graph integer) [(hamilton-cycle $a) a])
+{}
+</code></pre>
+
+<footer>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
+</footer>
+
+</body>
+
+</html>
+
