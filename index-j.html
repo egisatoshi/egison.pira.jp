@@ -1,7 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Programming Language Egison</title>
+<title>Egison - プログラミング言語</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -17,8 +18,14 @@
 </script>
 </head>
 
+<nav>
+  <ul>
+    <li><a href="./index.html">English</a></li>
+  </ul>
+</nav>
+
 <body>
-<h1>Egison - プログラミング言語<span style="font-size:50%">&rarr; <a href="index.html">English Version</a></span></h1>
+<h1>Egison - プログラミング言語</h1>
 
 <hr/>
 
@@ -29,7 +36,7 @@
   <li><a href="#pattern-matching">Egisonのパターンマッチ</a></li>
   <li><a href="#recruit">開発者募集</a></li>
   <li><a href="#workshops">ワークショップ</a></li>
-  <li><a href="#manuals">マニュアル</a></li>
+  <li><a href="#manual">マニュアル</a></li>
   <li><a href="#twitter">Twitter</a></li>
   <li><a href="#etc">小ネタ</a></li>
   <li><a href="#links">リンク</a></li>
@@ -40,17 +47,17 @@
 <h2 id="what">Egisonとは？</h2>
 
 <p>
-  Egisonは、<b>パターンマッチ指向</b>という新たなパラダイムを持つ日本発の新たな純粋関数型プログラミング言語です。<br/>
+  Egisonは、<b>パターンマッチ指向</b>という新たなパラダイムを持つ日本発の新たな純粋関数型プログラミング言語です。
 </p>
 
 <p>
-  Egisonは、強力なパターンの表現力と、パターンマッチをカスタマイズする機能を持っています。<br/>
+  Egisonは、強力なパターンの表現力と、パターンマッチをカスタマイズする機能を持っています。
   今までの言語では、集合のような正規形を持たないデータ型のデータの分解を行うには、新たな関数を定義しなければ行えなかったのですが、
-  Egisonを使えばパターンマッチを使って非常に簡潔に記述できます。<br/>
+  Egisonを使えばパターンマッチを使って非常に簡潔に記述できます。
 </p>
 
 <p>
-  現在開発中のEgison バージョン 4は、以下の機能を搭載する予定です。<br/>
+  現在開発中のEgison バージョン 4は、以下の機能を搭載する予定です。
   <ul>
     <li>Erlangのような分散システム</li>
     <li>HaskellやOCamlのような静的型システム</li>
@@ -62,43 +69,43 @@
 <h2 id="pattern-matching">Egisonのパターンマッチ</h2>
 
 <p>
-  Egisonの特徴は、強力なパターンマッチの表現力です。<br/>
-  Egisonを用いると正規形を持たないデータ型のデータに対してのパターンマッチングを行うことができます。<br/>
-  以下のようなEgisonのパターンマッチの特徴がそれを可能にします。<br/>
+  Egisonの特徴は、強力なパターンマッチの表現力です。
+  Egisonを用いると正規形を持たないデータ型のデータに対してのパターンマッチングを行うことができます。
+  以下のようなEgisonのパターンマッチの特徴がそれを可能にします。
 </p>
 
-<ul>
-  <li>複数の結果を持つパターンマッチ</li>
-  <p>
-    Egisonのパターンマッチの結果は複数あります。<br/>
-    この特徴は、正規形を持たないデータに対するパターンマッチを行うためには必須です。<br/>
-    なぜなら、正規形を持たないデータは同じデータに対して複数の表現形があるので、分解の方法も複数あるからです。<br/>
-  </p>
+<dl>
+  <dt>複数の結果を持つパターンマッチ</dt>
+  <dd>
+    Egisonのパターンマッチの結果は複数あります。
+    この特徴は、正規形を持たないデータに対するパターンマッチを行うためには必須です。
+    なぜなら、正規形を持たないデータは同じデータに対して複数の表現形があるので、分解の方法も複数あるからです。
+  </dd>
 
-  <li>非線形パターンに対するパターンマッチ</li>
-  <p>
-    パターン内のパターン変数に対する束縛は、同じパターンの中で参照できます。<br/>
-    これは、複数の結果を持つパターンマッチを行う際に、実用的なパターンを記述するのに必須な機能です。<br/>
-  </p>
+  <dt>非線形パターンに対するパターンマッチ</dt>
+  <dd>
+    パターン内のパターン変数に対する束縛は、同じパターンの中で参照できます。
+    これは、複数の結果を持つパターンマッチを行う際に、実用的なパターンを記述するのに必須な機能です。
+  </dd>
 
-  <li>パターン関数が第一級オブジェクト</li>
-  <p>
-    Egisonプログラマは、パターンを引数にとり、パターンを返す関数を記述することができます。<br/>
-    これにより、プログラムの複数の箇所で、頻出するパターンを使いまわすことができます。<br/>
-  </p>
-</ul>
+  <dt>パターン関数が第一級オブジェクト</dt>
+  <dd>
+    Egisonプログラマは、パターンを引数にとり、パターンを返す関数を記述することができます。
+    これにより、プログラムの複数の箇所で、頻出するパターンを使いまわすことができます。
+  </dd>
+</dl>
 
 <p>
-  Egisonのパターンマッチは以下のような特徴も含みます。<br/>
+  Egisonのパターンマッチは以下のような特徴も含みます。
 </p>
 
-<ul>
-  <li>パターンマッチは自動並列化可能</li>
-  <p>
-    並列可能なループは、ひとつの簡潔なEgisonのパターンマッチ式で記述できます。<br/>
-    Egison内部のパターンマッチの機構は簡単に並列化できます。<br/>
-  </p>
-</ul>
+<dl>
+  <dt>パターンマッチは自動並列化可能</dt>
+  <dd>
+    並列可能なループは、ひとつの簡潔なEgisonのパターンマッチ式で記述できます。
+    Egison内部のパターンマッチの機構は簡単に並列化できます。
+  </dd>
+</dl>
 
 <hr/>
 
@@ -119,30 +126,21 @@
 
 <hr/>
 
-
 <h2 id="twitter">Twitter</h2>
 
 <p>
-  Egisonについての情報を共有するためのTwitter アカウントがあります。<br/>
-  Egisonのアップデート情報やEgisonについてのイベント情報を配信する予定です。<br/>
+  Egisonについての情報を共有するためのTwitter アカウントがあります。
+  Egisonのアップデート情報やEgisonについてのイベント情報を配信する予定です。
   <li>
     Twitter: <a href="http://twitter.com/Egison_Lang">@Egison_Lang</a>
   </li>
-
 </p>
 
 <hr/>
 
-<h2 id="manuals">マニュアル</h2>
+<h2 id="manual">マニュアル</h2>
 
-<ul>
-  <li>
-    <a href="manual3/index.html">Egison バージョン 3 ユーザーマニュアル</a>
-  </li>
-  <li>
-    <a href="manual2/index.html">Egison バージョン 2 ユーザーマニュアル</a>
-  </li>
-</ul>
+<a href="manual3/index.html">Egison バージョン 3 ユーザーマニュアル</a>
 
 <hr/>
 
@@ -183,14 +181,7 @@
 </body>
 
 <footer>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=left>
-        <i>
-          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index-j.html">Satoshi Egi</a>
-        </i>
-    </tr>
-  </table>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index-j.html">Satoshi Egi</a>
 </footer>
 
 </html>

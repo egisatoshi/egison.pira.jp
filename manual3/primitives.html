@@ -2,7 +2,7 @@
 <head>
 <title>Egison Users Manual</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="./style.css">
+<link rel="stylesheet" type="text/css" href="../style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -34,209 +34,225 @@
 
 <p>
 We give the list of primitive functions, here.
-It consists of numeric functions, 
+It consists of numeric functions, boolean functions, string functions, and I/O functions.
+We don't describe precise behaviour of them, but give simply examples.
 </p>
+
 <hr/>
 
 <h2 id="primitives">Primitive Functions</h2>
 
-<li><code>+</code></li>
-<li><code>-</code></li>
-<li><code>*</code></li>
-<pre>
-  <code>
-    (+ 13 21)
-    (- 13 21)
-    (* 13 21)
-  </code>
-</pre>
+<dl>
+<dt><code>+</code></dt>
+<dd><pre><code>(+ 13 21)</code></pre></dd>
 
-<li><code>modulo</code></li>
-<li><code>quotient</code></li>
-<li><code>remainder</code></li>
-<pre>
-  <code>
-    (modulo -21 13)
-    (quotient -21 13)
-    (remainder -21 13)
-  </code>
-</pre>
+<dt><code>-</code></dt>
+<dd><pre><code>(- 13 21)</code></pre></dd>
 
-<li><code>eq-n?</code></li>
-<li><code>lt-n?</code></li>
-<li><code>lte-n?</code></li>
-<li><code>gt-n?</code></li>
-<li><code>gte-n?</code></li>
-<pre>
-  <code>
-    (eq-n? 2 -5)
-    (lt-n? 2 -5)
-    (lte-n? 2 -5)
-    (gt-n? 2 -5)
-    (gte-n? 2 -5)
-  </code>
-</pre>
+<dt><code>*</code></dt>
+<dd><pre><code>(* 13 21)</code></pre></dd>
 
-<li><code>+f</code></li>
-<li><code>-f</code></li>
-<li><code>*f</code></li>
-<li><code>/f</code></li>
-<pre>
-  <code>
-    (+f 3.14159 2.71828)
-    (-f 3.14159 2.71828)
-    (*f 3.14159 2.71828)
-    (/f 3.14159 2.71828)
-  </code>
-</pre>
+<dt><code>modulo</code></dt>
+<dd><pre><code>(modulo -21 13)</code></pre></dd>
 
-<li><code>eq-f?</code></li>
-<li><code>lt-f?</code></li>
-<li><code>lte-f?</code></li>
-<li><code>gt-f?</code></li>
-<li><code>gte-f?</code></li>
-<pre>
-  <code>
-    (eq-f? 3.14159 2.71828)
-    (lt-f? 3.14159 2.71828)
-    (lte-f? 3.14159 2.71828)
-    (gt-f? 3.14159 2.71828)
-    (gte-f? 3.14159 2.71828)
-  </code>
-</pre>
+<dt><code>quotient</code></dt>
+<dd><pre><code>(quotient -21 13)</code></pre></dd>
 
-<li><code>neg</code></li>
-<li><code>abs</code></li>
-<pre>
-  <code>
-    (neg -89)
-    (abs -89)
-  </code>
-</pre>
+<dt><code>remainder</code></dt>
+<dd><pre><code>(remainder -21 13)</code></pre></dd>
 
-<li><code>sqrt</code></li>
-<li><code>exp</code></li>
-<li><code>log</code></li>
-<pre>
-  <code>
-    (sqrt 2.71828)
-    (exp 2.71828)
-    (log 2.71828)
-  </code>
-</pre>
+<dt><code>eq-n?</code></dt>
+<dd><pre><code>(eq-n? 2 -5)</code></pre></dd>
 
+<dt><code>lt-n?</code></dt>
+<dd><pre><code>(lt-n? 2 -5)</code></pre></dd>
 
-<li><code>sin</code></li>
-<li><code>cos</code></li>
-<li><code>tan</code></li>
-<pre>
-  <code>
-    (sin 2.71828)
-    (cos 2.71828)
-    (tan 2.71828)
-  </code>
-</pre>
+<dt><code>lte-n?</code></dt>
+<dd><pre><code>(lte-n? 2 -5)</code></pre></dd>
 
-<li><code>asin</code></li>
-<li><code>acos</code></li>
-<li><code>atan</code></li>
-<pre>
-  <code>
-    (asin 0.41078)
-    (acos 0.41078)
-    (atan 0.41078)
-  </code>
-</pre>
+<dt><code>gt-n?</code></dt>
+<dd><pre><code>(gt-n? 2 -5)</code></pre></dd>
 
-<li><code>sinh</code></li>
-<li><code>cosh</code></li>
-<li><code>tanh</code></li>
-<pre>
-  <code>
-    (sinh 2.71828)
-    (cosh 2.71828)
-    (tanh 2.71828)
-  </code>
-</pre>
+<dt><code>gte-n?</code></dt>
+<dd><pre><code>(gte-n? 2 -5)</code></pre></dd>
 
-<li><code>asinh</code></li>
-<li><code>acosh</code></li>
-<li><code>atanh</code></li>
-<pre>
-  <code>
-    (asinh 3.14159)
-    (acosh 3.14159)
-    (atanh 3.14159)
-  </code>
-</pre>
+<dt><code>+f</code></dt>
+<dd><pre><code>(+f 3.14159 2.71828)</code></pre></dd>
 
-<li><code>round</code></li>
-<li><code>floor</code></li>
-<li><code>ceiling</code></li>
-<li><code>truncate</code></li>
-<pre>
-  <code>
-    (round -2.71828)
-    (floor -2.71828)
-    (ceiling -2.71828)
-    (truncate -2.71828)
-  </code>
-</pre>
+<dt><code>-f</code></dt>
+<dd><pre><code>(-f 3.14159 2.71828)</code></pre></dd>
 
-<li><code>eq?</code></li>
-<pre>
-  <code>
-    (eq? 3.14159 "This is pi.")
-    (eq? "Can you use Egison?" 'Y')
-    (eq? 1 1.0)
-  </code>
-</pre>
+<dt><code>*f</code></dt>
+<dd><pre><code>(*f 3.14159 2.71828)</code></pre></dd>
 
-<li><code>lt?</code></li>
-<li><code>lte?</code></li>
-<li><code>gt?</code></li>
-<li><code>gte?</code></li>
-<pre>
-  <code>
-    (lt? 3.14159 144)
-    (lte? 3.14159 144)
-    (gt? 3.14159 144)
-    (gte? 3.14159 144)
-  </code>
-</pre>
+<dt><code>/f</code></dt>
+<dd><pre><code>(/f 3.14159 2.71828)</code></pre></dd>
 
-<li><code>string-append</code></li>
-<pre>
-  <code>
-    (string-append "That's nothing but list of examples using the primitive functions.\n" "If you want to get more examples, you will find it in libraries.")
-  </code>
-</pre>
+<dt><code>eq-f?</code></dt>
+<dd><pre><code>(eq-f? 3.14159 2.71828)</code></pre></dd>
+
+<dt><code>lt-f?</code></dt>
+<dd><pre><code>(lt-f? 3.14159 2.71828)</code></pre></dd>
+
+<dt><code>lte-f?</code></dt>
+<dd><pre><code>(lte-f? 3.14159 2.71828)</code></pre></dd>
+
+<dt><code>gt-f?</code></dt>
+<dd><pre><code>(gt-f? 3.14159 2.71828)</code></pre></dd>
+
+<dt><code>gte-f?</code></dt>
+<dd><pre><code>(gte-f? 3.14159 2.71828)</code></pre></dd>
+
+<dt><code>neg</code></dt>
+<dd><pre><code>(neg -89)</code></pre></dd>
+
+<dt><code>abs</code></dt>
+<dd><pre><code>(abs -89)</code></pre></dd>
+
+<dt><code>sqrt</code></dt>
+<dd><pre><code>(sqrt 2.71828)</code></pre></dd>
+
+<dt><code>exp</code></dt>
+<dd><pre><code>(exp 2.71828)</code></pre></dd>
+
+<dt><code>log</code></dt>
+<dd><pre><code>(log 2.71828)</code></pre></dd>
+
+<dt><code>sin</code></dt>
+<dd><pre><code>(sin 2.71828)</code></pre></dd>
+
+<dt><code>cos</code></dt>
+<dd><pre><code>(cos 2.71828)</code></pre></dd>
+
+<dt><code>tan</code></dt>
+<dd><pre><code>(tan 2.71828)</code></pre></dd>
+
+<dt><code>asin</code></dt>
+<dd><pre><code>(asin 0.41078)</code></pre></dd>
+
+<dt><code>acos</code></dt>
+<dd><pre><code>(acos 0.41078)</code></pre></dd>
+
+<dt><code>atan</code></dt>
+<dd><pre><code>(atan 0.41078)</code></pre></dd>
+
+<dt><code>sinh</code></dt>
+<dd><pre><code>(sinh 2.71828)</code></pre></dd>
+
+<dt><code>cosh</code></dt>
+<dd><pre><code>(cosh 2.71828)</code></pre></dd>
+
+<dt><code>tanh</code></dt>
+<dd><pre><code>(tanh 2.71828)</code></pre></dd>
+
+<dt><code>asinh</code></dt>
+<dd><pre><code>(asinh 3.14159)</code></pre></dd>
+
+<dt><code>acosh</code></dt>
+<dd><pre><code>(acosh 3.14159)</code></pre></dd>
+
+<dt><code>atanh</code></dt>
+<dd><pre><code>(atanh 3.14159)</code></pre></dd>
+
+<dt><code>round</code></dt>
+<dd><pre><code>(round -2.71828)</code></pre></dd>
+
+<dt><code>floor</code></dt>
+<dd><pre><code>(floor -2.71828)</code></pre></dd>
+
+<dt><code>ceiling</code></dt>
+<dd><pre><code>(ceiling -2.71828)</code></pre></dd>
+
+<dt><code>truncate</code></dt>
+<dd><pre><code>(truncate -2.71828)</code></pre></dd>
+
+<dt><code>eq?</code></dt>
+<dd><pre><code>(eq? 3.14159 "This is pi.")
+(eq? "Can you use Egison?" 'Y')
+(eq? 1 1.0)</code></pre></dd>
+
+<dt><code>lt?</code></dt>
+<dd><pre><code>(lt? 3.14159 144)</code></pre></dd>
+
+<dt><code>lte?</code></dt>
+<dd><pre><code>(lte? 3.14159 144)</code></pre></dd>
+
+<dt><code>gt?</code></dt>
+<dd><pre><code>(gt? 3.14159 144)</code></pre></dd>
+
+<dt><code>gte?</code></dt>
+<dd><pre><code>(gte? 3.14159 144)</code></pre></dd>
+
+<dt><code>string-append</code></dt>
+<dd><pre><code>(string-append "That's nothing but list of examples using the primitive functions.\n" "If you want to get more examples, you will find it in libraries.")</code></pre></dd>
+
+</dl>
 
 <h2 id="ioprimitives">I/O Primitive Functions</h2>
 
-<li><code>return</code></li>
-<li><code>open-input-file</code></li>
-<li><code>open-output-file</code></li>
-<li><code>close-input-port</code></li>
-<li><code>close-output-port</code></li>
-<li><code>read-char</code></li>
-<li><code>read-line</code></li>
-<li><code>write-char</code></li>
-<li><code>write-string</code></li>
-<li><code>write</code></li>
-<li><code>eof?</code></li>
-<li><code>flush</code></li>
-<li><code>read-char-from-port</code></li>
-<li><code>read-line-from-port</code></li>
-<li><code>write-char-to-port</code></li>
-<li><code>write-string-to-port</code></li>
-<li><code>write-to-port</code></li>
-<li><code>eof-port?</code></li>
-<li><code>flush-port</code></li>
-<li><code>rand</code></li>
+<dl>
+<dt><code>return</code></dt>
+
+<dt><code>open-input-file</code></dt>
+<dd><pre><code>[$inport (open-input-file "./input.txt")]</code></pre></dd>
+
+<dt><code>open-output-file</code></dt>
+<dd><pre><code>[$outport (open-output-file "./output.txt")]</code></pre></dd>
+
+<dt><code>close-input-port</code></dt>
+<dd><pre><code>[(close-input-port inport)]</code></pre></dd>
+
+<dt><code>close-output-port</code></dt>
+<dd><pre><code>[(close-output-port outport)]</code></pre></dd>
+
+<dt><code>read-char</code></dt>
+<dd><pre><code>[$c (read-char)]</code></pre></dd>
+
+<dt><code>read-line</code></dt>
+<dd><pre><code>[$line (read-line)]</code></pre></dd>
+
+<dt><code>write-char</code></dt>
+<dd><pre><code>[(write-char 'c')]</code></pre></dd>
+
+<dt><code>write-string</code></dt>
+<dd><pre><code>[(write-string "string")]</code></pre></dd>
+
+<dt><code>write</code></dt>
+<dd><pre><code>[(write [|{[ 1 'b' "TH" ] [| #t |]} {} |])]</code></pre></dd>
+
+<dt><code>eof?</code></dt>
+<dd><pre><code>[(eof?)]</code></pre></dd>
+
+<dt><code>flush</code></dt>
+<dd><pre><code>[(flush)]</code></pre></dd>
+
+<dt><code>read-char-from-port</code></dt>
+<dd><pre><code>[$c (read-char-from-port inport)]</code></pre></dd>
+
+<dt><code>read-line-from-port</code></dt>
+<dd><pre><code>[$line (read-line-from-port inport)]</code></pre></dd>
+
+<dt><code>write-char-to-port</code></dt>
+<dd><pre><code>[(write-char-to-port 'c' outport)]</code></pre></dd>
+
+<dt><code>write-string-to-port</code></dt>
+<dd><pre><code>[(write-string-to-port "String" outport)]</code></pre></dd>
+
+<dt><code>write-to-port</code></dt>
+<dd><pre><code>[(write-to-port [|{[ 1 'b' "TH" ] [| #t |]} {} |] outport)]</code></pre></dd>
+
+<dt><code>eof-port?</code></dt>
+<dd><pre><code>[(eof-port? inport)]</code></pre></dd>
+
+<dt><code>flush-port</code></dt>
+<dd><pre><code>[(flush-port outport)]</code></pre></dd>
+
+<dt><code>rand</code></dt>
+<dd><pre><code>[$r (rand 1 6)]</code></pre></dd>
+</dl>
 
 <footer>
-  Copyright (C) 2011-2013 <a href="http://egi.pira.j../index.html">Satoshi Egi</a>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
 </footer>
 
 </body>

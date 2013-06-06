@@ -1,7 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Programming Language Egison</title>
+<title>Egison - Programming Language</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="./style.css">
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -18,7 +19,14 @@
 </head>
 
 <body>
-<h1>Egison - Programming Language<span style="font-size:50%">&rarr; <a href="index-j.html">Japanese Version</a></span></h1>
+
+<nav>
+  <ul>
+    <li><a href="./index-j.html">Japanese</a></li>
+  </ul>
+</nav>
+
+<h1>Egison - Programming Language</h1>
 
 <hr/>
 
@@ -27,7 +35,7 @@
 <ul>
   <li><a href="#what">What is Egison?</a></li>
   <li><a href="#pattern-matching">Pattern Matching of Egison</a></li>
-  <li><a href="#manuals">Manuals</a></li>
+  <li><a href="#manual">Manual</a></li>
   <li><a href="#twitter">Twitter</a></li>
   <li><a href="#links">Links</a></li>
 </ul>
@@ -46,9 +54,9 @@
 </p>
 
 <p>
-  A feature of Egison is the strong pattern matching facility.<br/>
+  A feature of Egison is the strong pattern matching facility.
   With Egison, you can represent pattern matching for data types whose data have no normal forms,
-  such as set, multiset, and algebraic structures such as group, ring, field, and so on.<br/>
+  such as set, multiset, and algebraic structures such as group, ring, field, and so on.
 </p>
 
 <p>
@@ -57,68 +65,59 @@
     <li>concurrent system as Erlang</li>
     <li>static typing system as Haskell and OCaml</li>
   </ul>
-  in the next version 4, now developing.<br/>
+  in the next version 4, now developing.
 </p>
-
-<hr/>
 
 <h2 id="pattern-matching">Pattern Matching of Egison</h2>
 
 <p>
-  A feature of Egison is the strong pattern-matching facility.<br/>
-  Egison can pattern-match with data types whose data have no normal forms (<i>unfree data types</i>).<br/>
-  Following features enable it.<br/>
+  A feature of Egison is the strong pattern-matching facility.
+  Egison can pattern-match with data types whose data have no normal forms (<i>unfree data types</i>).
+  Following features enable it.
 </p>
 
-<ul>
-  <li>Multiple pattern-matching results</li>
-  <p>
-    Pattern-matching has multiple results.<br/>
-    This feature is necessary to pattern-match with unfree data types.<br/>
-    Because unfree data have many forms for same data, so there are multiple ways of destruction.<br/>
-  </p>
-
-  <li>Non-linear patterns</li>
-  <p>
-    Bindings in a pattern can be refer in the same pattern.<br/>
-    It is necessary to write useful patterns for pattern-matching with multiple results.<br/>
-  </p>
-
-  <li>First class pattern-functions</li>
-  <p>
-    We can write functions that receive patterns and return a pattern.<br/>
-    Useful patterns can be reused in many places in a program.<br/>
-  </p>
-</ul>
+<dl>
+  <dt>Multiple pattern-matching results</dt>
+  <dd>
+    Pattern-matching has multiple results.
+    This feature is necessary to pattern-match with unfree data types.
+    Because unfree data have many forms for same data, so there are multiple ways of destruction.
+  </dd>
+  
+  <dt>Non-linear patterns</dt>
+  <dd>
+    Bindings in a pattern can be refer in the same pattern.
+    It is necessary to write useful patterns for pattern-matching with multiple results.
+  </dd>
+  
+  <dt>First class pattern-functions</dt>
+  <dd>
+    We can write functions that receive patterns and return a pattern.
+    Useful patterns can be reused in many places in a program.
+  </dd>
+</dl>
 
 <p>
   Egison's pattern-matching is going to include a following feature.
 </p>
 
-<ul>
-  <li>Auto-parallelized pattern-matching</li>
-  <p>
-    Parallelizable loops are expressed with a single pattern-matching expression in Egison.<br/>
-    Pattern-matching process inside Egison itself can be parallelized easily.<br/>
-  </p>
-</ul>
+<dl>
+  <dt>Auto-parallelized pattern-matching</dt>
+  <dd>
+    Parallelizable loops are expressed with a single pattern-matching expression in Egison.
+    Pattern-matching process inside Egison itself can be parallelized easily.
+  </dd>
+</dl>
 
 <p>
-  Algorithms are expressed <b>intuitively</b> and will be <b>auto-parallelized</b> with Egison!!<br/>
+  Algorithms are expressed <b>intuitively</b> and will be <b>auto-parallelized</b> with Egison!!
 </p>
 
-<hr/>
-
-<h2 id="manuals">Manuals</h2>
+<h2 id="manual">Manual</h2>
 
 <p>
-  <ul>
-    <li><a href="manual3/index.html">Egison Version 3 User Manual</a></li>
-    <li><a href="manual2/index.html">Egison Version 2 User Manual</a></li>
-  </ul>
+<a href="manual3/index.html">Egison Version 3 User Manual</a>
 </p>
-
-<hr/>
 
 <h2 id="twitter">Twitter</h2>
 
@@ -128,10 +127,7 @@
   <li>
     Twitter: <a href="http://twitter.com/Egison_Lang">@Egison_Lang</a>
   </li>
-
 </p>
-
-<hr/>
 
 <h2 id="links">Links</h2>
 
@@ -144,19 +140,10 @@
   </li>
 </ul>
 
-<hr/>
-
 </body>
 
 <footer>
-  <table width=100% border=0 cellspacing=0>
-    <tr>
-      <td align=left>
-        <i>
-          Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
-        </i>
-    </tr>
-  </table>
+  Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
 </footer>
 
 </html>
