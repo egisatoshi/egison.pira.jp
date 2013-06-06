@@ -54,11 +54,10 @@ For example, the graph
 <img src="./graph1.png" alt="graph1">
 
 <p>
- is represented as the multiset <code>g1</code>.
+is represented as the multiset <code>g1</code>.
 </p>
 
-<pre>
-<code>(define $g1 {&lt;Node 1 {4} {2 3 5}&gt;
+<pre><code>(define $g1 {&lt;Node 1 {4} {2 3 5}&gt;
              &lt;Node 2 {1} {3}&gt;
              &lt;Node 3 {1 2} {4}&gt;
              &lt;Node 4 {3} {1 5}&gt;
@@ -93,7 +92,10 @@ Patterns Hamiltonian paths and cycles match are as follows.
 </code></pre>
 
 <p>
-Indeed, you can find the Hamiltonian paths and cycles of <code>g1</code>.
+Because of the definition of Hamiltonian path, the length of any Hamiltonian path is the same as the number of nodes.
+Then, if an order of the nodes is a path, it is a Hamiltonian path.
+The above patterns use this fact.
+Indeed, you can find the Hamiltonian paths and cycles of <code>g1</code> using the patterns.
 </p>
 
 <pre><code>&gt; (match-all g1 (graph integer) [(hamilton-path $a) a])
@@ -101,6 +103,37 @@ Indeed, you can find the Hamiltonian paths and cycles of <code>g1</code>.
 &gt; (match-all g1 (graph integer) [(hamilton-cycle $a) a])
 {}
 </code></pre>
+
+<p>
+The graph doesn't have any Hamiltonian cycle.
+As you can see, if an edge from <code>2</code> to <code>5</code> is added,
+</p>
+
+<pre><code>(define $g1a {&lt;Node 1 {4} {2 3 5}&gt;
+             &lt;Node 2 {1 5} {3}&gt;
+             &lt;Node 3 {1 2} {4}&gt;
+             &lt;Node 4 {3} {1 5}&gt;
+             &lt;Node 5 {1 4} {2}&gt;})</code></pre>
+
+<p>
+it has a Hamiltonian cycle.
+</p>
+
+<pre><code>&gt; (match-all g1a (graph integer) [(hamilton-path $a) a])
+{[|1 4 3 2 5|] [|2 5 1 4 3|] [|3 2 5 1 4|] [|5 1 4 3 2|] [|2 5 4 3 1|] [|4 3 2 5 1|] [|5 4 3 2 1|]}
+&gt; (match-all g1a (graph integer) [(hamilton-cycle $a) a])
+{[|1 4 3 2 5|] [|2 5 1 4 3|] [|3 2 5 1 4|] [|5 1 4 3 2|] [|4 3 2 5 1|]}
+</code></pre>
+
+<p>
+Note that the arrays of the latter represent the same Hamiltonian cycle.
+</p>
+
+<p>
+Undirected graphs are directed graphs that has the same incoming multiset as the outgoing multiset.
+Converting matchers from directed graph to undirected graph is an easy exercise.
+If you need other examples, you can find them in "lib/graph.egi" and "sample/social.egi".
+</p>
 
 <footer>
   Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>
