@@ -42,20 +42,49 @@
   Then, we strongly recommend you to read other chapters after reading this chapter.
   The readers that want to master pattern matching should read the next chapter "<a href="./pattern-matching.html">Pattern Matching</a>".
   If you want to create your own matcher, see the chapter "<a href="./how-to-define-matchers.html">How to Define Matchers</a>".
+</p>
+
 <hr/>
 
-<h2>Various Patterns</h2>
+<ul>
+  <li><a href="#patterns">Various Patterns</a></li>
+  <ul>
+    <li><a href="#wildcard">Wildcard</a></li>
+    <li><a href="#inductive-patterns">Inductive Patterns</a></li>
+    <li><a href="#variable-patterns">Variable Patterns</a></li>
+    <li><a href="#indexed-patterns">Indexed Variable Patterns</a></li>
+    <li><a href="#value-patterns">Value Patterns</a></li>
+    <li><a href="#let-patterns">Let Patterns</a></li>
+    <li><a href="#predicate-patterns">Predicate Patterns</a></li>
+    <li><a href="#and-patterns">And-Patterns</a></li>
+    <li><a href="#or-patterns">Or-Patterns</a></li>
+    <li><a href="#not-patterns">Not-Patterns</a></li>
+    <li><a href="#loop patterns">Loop-Patterns</a></li>
+  </ul>
+  <li><a href="#syntax">Syntax using Patterns</a></li>
+  <ul>
+    <li><a href="#match"><code>match</code> expressions</a></li>
+    <li><a href="#match-all"><code>match-all</code> expressions</a></li>
+    <li><a href="#matcher"><code>matcher</code> expressions</a></li>
+    <li><a href="#match-lambda"><code>match-lambda</code> expressions</a></li>
+    <li><a href="#pattern-function"><code>pattern-function</code> expressions</a></li>
+  </ul>
+</ul>
+
+<hr/>
+
+<h2 id="patterns">Various Patterns</h2>
 
 <p>
   In the following, we show various patterns of Egison.
 </p>
 
-<h3>Wildcards</h3>
+<h3 id="wildcard">Wildcard</h3>
 
 <p>
   Here, we explain the special pattern <i>wildcard</i> <code>_</code>.
   Any object matches this pattern.
-  We use <a href="#match-expression"><code>match</code> expressions</a> and <a href="#matchall-expression"><code>match-all</code> expressions</a>.
+  We use <a href="#match"><code>match</code> expressions</a> and <a href="#match-all"><code>match-all</code> expressions</a>.
   Roughly speaking, they are syntax for pattern-matching.
   You should read the explanations of these expressions at the same time.
 </p>
@@ -69,13 +98,13 @@
 &gt; (match "KO" something {[_ &lt;OK&gt;]})
 &lt;OK&gt;</code></pre>
 
-<h3>Inductive Patterns</h3>
+<h3 id="inductive-patterns">Inductive Patterns</h3>
 
 <pre><code>  &lt;<i>identifier</i> <i>value</i> ...&gt;</code></pre>
 
 <p>
   As a datum, a pattern can be defined inductively.
-  Notation of inductive patterns is similar to ones of inductive data.
+  Notation of inductive patterns is similar to ones of <a href="basics.html#inductive-data">inductive data</a>.
   The exception is, in inductive patterns, the head of an identifier is lowercase.
   The behaviour of inductive patterns is defined in a matcher.
   Then, matchers sometimes define inductive patterns having the same name.
@@ -85,7 +114,7 @@
 <pre><code>&lt;nil&gt;
 &lt;cons &lt;nil&gt; &lt;nil&gt;&gt;</code></pre>
 
-<h3>Variable Patterns</h3>
+<h3 id="variable-patterns">Variable Patterns</h3>
 
 <pre><code>  <i>variable</i></code></pre>
 
@@ -93,7 +122,7 @@
 You can use variables as patterns.
 These patterns are called "variable patterns".
 Any object matches this pattern, and then is locally bound to the variable.
-Moreover, you can use the pattern in inductive patterns.
+In particular, you can use the pattern in inductive patterns.
 This usage allows us to deconstruct an object.
 </p>
 
@@ -106,7 +135,7 @@ This usage allows us to deconstruct an object.
 &gt; (match {1} (list integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]})
 [1 {}]</code></pre>
 
-<h3>Indexed Variable Patterns</h3>
+<h3 id="indexed-patterns">Indexed Variable Patterns</h3>
 
 <pre><code>  <i>variable</i>_<i>integer</i> </code></pre>
 
@@ -129,7 +158,7 @@ undefined
 &gt; (match {1 2 3} (list integer) {[&lt;nil&gt; #f] [&lt;cons $a_2 $a_1&gt; a]})
 [|{2 3} 1|]</code></pre>
 
-<h3>Value Patterns</h3>
+<h3 id="value-patterns">Value Patterns</h3>
 
 <pre><code>  ,<i>value</i></code></pre>
 
@@ -150,7 +179,35 @@ undefined
 &gt; (match {1 4 3} (list integer) {[&lt;cons _ &lt;cons ,2 _&gt;&gt; &lt;OK&gt;] [_ &lt;KO&gt;]})
 &lt;KO&gt;</code></pre>
 
-<h3>Predicate Patterns</h3>
+<h3 id="let-patterns">Let Patterns</h3>
+
+<pre><code>  (let {[<i>variable</i> <i>formula</i>] ...} <i>pattern</i>)</code></pre>
+
+As pointed above, syntax for usual objects and patterns is rigorously separated.
+The let patterns seem to be the exception of it.
+This is similar to <a href="./basics.html#let"><code>let</code> expressions</a>.
+Each <i>variable</i> is locally bounded to each <i>formula</i>, and the <i>variable</i>s can be used in the <i>pattern</i>.
+Note that you cannot use a <i>variable</i> in <i>formula</i>e.
+The pattern is a "let" pattern, and not is a "letrec" pattern.
+
+<pre><code>&gt; (define $f
+    (lambda [$x]
+      (match x (multiset integer)
+        {[(let {[$n (size x)]}
+               &lt;cons ,n &lt;cons ,n _&gt;&gt;)
+            #t]
+         [_ #f]})))
+&gt; (f {1 2 2})
+#f
+&gt; (f {3 3 2})
+#t
+&gt; (f {1 2 3 4})
+#f
+&gt; (f {1 4 3 4})
+#t
+</code></pre>
+
+<h3 id="predicate-patterns">Predicate Patterns</h3>
 
 <pre><code>  ?function</code></pre>
 
@@ -164,15 +221,13 @@ A predicate pattern is a pattern that an object matches if the result of applica
 &gt; (match-all {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987} (multiset integer) [&lt;cons (&amp; ?(lambda [$x] (eq? (modulo x 2) 0)) $x) _&gt; x])
 {2 8 34 144 610}</code></pre>
 
-<!-- <h3>Cut-Patterns</h3> -->
-
-<h3>And-Patterns</h3>
+<h3 id="and-patterns">And-Patterns</h3>
 
 <pre><code>  (& <i>pattern</i> ...)</code></pre>
 
 <p>
 When you have patterns, you sometimes want to get a pattern that is matched, if and only if, all of the patterns are matched.
-Such a pattern is called "and-pattern".
+Such a pattern is called an "and-pattern".
 </p>
 
 <pre><code>(& &lt;cons ,1 _&gt; &lt;snoc ,2 _&gt;)
@@ -193,7 +248,7 @@ Such a pattern is called "and-pattern".
 
 <p>
   The most common usage of and-pattern is "matching and binding".
-  When you need to get a value matched the pattern, it is useful.
+  When you need to get a value matching the pattern, it is useful.
   For example, any non-empty list matches the following and-pattern, and is bound to the variable "xs".
 </p>
 
@@ -204,7 +259,7 @@ Such a pattern is called "and-pattern".
 &gt; (match {} (list integer) {[(& &lt;cons _ _&gt; $xs) xs] [_ #f]})
 #f</code></pre>
 
-<h3>Or-Patterns</h3>
+<h3 id="or-patterns">Or-Patterns</h3>
 
 <pre><code>  (| <i>pattern</i> ...)</code></pre>
 
@@ -225,6 +280,7 @@ Such a pattern is called "and-pattern".
 <p>
   The following is an interesting example of or-pattern.
   <code>(f)</code> is the pattern that any collection consisting of 1 matches.
+  You should refer to <a href="#pattern-function">pattern-function</a>.
 </p>
 
 <pre><code>&gt; (define $f (pattern-function [] (| &lt;nil&gt; &lt;cons ,1 (f)&gt;)))
@@ -237,7 +293,7 @@ Such a pattern is called "and-pattern".
 &gt; (match-all {1 1 1 2 1 1} (list integer) [(f) &lt;OK&gt;])
 {}</code></pre>
 
-<h3>Not-Patterns</h3>
+<h3 id="not-patterns">Not-Patterns</h3>
 
 <pre><code>  ^<i>pattern</i></code></pre>
 
@@ -304,7 +360,7 @@ This is simple but useful usage of not-patterns.
 The arguments of a loop-pattern represent an index-variable, a range of the index, a pattern repeated, and a pattern representing the end.
 When the second argument is null, a loop-pattern is "the same as" the last argument.
 Otherwise, it is "the same as" the third argument substituted itself for <code>...</code> and the head of the second argument for the index-variable with removing the head of the second argument.
-It is difficult to understand what it means.
+It is probably difficult to understand what it means.
 Then, we give <code>comb</code> as an example, and will describe the meaning of a loop-pattern using the example.
 It's roughly correct and easier to understand.
 </p>
@@ -330,7 +386,7 @@ Then, a loop-pattern is
   _)</code></pre>
 
 <p>
-When the range of the index is non-null, a loop-pattern "evaluates" the third argument regarding <code>...</code> in the argument as the loop-pattern itself.
+When the range of the index is non-null, a loop-pattern "returns" the third argument regarding <code>...</code> in the argument as the loop-pattern itself.
 Since <code>{1 2 3}</code> isn't null, the above example is "evaluated to"
 </p>
 
@@ -370,9 +426,9 @@ This restriction decides which loop-patterns a given <code>...</code> belongs to
 You can find an example of nested loop-patterns in <a href="./n-queen.html">Example : N-Queen</a>.
 </p>
 
-<h2>Syntax using Patterns</h2>
+<h2 id="syntax">Syntax using Patterns</h2>
 
-<h3 id="match-expression"><code>match</code> expressions</h3>
+<h3 id="match"><code>match</code> expressions</h3>
 
 <pre><code>  (match <i>formula</i> <i>matcher</i> {[<i>pattern</i> <i>formula</i>] ...})</code></pre>
 
@@ -391,7 +447,7 @@ For the details, see the next chapter.
 &gt; (match {1 2 3 4} (set integer) {[&lt;nil&gt; #f] [&lt;cons $x $xs&gt; [x xs]]})
 [1 {1 2 3 4}]</code></pre>
 
-<h3 id="matchall-expression"><code>match-all</code> expressions</h3>
+<h3 id="match-all"><code>match-all</code> expressions</h3>
 
 <pre><code>  (match-all <i>formula</i> <i>matcher</i> [<i>pattern</i> <i>formula</i>])</code></pre>
 
@@ -406,13 +462,13 @@ For the details, see the next chapter.
 &gt; (match-all {1 2 3 4} (set integer) [&lt;cons $x $xs&gt; [x xs]])
 {[1 {1 2 3 4}] [2 {1 2 3 4}] [3 {1 2 3 4}] [4 {1 2 3 4}]}</code></pre>
 
-<h3><code>matcher</code> expressions</h3>
+<h3 id="matcher"><code>matcher</code> expressions</h3>
 
 This expression is used to create a matcher.
 Since this is complicated, we don't explain this expression here, but do in another chapter.
 If you want to know this expression, see <a href="./how-to-define-matchers.html">How to Define Matchers</a>.
 
-<h3><code>match-lambda</code> expressions</h3>
+<h3 id="match-lambda"><code>match-lambda</code> expressions</h3>
 
 <pre><code>  (match-lambda <i>matcher</i> {[<i>pattern</i> <i>formula</i>] ...})</code></pre>
 

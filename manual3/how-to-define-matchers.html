@@ -23,9 +23,18 @@
   As described in previous chapters, matchers define how to do pattern-matching.
   In this section, we explain how to define matchers using libraries as examples.
 </p>
+
 <hr/>
 
-<h2>Formal Definition of <code>matcher</code></h2>
+<ul>
+  <li><a href="#formaldef">Formal Definition of <code>matcher</code></a></li>
+  <li><a href="#simple">Definitions of Simple Matchers</a></li>
+  <li><a href="#collection">Definitions of Matchers for Collection Data</a></li>
+</ul>
+
+<hr/>
+
+<h2 id="formaldef">Formal Definition of <code>matcher</code></h2>
 
 <p>
 You can define a matcher using <code>matcher</code>.
@@ -51,7 +60,7 @@ Here, <code>&lt;body&gt;</code> is a formula of Egison.
 <code>&lt;primitive-pp&gt;</code> and <code>&lt;primitive-dp&gt;</code> are abbreviations of <code>&lt;primitive-pattern-pattern&gt;</code> and <code>&lt;primitive-data-pattern&gt;</code>, respectively.
 </p>
 
-<h2>Definitions of Simple Matchers</h2>
+<h2 id="simple">Definitions of Simple Matchers</h2>
 
 <p>
 A matcher determines how to do pattern-matching.
@@ -198,7 +207,7 @@ The following code has the same meaning as the above definitions of <code>orderi
     {&lt;leaf integer&gt; &lt;node integer-tree integer-tree&gt;}))
 </code></pre>
 
-<h2>Definitions of Matchers for Collection Data</h2>
+<h2 id="collection">Definitions of Matchers for Collection Data</h2>
 
 <p>
 We will explain how to define matchers for collection data, such as list, multiset, and set.
