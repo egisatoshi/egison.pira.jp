@@ -131,7 +131,23 @@ Note that the arrays of the latter represent the same Hamiltonian cycle.
 
 <p>
 Undirected graphs are directed graphs that has the same incoming multiset as the outgoing multiset.
-Converting matchers from directed graph to undirected graph is an easy exercise.
+Converting matchers from directed graph to undirected graph, undirected graphs are described as follows.
+</p>
+
+<pre><code>(define $nodeInfo
+  (lambda [$a]
+    (algebraic-data-matcher
+      {&lt;node a (multiset a)&gt;}))
+
+(define $graph 
+  (lambda [$a]
+    (multiset a)))</code></pre>
+
+<p>
+For example,
+</p>
+
+<p>
 If you need other examples, you can find them in "lib/graph.egi" and "sample/social.egi".
 </p>
 
