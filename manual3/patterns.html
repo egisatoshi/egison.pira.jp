@@ -186,7 +186,7 @@ undefined
 As pointed above, syntax for usual objects and patterns is rigorously separated.
 The let patterns seem to be the exception of it.
 This is similar to <a href="./basics.html#let"><code>let</code> expressions</a>.
-Each <i>variable</i> is locally bounded to each <i>formula</i>, and the <i>variable</i>s can be used in the <i>pattern</i>.
+Each <i>variable</i> is locally bound to each <i>formula</i>, and the <i>variable</i>s can be used in the <i>pattern</i>.
 Note that you cannot use a <i>variable</i> in <i>formula</i>e.
 The pattern is a "let" pattern, and not is a "letrec" pattern.
 
@@ -425,6 +425,84 @@ For example, <code>&lt;cons ... &lt;nil&gt;&gt;</code> is prohibited.
 This restriction decides which loop-patterns a given <code>...</code> belongs to, and then allows us to write nested loop-patterns.
 You can find an example of nested loop-patterns in <a href="./n-queen.html">Example : N-Queen</a>.
 </p>
+
+<p>
+By the way, you can omit the last argument of a loop-pattern.
+In such a case, Egison regards the last argument is <code>^_</code>, which is a pattern that no objects match.
+For example,
+</p>
+
+<pre><code>(loop $i (between 1 n)
+  &lt;join _ &lt;cons $a_i ...&gt;&gt;)</code></pre>
+
+<p>
+is interpreted as 
+</p>
+
+<pre><code>(loop $i (between 1 n)
+  &lt;join _ &lt;cons $a_i ...&gt;&gt;
+  ^_)</code></pre>
+
+<p>
+How to use this special loop pattern?
+Imagine a list where an element is calculated using the previous elements (e.g., arithmetic sequences, geometric sequences, and the fibonacci numbers).
+We will write a pattern that any initial subsequence of such a list matches.
+
+Recall a pattern that any collection consisting of 1 matches, which is described in <a href="#or-patterns">or-patterns</a>.
+This seems to be ths special case of what we want to get.
+However, since the definition of this pattern uses a pattern-function, it is difficult to extend the pattern.
+How to refer the previous elements?
+How to return the matched object?
+You can use a last-argument-less loop-pattern to avoid this difficulty.
+</p>
+
+<pre><code>(define $fibseq
+  (match-lambda (list integer)
+    {[(| &lt;nil&gt;
+         &lt;cons $a_1 &lt;nil&gt;&gt;
+         &lt;cons $a_1
+               &lt;cons $a_2
+                     (loop $i (from 3)
+                           (| &lt;nil&gt; 
+                              &lt;cons (&amp; ,(+ a_(- i 2) a_(- i 1)) $a_i) ...&gt;))&gt;&gt;) 
+        #t]
+     [_ #f]}))</code></pre>
+
+<p>
+The above describes a pattern that any initial subsequence of fibonacci-like sequences matches, which means any element is the sum of the two previous.
+You can notice that, in such a case, the last argument of a loop-pattern is meaningless even if it is.
+</p>
+
+<pre><code>&gt; (fibseq {1 1 2 3 5 8 13 21 34 55 89 144 233 377})
+#t
+&gt; (fibseq {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610})
+#t
+&gt; (fibseq {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 887})
+#f
+&gt; (fibseq {1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987})
+#t
+</code></pre>
+
+<p>
+Since a variable <code>a</code> is bound to an array, we can return it and show an initial sequence.
+</p>
+
+<pre><code>(define $fibseq2
+  (match-lambda (multiset integer)
+    {[(| &lt;nil&gt;
+         &lt;cons $a_1 &lt;nil&gt;&gt;
+         &lt;cons $a_1
+               &lt;cons $a_2
+                     (loop $i (from 3)
+                           (| &lt;nil&gt; 
+                              &lt;cons (&amp; ,(+ a_(- i 2) a_(- i 1)) $a_i) ...&gt;))&gt;&gt;) 
+           a]
+     [_ [||]]}))</code></pre>
+
+<pre><code>&gt; (fibseq2 {8 13 5 233 2 55 610 21 34 89 1 3 144})
+[||]
+&gt; (fibseq2 {8 13 377 5 233 2 55 610 21 34 89 1 3 144})
+[|1 2 3 5 8 13 21 34 55 89 144 233 377 610|]</code></pre>
 
 <h2 id="syntax">Syntax using Patterns</h2>
 
