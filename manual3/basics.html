@@ -37,11 +37,50 @@
   This chapter explains an aspect of Egison as an ordinal purely functional programming language.
   We will explain patterns and pattern-matching, the most important feature of Egison in the next chapter.
   The readers familiar to other functional programming languages can skip this chapter.
+</p>
 <hr/>
 
-<h2>Top Expressions</h2>
+<ul>
+  <li><a href="#top">Top Expressions</a></li>
+  <ul>
+    <li><a href="#define">Define and Test Expressions</a></li>
+    <li><a href="#load">Load Expressions</a></li>
+    <li><a href="#execute">Execute Expressions</a></li>
+  </ul>
+  <li><a href="#built-in">Built-in Data</a></li>
+  <ul>
+    <li><a href="#boolean">Boolean Values</a></li>
+    <li><a href="#integers">Integers</a></li>
+    <li><a href="#floats">Floats</a></li>
+    <li><a href="#characters">Characters</a></li>
+    <li><a href="#strings">Strings</a></li>
+    <li><a href="#undefined">Undefined</a></li>
+  </ul>
+  <li><a href="#objects">Objects</a></li>
+  <ul>
+    <li><a href="#enclosures">Five Enclosures</a></li>
+    <li><a href="#inductive-data">Inductive Data</a></li>
+    <li><a href="#tuple">Tuples (Multiple Values)</a></li>
+    <li><a href="#collection">Collections</a></li>
+    <li><a href="#array">Array</a></li>
+  </ul>
+  <li><a href="#syntax">Syntax of Egison</a></li>
+  <ul>
+    <li><a href="#lambda"><code>lambda</code> expressions</a></li>
+    <li><a href="#let"><code>let</code> expressions</a></li>
+    <li><a href="#letrec"><code>letrec</code> expressions</a></li>
+    <li><a href="#if"><code>if</code> expressions</a></li>
+    <li><a href="#apply"><code>apply</code> expressions</a></li>
+    <li><a href="#generate-array"><code>generate-array</code> expressions</a></li>
+    <li><a href="#array-size"><code>array-size</code> expressions</a></li>
+  </ul>
+</ul>
 
-<h3>Define and Test Expressions</h3>
+<hr/>
+
+<h2 id="top">Top Expressions</h2>
+
+<h3 id="define">Define and Test Expressions</h3>
 
 <p>
   Give some input to Egison as below.
@@ -69,7 +108,7 @@
 &gt; (f x 4)
 [6 8]</code></pre>
 
-<h3>Load Expressions</h3>
+<h3 id="load">Load Expressions</h3>
 
 <p>
   You can load Egison Libraries with <code>load</code> expressions.
@@ -84,7 +123,7 @@
   A <code>load-file</code> expression takes a full-path to the Egison program file.
 </p>
 
-<h3>Execute Expressions</h3>
+<h3 id="execute">Execute Expressions</h3>
 
 <p>
   Like other programming language, you can manipulate IO via Egison.
@@ -93,13 +132,13 @@
   We will do at another chapter.
 </p>
 
-<h2>Built-in Data</h2>
+<h2 id="built-in">Built-in Data</h2>
 
 <p>
   Boolean values, integers, float numbers, and characters are implemented as built-in data in Egison.
 </p>
 
-<h3>Boolean Values</h3>
+<h3 id="boolean">Boolean Values</h3>
 
 <p>
   `<code>#t</code>' represents true.<br/>
@@ -109,7 +148,7 @@
 <pre><code>#t
 #f</code></pre>
 
-<h3>Integers</h3>
+<h3 id="integers">Integers</h3>
 
 <p>
   A string which consists of only numbers is a number literal.
@@ -121,7 +160,7 @@
 -100
 ...</code></pre>
 
-<h3>Floats</h3>
+<h3 id="floats">Floats</h3>
 
 <p>
   A floating-point literal is concatenation of an integer literal, `<code>.</code>', and a number literal.
@@ -132,7 +171,7 @@
 -100.012001
 ...</code></pre>
 
-<h3>Characters</h3>
+<h3 id="characters">Characters</h3>
 
 <p>
   A character literal is a character enclosed in single quotes.
@@ -143,7 +182,7 @@
 'c'
 ...</code></pre>
 
-<h3>Strings</h3>
+<h3 id="strings">Strings</h3>
 
 <p>
   A string literal is a string enclosed in double quotes.
@@ -166,9 +205,9 @@
 
 <pre><code>undefined</code></pre>
 
-<h2>Objects</h2>
+<h2 id="objects">Objects</h2>
 
-<h3>Five Enclosures</h3>
+<h3 id="enclosures">Five Enclosures</h3>
 
 <p>
 First of all, we explain the enclosures of Egison.
@@ -285,9 +324,9 @@ The former gives an easy way to create complicated arrays, and the latter shows 
 The details are described in each subsection.
 </p>
 
-<h2>Syntax of Egison</h2>
+<h2 id="syntax">Syntax of Egison</h2>
 
-<h3><code>lambda</code> expressions</h3>
+<h3 id="lambda"><code>lambda</code> expressions</h3>
 
 <pre><code>  (lambda [<i>variable</i> ...] <i>formula</i>)</code></pre>
 
@@ -327,7 +366,7 @@ The second argument is a formula, which is the body of the function.
 &gt; ((map $2 $1) {1 2 3} (+ $ 1))
 {2 3 4}</code></pre>
 
-<h3><code>let</code> expressions</h3>
+<h3 id="let"><code>let</code> expressions</h3>
 
 <pre><code>  (let {[<i>variable</i> <i>formula</i>] ...} <i>formula</i>)</code></pre>
 
@@ -349,7 +388,7 @@ Unbound variable: x</code></pre>
 Note the latter example works even if x is unbound, since Egison uses lazy evaluation.
 </p>
 
-<h3><code>letrec</code> expressions</h3>
+<h3 id="letrec"><code>letrec</code> expressions</h3>
 
 <pre><code>  (letrec {[<i>variable</i> <i>formula</i>] ...} <i>formula</i>)</code></pre>
 
@@ -361,7 +400,7 @@ Note the latter example works even if x is unbound, since Egison uses lazy evalu
 <pre><code>&gt; (letrec {[$x #t] [$y x]} (not y))
 #f</code></pre>
 
-<h3><code>if</code> expressions</h3>
+<h3 id="if"><code>if</code> expressions</h3>
 
 <pre><code>  (if <i>boolean</i> <i>formula</i> <i>formula</i>)</code></pre>
 
@@ -375,7 +414,7 @@ NO
 &gt; (if #t 1 ((lambda $x (x x)) (lambda $x (x x))))
 1</code></pre>
 
-<h3><code>apply</code> expressions</h3>
+<h3 id="apply"><code>apply</code> expressions</h3>
 
 <pre><code>  (apply <i>function</i> [<i>value</i> ...])</code></pre>
 
