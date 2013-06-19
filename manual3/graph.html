@@ -137,14 +137,66 @@ Converting matchers from directed graph to undirected graph, undirected graphs a
 <pre><code>(define $nodeInfo
   (lambda [$a]
     (algebraic-data-matcher
-      {&lt;node a (multiset a)&gt;}))
+      {&lt;node a (multiset a)&gt;})))
 
-(define $graph 
+(define $ugraph 
   (lambda [$a]
-    (multiset a)))</code></pre>
+    (multiset (nodeInfo a))))</code></pre>
 
 <p>
 For example,
+</p>
+
+<img src="./graph2.png" alt="graph2">
+
+<p>
+is 
+</p>
+
+<pre><code>(define $g2 {
+    &lt;Node 1 {4 5 8 10}&gt;
+    &lt;Node 2 {3 6 12}&gt;
+    &lt;Node 3 {2 7 9}&gt;
+    &lt;Node 4 {1 6}&gt;
+    &lt;Node 5 {1 8 9 11}&gt;
+    &lt;Node 6 {2 4 10 12}&gt;
+    &lt;Node 7 {3 9 11}&gt;
+    &lt;Node 8 {1 5}&gt;
+    &lt;Node 9 {3 5 7}&gt;
+    &lt;Node 10 {1 6 12}&gt;
+    &lt;Node 11 {5 7}&gt;
+    &lt;Node 12 {2 6 10}&gt;
+    })</code></pre>
+
+<p>
+You can find the circuits of any length using the following function.
+It is possibly difficult to enumerate them. Can you answer the number of octagons in the graph?
+</p>
+
+<pre><code>(define $circuits
+  (lambda [$t]
+    (lambda [$g $n]
+      (match-all g (ugraph t)
+        [&lt;cons &lt;node $a_1 &lt;cons $a_2 _&gt;&gt;
+               (loop $i (between 2 (- n 1))
+                   &lt;cons &lt;node ,a_i &lt;cons $a_(+ i 1) _&gt;&gt;
+                         ...&gt;
+                   &lt;cons &lt;node ,a_n &lt;cons ,a_1 _&gt;&gt; _&gt;)&gt;
+         a]))))</code></pre>
+
+<p>
+Since the above is similiar to <code>hamilton-cycle</code>, it is not difficult to understand the function.
+</p>
+
+<pre><code>&gt; ((circuits integer) g2 8)
+{[|1 4 6 2 3 7 9 5|] [|5 1 4 6 2 3 7 9|] [|1 4 6 2 3 7 11 5|]
+... <i>(omitted)</i>
+&gt; (size ((circuits integer) g2 8))
+192</code></pre>
+
+<p>
+The answer, the number of octagons is 12 (= 192/16).
+Note that any circuit is counted sixteen times, since an octagon has eight edges and the reverse of a circuit is also a circuit.
 </p>
 
 <p>
