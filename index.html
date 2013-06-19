@@ -48,7 +48,7 @@
   Egison is the
   <ul>
     <li>pattern-matching-oriented</li>
-    <li>pure functional</li>
+    <li>purely functional</li>
   </ul>
   programming language.<br/>
 </p>
@@ -90,10 +90,11 @@
     It is necessary to write useful patterns for pattern-matching with multiple results.
   </dd>
   
-  <dt>First class pattern-functions</dt>
+  <dt>Patterns have lexical scoping</dt>
   <dd>
-    We can write functions that receive patterns and return a pattern.
-    Useful patterns can be reused in many places in a program.
+    We can modularize usefule patterns with <i>pattern-function</i>, functions that receive patterns and return a pattern.
+    Since a pattern-function has lexical scoping, bindings for pattern-variables in the argument patterns and the body of pattern-functions don't conflict.
+    Useful patterns can be reused in many places in a program without worry of name clash.
   </dd>
 </dl>
 

@@ -443,7 +443,7 @@ are the same.
 <p>
   Shown as follows, you can reuse a pattern via a pattern-function.
   Since a pattern-function has lexical scoping as a normal function by <code>lambda</code>,
-  bindings to pattern-variables in the argument patterns and the body of pattern-functions don't conflict.
+  bindings for pattern-variables in the argument patterns and the body of pattern-functions don't conflict.
   Then, you don't have to care about which pattern-variable occurs in a pattern-function.
 </p>
 
@@ -460,7 +460,7 @@ are the same.
 Unbound variable: x</code></pre>
 
 <p>
-  The last result means that you cannot use bindings to the pattern-variables that occur in the body of a pattern-function applied in a pattern.
+  The last result means that you cannot use bindings for the pattern-variables that occur in the body of a pattern-function applied in a pattern.
 </p>
 
 <pre><code>&gt; (define $twin (pattern-function [$pat1 $pat2] &lt;cons (&amp; $pat pat1) &lt;cons ,pat pat2&gt;&gt;))
