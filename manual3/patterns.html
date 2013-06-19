@@ -121,7 +121,7 @@
 <p>
 You can use variables as patterns.
 These patterns are called "variable patterns".
-Any object matches this pattern, and then is locally bound to the variable.
+Any object matches this pattern, and then the variable is locally bound to the object.
 In particular, you can use the pattern in inductive patterns.
 This usage allows us to deconstruct an object.
 </p>
@@ -141,7 +141,7 @@ This usage allows us to deconstruct an object.
 
 <p>
 An indexed variable pattern is a special variable pattern.
-In this pattern, the <i>variable</i> is regarded as an <a href="./basics.html#array">array</a>, and then the <i>integer</i>-th element is bound to the matched object.
+In this pattern, the <i>variable</i> is regarded as an <a href="./basics.html#array">array</a>, and then the <i>integer</i>-th element is bound to the matching object.
 Note that an <i>integer</i> is arbitrary.
 </p>
 
@@ -249,7 +249,7 @@ Such a pattern is called an "and-pattern".
 <p>
   The most common usage of and-pattern is "matching and binding".
   When you need to get a value matching the pattern, it is useful.
-  For example, any non-empty list matches the following and-pattern, and is bound to the variable "xs".
+  For example, any non-empty collection matches the following and-pattern, and then the variable "xs" is bound to it.
 </p>
 
 <pre><code>(& &lt;cons _ _&gt; $xs)</code></pre>
@@ -514,7 +514,7 @@ Since a variable <code>a</code> is bound to an array, we can return it and show 
 This expression do pattern matching of the first argument.
 The fist argument is regarded as a data of the second argument and compared with the patterns of the third argument.
 When it matches a pattern in the third argument, the associated formula will be evaluated.
-If the pattern includes pattern variables, variables are locally bound and the formula will be evaluated with the variables.
+If the pattern includes variable, they are locally bound and then the formula will be evaluated with them.
 This binding isn't necessarily unique.
 But, unlike the below, this expression returns just one of the cases.
 For the details, see the next chapter.

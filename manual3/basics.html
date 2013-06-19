@@ -73,6 +73,7 @@
     <li><a href="#apply"><code>apply</code> expressions</a></li>
     <li><a href="#generate-array"><code>generate-array</code> expressions</a></li>
     <li><a href="#array-size"><code>array-size</code> expressions</a></li>
+    <!-- <li><a href="#array-ref"><code>array-ref</code> expressions</a></li> -->
   </ul>
 </ul>
 
@@ -95,7 +96,7 @@
 
 <p>
   There are two kinds of <i>top expressions</i> in above input, <code>define</code> expressions and <code>test</code> expressions.
-  A <code>define</code> expression binds the value or the function to the variable.
+  A <code>define</code> expression binds the variable to the value or the function.
   A <code>test</code> expression evaluates the given expression.
   On the interpreter, you can omit <code>test</code>.
   That is, you can write as follows.
@@ -319,7 +320,7 @@ It allows us to use multi-dimensional arrays.
 
 <p>
 Egison prepares special syntax for arrays.
-They are <a href="#generate-array">generate-array</a> and <a href="#array-size">array-size</a>.
+They are <a href="#generate-array">generate-array</a>, <a href="#array-size">array-size</a><!-- , and <a href="#array-ref">array-ref</a>-->.
 The former gives an easy way to create complicated arrays, and the latter shows the size of arrays. 
 The details are described in each subsection.
 </p>
@@ -373,7 +374,7 @@ The second argument is a formula, which is the body of the function.
 <p>
 A let expression takes two arguments.
 The first argument is a collection of binary tuples, which are pairs of a variable and a formula.
-These formulae will be evaluated when the associated variable is needed in an evaluation of the second argument, and bound to the variable.
+These formulae will be evaluated when the associated variable is needed in an evaluation of the second argument, and then the variable is bound to them.
 Since a formula in the first argument is evaluated with the original environment, you can't use variables in the first argument in the formula.
 </p>
 
@@ -498,6 +499,24 @@ undefined
 The above show <code>a</code> does not have the first element, but have the second element
 You should be careful how to use <code>array-size</code>.
 </p>
+
+<!-- <h3 id="array-ref"><code>array-ref</code> expressions</h3> -->
+
+<!-- <pre><code>  (array-ref <i>array</i> <i>integer</i>)</code></pre> -->
+
+<!-- <p> -->
+<!-- An <code>array-ref</code> expression returns the <i>integer</i>-th element of the <i>array</i>. -->
+<!-- It is the same as <code><i>array</i>_<i>integer</i></code>. -->
+<!-- </p> -->
+
+<!-- <pre><code>&gt; [| 1 2 3 |]_2 -->
+<!-- 2 -->
+<!-- &gt; (array-ref [| 1 2 3 |] 2) -->
+<!-- 2 -->
+<!-- &gt; [| 1 2 3 |]_4 -->
+<!-- undefined -->
+<!-- &gt; (array-ref [| 1 2 3 |] 4) -->
+<!-- undefined</code></pre> -->
 
 <footer>
   Copyright (C) 2011-2013 <a href="http://egi.pira.jp/index.html">Satoshi Egi</a>

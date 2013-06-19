@@ -69,11 +69,11 @@ Generally speaking, given a pattern and an object, a matcher returns the candida
 Given a pattern and an object, what Egison does is the followings.
 <ol>
 <li>Find a <code>&lt;primitive-pattern-pattern&gt;</code> matched by the pattern.
-If the <code>&lt;primitive-pattern-pattern&gt;</code> contains pattern variables, the associated values in the pattern are bound.
+If the <code>&lt;primitive-pattern-pattern&gt;</code> contains variables, they are bound to the associated values in the pattern.
 </li>
 <li>
 If found, find a <code>&lt;primitive-data-pattern&gt;</code> in the associated <code>&lt;primitive-data-clause&gt;</code> matched by the object.
-If the <code>&lt;primitive-data-pattern&gt;</code> contains pattern variables, the associated values in the object are bound.
+If the <code>&lt;primitive-data-pattern&gt;</code> contains variables, they are bound to the associated values in the object.
 </li>
 <li>
 If found, return the result of an evaluation of the associated <code>&lt;body&gt;</code>.
@@ -127,7 +127,7 @@ For example, consider evaluating the following code.
 
 <p>
 Since the patterns in the first two piece of code are both value patterns, they match <code>,$val</code>.
-Then, <code>&lt;Less&gt;</code> and <code>&lt;Equal&gt;</code> are bound to <code>val</code>.
+Then, <code>val</code> is bound to <code>&lt;Less&gt;</code> or <code>&lt;Equal&gt;</code>.
 In the third case, <code>&lt;equal&gt;</code> matches neither <code>,$val</code> nor <code>&lt;less&gt;</code>, but <code>&lt;equal&gt;</code>, because they are exactly the same.
 In the last one, <code>$x</code> matches the last <code>&lt;primitive-pattern-pattern&gt;</code>, namely, <code>$</code>.
 </p>
@@ -137,7 +137,7 @@ Let's move to the step 2.
 Like the step 1, Egison examines whether the object matches a <code>&lt;primitive-data-pattern&gt;</code> or not.
 Since <code>&lt;primitive-data-pattern&gt;</code>s in <code>ordering</code> are limited, it isn't difficult to understand which <code>&lt;primitive-data-pattern&gt;</code> the object matches.
 We emphasise that <code>Identifier</code> in <code>(primitive-inductive-data)</code> starts with uppercase, and then just inductive data match it.
-In the first two and last examples, the <code>&lt;primitive-data-pattern&gt;</code>s are all <code>$tgt</code>, and then <code>&lt;Equal&gt;</code> is bound to <code>tgt</code>.
+In the first two and last examples, the <code>&lt;primitive-data-pattern&gt;</code>s are all <code>$tgt</code>, and then <code>tgt</code> is bound to <code>&lt;Equal&gt;</code>.
 In the rest, namely, the third one, the object matches the first <code>&lt;primitive-data-pattern&gt;</code>, <code>&lt;Equal&gt;</code>.
 </p>
 
@@ -151,8 +151,8 @@ Obviously, the first example returns <code>{}</code> and the second one returns 
 The body of the last one is <code>{tgt}</code>, and then returns <code>{&lt;Equal&gt;}</code>.
 If the tuple of matchers in the <code>&lt;primitive-pattern-clause&gt;</code> isn't null, then Egison does the next pattern-matching with a tuple of patterns that match <code>$</code> and an object in the result using the tuple of matchers.
 In the example, the pattern is <code>$x</code>, the object is <code>&lt;Equal&gt;</code>, and the matcher is <code>something</code>.
-Here, <code>something</code> is the unique built-in matcher, which contains only wildcard and pattern variables.
-Since <code>$x</code> is a pattern variable, <code>&lt;Equal&gt;</code> is bound to <code>x</code>, and then the result of the formula is <code>{&lt;Equal&gt;}</code>.
+Here, <code>something</code> is the unique built-in matcher, which contains only wildcard and variables.
+Since <code>$x</code> is a variable, <code>x</code> is bound to <code>&lt;Equal&gt;</code>, and then the result of the formula is <code>{&lt;Equal&gt;}</code>.
 Now, we can drop the assumption.
 Since the tuple of matchers in the <code>primitive-pattern-clause</code> is null, the result of successful pattern-matching is <code>{[]}</code>, and Egison considers the pattern-matching successful.
 </p>
@@ -188,7 +188,7 @@ Then, we give another matcher, <code>integer-tree</code>.
 </code></pre>
 
 <p>
-  Since the pattern is <code>&lt;node &lt;leaf $n&gt; &lt;node _ _&gt;&gt;</code>, it matches <code>&lt;node $ $&gt;</code>. <code>&lt;leaf $n&gt;</code> and <code>&lt;node _ _&gt;</code> are "bound" to the first <code>$</code> and the second <code>$</code>, respectively.
+  Since the pattern is <code>&lt;node &lt;leaf $n&gt; &lt;node _ _&gt;&gt;</code>, it matches <code>&lt;node $ $&gt;</code>. the first <code>$</code> and the second <code>$</code> are "bound" to <code>&lt;leaf $n&gt;</code> and <code>&lt;node _ _&gt;</code>, respectively.
   The binding in the <code>&lt;primitive-data-pattern&gt;</code> is that <code>l</code> is <code>&lt;Leaf 3&gt;</code> and <code>r</code> is <code>&lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;</code>. Then, in the next, Egison does pattern-matching for the object <code>[&lt;Leaf 3&gt; &lt;Node &lt;Leaf 4&gt; &lt;Leaf 5&gt;&gt;]</code> with the pattern <code>[&lt;leaf $n&gt; &lt;node _ _&gt;]</code> using the matcher <code>[integer-tree integer-tree]</code>.
 When a result of current pattern-matching contains an element, next pattern-matching is done in series.
 </p>
