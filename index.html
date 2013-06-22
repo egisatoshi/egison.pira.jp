@@ -73,8 +73,8 @@
 <h2 id="pattern-matching">Pattern Matching of Egison</h2>
 
 <p>
-  A feature of Egison is the strong pattern-matching facility.
-  Egison can pattern-match with data types whose data have no normal forms (<i>unfree data types</i>).
+  Egison can pattern-match with data types whose data have no canonical forms.
+  Such data types are called(<i>unfree data types</i>).
 </p>
 
 <p>
@@ -88,7 +88,7 @@
 
 <p>
   Egison is the world's first programming language that makes pattern-matching with unfree data types practical.
-  Following features enables pattern-matching with unfree data types.
+  Following features enables practical pattern-matching with unfree data types.
 </p>
 
 <dl>
@@ -107,7 +107,7 @@
   
   <dt>Patterns have lexical scoping</dt>
   <dd>
-    We can modularize usefule patterns with <i>pattern-function</i>, functions that receive patterns and return a pattern.
+    We can modularize usefule patterns with <i>pattern-functions</i>, functions that receive patterns and return a pattern.
     Since a pattern-function has lexical scoping, bindings for pattern-variables in the argument patterns and the body of pattern-functions don't conflict.
     Useful patterns can be reused in many places in a program without worry of name clash.
   </dd>
