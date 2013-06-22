@@ -73,7 +73,20 @@
 <p>
   A feature of Egison is the strong pattern-matching facility.
   Egison can pattern-match with data types whose data have no normal forms (<i>unfree data types</i>).
-  Following features enable it.
+</p>
+
+<p>
+  In pattern-matching of well-known programming languages, the existence of canonical forms is assumed.
+  Therefore, when we do pattern-matching with unfree data types, we need to translate and regard them as data which have a canonical form.
+  For example, a set would be treated as a list.
+  Many programmers think this is unavoidable, and in fact, it is a latent stress of programming.
+  Sets and multisets often play important roles in expressing algorithms.
+  So natural expression for handling these kinds of data is also important.
+</p>
+
+<p>
+  Egison is the world's first programming language that makes pattern-matching with unfree data types practical.
+  Following features enables pattern-matching with unfree data types.
 </p>
 
 <dl>
