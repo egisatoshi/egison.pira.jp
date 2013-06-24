@@ -142,8 +142,8 @@
 <h3 id="boolean">Boolean Values</h3>
 
 <p>
-  `<code>#t</code>' represents true.<br/>
-  `<code>#f</code>' represents false.<br/>
+  <code>#t</code> represents true.<br/>
+  <code>#f</code> represents false.<br/>
 </p>
 
 <pre><code>#t
@@ -153,7 +153,7 @@
 
 <p>
   A string which consists of only numbers is a number literal.
-  An integer literal is a number literal or concatenation of `-' and a number literal.
+  An integer literal is a number literal or concatenation of <code>-</code> and a number literal.
 </p>
 
 <pre><code>1
@@ -164,7 +164,7 @@
 <h3 id="floats">Floats</h3>
 
 <p>
-  A floating-point literal is concatenation of an integer literal, `<code>.</code>', and a number literal.
+  A floating-point literal is concatenation of an integer literal, <code>.</code>, and a number literal.
 </p>
 
 <pre><code>1.0
@@ -213,7 +213,7 @@
 <p>
 First of all, we explain the enclosures of Egison.
 Perhaps you are surprised at how many kinds of enclosures in Egison when you first see code of Egison.
-In Egison, there are five kinds of enclosures, i.e. parentheses `( )', brackets `< >', square brackets `[ ]', braces `{ }', and double brackets `[| |]'.
+In Egison, there are five kinds of enclosures, i.e. parentheses <code>(</code> <code>)</code>, brackets <code>&lt;</code> <code>&gt;</code>, square brackets <code>[</code> <code>]</code>, braces <code>{</code> <code>}</code>, and double brackets <code>[|</code> <code>|]</code>.
 They represents procedure call, an <a href="#inductive-data">inductive datum</a>, a <a href="#tuple">tuple</a>, a <a href="#collection">collection</a>, and an <a href="#array">array</a>.
 Roughly speaking, you should use parentheses as LISP, brackets when you want to create patterns or your own data, and double brackets to create an array.
 Square brackets and braces are both used to collect values.
@@ -277,7 +277,7 @@ Unlike a tuple, a collection of an element and its unique element differ.
 <p>
 A collection may contain a collection as its element.
 Generally, an element of a collection that is an element of a collection isn't an element of the outer collection.
-`@' placed before a collection breaks the collection.
+<code>@</code> placed before a collection breaks the collection.
 Then, an element of a collection with <code>@</code> that is an element of a collection is an element of the outer collection.
 Using this notation, you can construct a collection from subcollections.
 </p>
@@ -293,7 +293,7 @@ Using this notation, you can construct a collection from subcollections.
 
 <p>
 An array is a sequence of elements enclosed in double brackets.
-Adding an underscore `_' and an index at the end, you can get the associated element of an array.
+Adding an underscore <code>_</code> and an index at the end, you can get the associated element of an array.
 If the index is larger than the size of an array, (which can be got by <a href="#array-size">array-size</a>) you will get <a href="#undefined">undefined</a>.
 </p>
 
@@ -434,7 +434,7 @@ That is, <code>(apply f [x<sub>0</sub> x<sub>1</sub> x<sub>2</sub>])</code> is t
 
 <p>
 Egison is equipped with two ways to generate an array.
-One is to write elements explicitly using double brackets `[| |]'.
+One is to write elements explicitly using double brackets <code>[|</code> <code>|]</code>.
 The other is this <code>generate-array</code> expression.
 </p>
 
