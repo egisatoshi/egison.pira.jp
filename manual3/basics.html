@@ -3,19 +3,6 @@
 <title>Egison Users Manual</title>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 <link rel="stylesheet" type="text/css" href="../style.css">
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-9772679-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
 </head>
 
 <body>
@@ -500,23 +487,23 @@ The above show <code>a</code> does not have the first element, but have the seco
 You should be careful how to use <code>array-size</code>.
 </p>
 
-<!-- <h3 id="array-ref"><code>array-ref</code> expressions</h3> -->
+<h3 id="array-ref"><code>array-ref</code> expressions</h3>
 
-<!-- <pre><code>  (array-ref <i>array</i> <i>integer</i>)</code></pre> -->
+<pre><code>  (array-ref <i>array</i> <i>integer</i>)</code></pre>
 
-<!-- <p> -->
-<!-- An <code>array-ref</code> expression returns the <i>integer</i>-th element of the <i>array</i>. -->
-<!-- It is the same as <code><i>array</i>_<i>integer</i></code>. -->
-<!-- </p> -->
+<p>
+An <code>array-ref</code> expression returns the <i>integer</i>-th element of the <i>array</i>.
+It is the same as <code><i>array</i>_<i>integer</i></code>.
+</p>
 
-<!-- <pre><code>&gt; [| 1 2 3 |]_2 -->
-<!-- 2 -->
-<!-- &gt; (array-ref [| 1 2 3 |] 2) -->
-<!-- 2 -->
-<!-- &gt; [| 1 2 3 |]_4 -->
-<!-- undefined -->
-<!-- &gt; (array-ref [| 1 2 3 |] 4) -->
-<!-- undefined</code></pre> -->
+<pre><code>&gt; [| 1 2 3 |]_2
+2
+&gt; (array-ref [| 1 2 3 |] 2)
+2
+&gt; [| 1 2 3 |]_4
+undefined
+&gt; (array-ref [| 1 2 3 |] 4)
+undefined</code></pre>
 
 <footer>
   Copyright (C) 2011-2013 <a href="http://egison.org/~egi/index.html">Satoshi Egi</a>
